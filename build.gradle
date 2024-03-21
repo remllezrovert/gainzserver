@@ -18,9 +18,10 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.postgresql:postgresql'
 	implementation 'org.json:json:20211205'
-	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.13.0'
-	implementation 'org.postgresql:postgresql:42.1.4'
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.15.4'
+	implementation 'org.springframework.data:spring-data-relational:3.2.3'
 	runtimeOnly 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
