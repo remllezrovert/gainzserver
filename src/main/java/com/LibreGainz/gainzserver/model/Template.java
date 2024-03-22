@@ -8,6 +8,7 @@ public class Template {
     private int userId;
     private String name;
     private String desc;
+    private String workoutType;
 
     public int getId() {
         return id;
@@ -26,6 +27,12 @@ public class Template {
     }
     public void setName(String name) {
         this.name = name;
+    }
+    public String getWorkoutType() {
+        return workoutType;
+    }
+    public void setWorkoutType(String workoutType) {
+        this.workoutType = workoutType;
     }
     public String getDesc() {
         return desc;
