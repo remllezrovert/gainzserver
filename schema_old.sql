@@ -54,17 +54,15 @@ CREATE TABLE IF NOT EXISTS Strength (
 -- Table: Template
 CREATE TABLE IF NOT EXISTS Template (
     id serial  NOT NULL,
-    Client_id int  NULL,
+    Client_id serial NOT NULL,
     title char(30)  NOT NULL,
-    description char(120)  NULL,
     workoutType varchar(15)  NULL,
+    summary char(120)  NULL,
     jsonObject jsonb  NULL,
     CONSTRAINT Template_pk PRIMARY KEY (id)
 );
 
 CREATE INDEX IF NOT EXISTS TemplateTitleIndex on Template (title ASC);
-
-CREATE INDEX IF NOT EXISTS TemplateClientIndex on Template (Client_id ASC);
 
 CREATE INDEX IF NOT EXISTS TemplateTypeIndex on Template (workoutType ASC);
 
@@ -79,6 +77,9 @@ CREATE TABLE IF NOT EXISTS Workout (
 );
 
 CREATE INDEX IF NOT EXISTS WorkoutTemplateIndex on Workout (Template_id ASC);
+
+
+
 
 -- foreign keys
 -- Reference: Cardio_Workout (table: Cardio)
@@ -97,6 +98,17 @@ ALTER TABLE Device ADD CONSTRAINT Device_Client
     INITIALLY IMMEDIATE
 ;
 
+-- Reference: Template_Client (table: Device)
+ALTER TABLE Template ADD CONSTRAINT Template_Client
+    FOREIGN KEY (Client_id)
+    REFERENCES Client (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+
+
+
 -- Reference: Isometric_Workout (table: Isometric)
 ALTER TABLE Isometric ADD CONSTRAINT Isometric_Workout
     FOREIGN KEY (Workout_id)
@@ -113,13 +125,6 @@ ALTER TABLE Strength ADD CONSTRAINT Strength_Workout
     INITIALLY IMMEDIATE
 ;
 
--- Reference: Template_Client (table: Template)
-ALTER TABLE Template ADD CONSTRAINT Template_Client
-    FOREIGN KEY (Client_id)
-    REFERENCES Client (id)  
-    NOT DEFERRABLE 
-    INITIALLY IMMEDIATE
-;
 
 -- Reference: Workout_Template (table: Workout)
 ALTER TABLE Workout ADD CONSTRAINT Workout_Template

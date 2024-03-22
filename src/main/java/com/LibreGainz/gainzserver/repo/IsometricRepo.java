@@ -21,9 +21,23 @@ public class IsometricRepo{
     }
 
     public void save(Isometric i){
-        String sql = "INSERT INTO Isometric (Workout_id, weight, unit, timeArr) VALUES (?,?,?,?);";
-        jdbcTemp.update(sql,i.getId(), i.getWeight(), i.getUnit(), i.getSet());
+        String sql = 
+        """
+        INSERT INTO Workout (id, Template_id, workoutDate, weight, unit, timeArr, tagArr, jsonObject) 
+        VALUES (?,?,?,?,?,?::time[],?::varchar[],?::jsonb);
+        """;
+    jdbcTemp.update(sql, 
+        i.getId(),
+        i.getTemplateId(),
+        i.getDate(),
+        i.getWeight(),
+        i.getUnit(), 
+        i.getSet(),
+        i.getTags(),
+        i.getjStr()
+        );
     }
+
     public List<Isometric> findAll(){
         return new ArrayList<Isometric>();
     }

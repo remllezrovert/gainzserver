@@ -8,8 +8,6 @@ import java.util.List;
 import java.sql.ResultSet;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.SQLException;
-
-
 @Repository
 public class StrengthRepo{
     public JdbcTemplate jdbcTemp;
@@ -23,12 +21,25 @@ public class StrengthRepo{
     }
 
     public void save(Strength s){
-        String sql = "INSERT INTO Strength (Workout_id, weight, unit, repArr) VALUES (?,?,?,?);";
-        jdbcTemp.update(sql,s.getId(),s.getWeight(),s.getUnit(),s.getSet());
+        String sql = 
+        """
+        INSERT INTO Workout (id, Template_id, workoutDate, weight, unit, timeArr, tagArr, jsonObject) 
+        VALUES (?,?,?,?,?,?::smallint[],?::varchar[],?::jsonb);
+        """;
+    jdbcTemp.update(sql, 
+        s.getId(),
+        s.getTemplateId(),
+        s.getDate(),
+        s.getWeight(),
+        s.getUnit(), 
+        s.getSet(),
+        s.getTags(),
+        s.getjStr()
+        );
     }
+
     public List<Strength> findAll(){
         return new ArrayList<Strength>();
     }
 
 }
-

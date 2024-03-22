@@ -21,8 +21,21 @@ public class CardioRepo{
     }
 
     public void save(Cardio c){
-        String sql = "INSERT INTO Cardio (Workout_id, distance, duration, unit) VALUES (?,?,?,?);";
-        jdbcTemp.update(sql, c.getId(), c.getDistance(), c.getTime(), c.getUnit());
+    String sql = 
+        """
+        INSERT INTO Workout (id, Template_id, workoutDate, distance, duration, unit, tagArr, jsonObject) 
+        VALUES (?,?,?,?,?,?::varchar[],?::jsonb);
+        """;
+    jdbcTemp.update(sql, 
+        c.getId(),
+        c.getTemplateId(),
+        c.getDate(),
+        c.getDistance(),
+        c.getTime(), 
+        c.getUnit(), 
+        c.getTags(),
+        c.getjStr()
+        );
     }
     public List<Cardio> findAll(){
         return new ArrayList<Cardio>();

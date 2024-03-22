@@ -4,17 +4,11 @@ import java.sql.Time;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Cardio {
-    private long id;
+public class Cardio extends Workout{
     private float distance;
     private Time time;
     private Unit unit;
-    public long getId() {
-        return id;
-    }
-    public void setId(long id) {
-        this.id = id;
-    }
+
     public Time getTime() {
         return time;
     }

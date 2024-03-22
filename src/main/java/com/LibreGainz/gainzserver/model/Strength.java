@@ -5,11 +5,10 @@ import java.util.ArrayList;
 
 
 @Component
-public class Strength {
+public class Strength extends Workout{
     ArrayList<Short> set = new ArrayList<Short>();
     Unit unit;
     short weight;
-    long id;
 
     public Unit getUnit() {
         return unit;
@@ -32,14 +31,5 @@ public class Strength {
     public void setWeight(short weight) {
         this.weight = weight;
     }
-    public long getId() {
-        return id;
-    }
-    public void setId(long id) {
-        this.id = id;
-    }
-    
-
-
 
 }

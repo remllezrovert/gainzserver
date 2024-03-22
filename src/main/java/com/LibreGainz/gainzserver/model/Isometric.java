@@ -3,17 +3,10 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Component;
 @Component
-public class Isometric {
-    long id;
+public class Isometric extends Workout{
     ArrayList<String> set = new ArrayList<String>();
     Unit unit;
     short weight;
-    public long getId() {
-        return id;
-    }
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public Unit getUnit() {
         return unit;

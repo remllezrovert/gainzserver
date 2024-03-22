@@ -10,6 +10,7 @@ public class Workout {
     private long id;
     private long templateId;
     private Date date;
+    private String jStr;
 
 
     public Date getDate(){
@@ -43,6 +44,14 @@ public class Workout {
 
     public void addTag(String tag){
         tags.add(tag);
+    }
+
+    public String getjStr() {
+        return jStr;
+    }
+
+    public void setjStr(String jStr) {
+        this.jStr = jStr;
     }
 
 
