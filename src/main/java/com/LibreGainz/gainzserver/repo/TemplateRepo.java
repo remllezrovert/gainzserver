@@ -23,8 +23,8 @@ public class TemplateRepo{
     }
 
     public void save(Template t){
-        String sql = "INSERT INTO Template (id, Client_id, title, description) VALUES (?,?,?,?);";
-        jdbcTemp.update(sql,t.getId(), t.getUserId(), t.getName(),t.getDesc());
+        String sql = "INSERT INTO Template (id, Client_id, title, workoutType,summary) VALUES (?,?,?,?,?);";
+        jdbcTemp.update(sql,t.getId(), t.getUserId(), t.getName(),t.getWorkoutType(),t.getDesc());
     }
 
     public List<Template> findAll(){
@@ -33,9 +33,9 @@ public class TemplateRepo{
         {
         Template t = new Template();
         t.setId(rs.getInt("id"));
-        t.setUserId(rs.getInt("User_id"));
+        t.setWorkoutType(rs.getString("workoutType"));
         t.setName(rs.getString("title"));
-        t.setDesc(rs.getString("description"));
+        t.setDesc(rs.getString("summary"));
         return t;
         };
         List<Template> templateList= jdbcTemp.query(sql, mapper);

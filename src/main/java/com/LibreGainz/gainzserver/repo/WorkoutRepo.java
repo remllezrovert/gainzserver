@@ -35,7 +35,7 @@ public class WorkoutRepo{
     }
 
     public void save(Workout w){
-        String sql = "INSERT INTO Workout (id, Template_id, workoutDate, tagsArr) VALUES (?,?,?,?);";
+        String sql = "INSERT INTO Workout (id, Template_id, workoutDate, tagArr, jsonObject) VALUES (?,?,?,?::varchar[],?::jsonb);";
         //This converts ArrayList<String> into json
         String json = "";
         try{
@@ -44,7 +44,7 @@ public class WorkoutRepo{
         } catch (JsonProcessingException jpe) {
             jpe.printStackTrace();
         }
-        jdbcTemp.update(sql,w.getId(), w.getTemplateId(), w.getDate(), json);
+        jdbcTemp.update(sql,w.getId(), w.getTemplateId(), w.getDate(), w.getTags().toArray(new String[w.getTags().size()]),json);
     }
 
     public List<Workout> findAll(){
@@ -61,18 +61,18 @@ public class WorkoutRepo{
         Workout w = new Workout();
         w.setId(rs.getInt("id"));
         w.setDate(rs.getDate("workoutDate"));
-        String str = rs.getString("tags").replace("\\","").replace("\"", "");
+        String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
         for (String tag :str.substring(1,str.length() -1).split(","))
             w.addTag(tag);
         return w;
     }
 
-    public List<Workout> getMax(){
-    String sql = "SELECT * FROM Workout WHERE JSON_CONTAINS(tags::jsonb, '\"helo\"');";
+
+    public List<Workout> getByTag(String tag){
+    String sql = "SELECT * FROM Workout WHERE " +"'" + tag + "'" + "=ANY(tagArr);";
 
     RowMapper<Workout> mapper = (rs, rowNum) ->
         extracted(rs);
-    //String myTag = jdbcTemp.query(sql2);
     List<Workout> myList= jdbcTemp.query(sql, mapper);
     return myList;
         

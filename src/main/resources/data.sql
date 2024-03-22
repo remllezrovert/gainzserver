@@ -1,5 +1,4 @@
 
-SET MODE PostGreSQL;
 INSERT INTO Client (id, name) values (101, 'Amir');
 INSERT INTO Client (id, name) values (102, 'Kyle');
 INSERT INTO Client (id, name) values (103, 'Trevor');
