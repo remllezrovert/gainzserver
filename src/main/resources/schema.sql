@@ -5,15 +5,6 @@
 -- Table: Cardio
 CREATE TYPE Unit AS ENUM ('LB','KG','MI','KM');
 
-CREATE TABLE IF NOT EXISTS Cardio (
-    Workout_id int8  NOT NULL,
-    distance decimal(3,3)  NULL,
-    durration time  NULL,
-    unit Unit NULL,
-    jsonObject jsonb  NULL,
-    CONSTRAINT Cardio_pk PRIMARY KEY (Workout_id)
-);
-
 -- Table: Client
 CREATE TABLE IF NOT EXISTS Client (
     id serial  NOT NULL,
@@ -30,26 +21,6 @@ CREATE TABLE IF NOT EXISTS Device (
 );
 
 CREATE INDEX IF NOT EXISTS ClientIdIndex on Device (Client_id ASC);
-
--- Table: Isometric
-CREATE TABLE IF NOT EXISTS Isometric (
-    Workout_id int8  NOT NULL,
-    weight smallint  NULL,
-    timeArr time[]  NULL,
-    unit Unit NULL,
-    jsonObject jsonb  NULL,
-    CONSTRAINT Isometric_pk PRIMARY KEY (Workout_id)
-);
-
--- Table: Strength
-CREATE TABLE IF NOT EXISTS Strength (
-    Workout_id int8  NOT NULL,
-    weight smallint  NULL,
-    repArr smallint[]  NULL,
-    unit Unit NULL,
-    jsonObject jsonb  NULL,
-    CONSTRAINT Strength_pk PRIMARY KEY (Workout_id)
-);
 
 -- Table: Template
 CREATE TABLE IF NOT EXISTS Template (
@@ -71,24 +42,18 @@ CREATE TABLE IF NOT EXISTS Workout (
     id bigserial  NOT NULL,
     Template_id int  NOT NULL,
     workoutDate date  NULL,
+    unit Unit NULL,
+    weight smallint  NULL,
+    distance decimal(3,3)  NULL,
+    durration time  NULL,
+    repArr smallint[]  NULL,
+    timeArr time[]  NULL,
     tagArr varchar(20)[]  NULL,
     jsonObject jsonb  NULL,
     CONSTRAINT Workout_pk PRIMARY KEY (id)
 );
 
 CREATE INDEX IF NOT EXISTS WorkoutTemplateIndex on Workout (Template_id ASC);
-
-
-
-
--- foreign keys
--- Reference: Cardio_Workout (table: Cardio)
-ALTER TABLE Cardio ADD CONSTRAINT Cardio_Workout
-    FOREIGN KEY (Workout_id)
-    REFERENCES Workout (id)  
-    NOT DEFERRABLE 
-    INITIALLY IMMEDIATE
-;
 
 -- Reference: Device_Client (table: Device)
 ALTER TABLE Device ADD CONSTRAINT Device_Client
@@ -106,26 +71,6 @@ ALTER TABLE Template ADD CONSTRAINT Template_Client
     INITIALLY IMMEDIATE
 ;
 
-
-
-
--- Reference: Isometric_Workout (table: Isometric)
-ALTER TABLE Isometric ADD CONSTRAINT Isometric_Workout
-    FOREIGN KEY (Workout_id)
-    REFERENCES Workout (id)  
-    NOT DEFERRABLE 
-    INITIALLY IMMEDIATE
-;
-
--- Reference: Strength_Workout (table: Strength)
-ALTER TABLE Strength ADD CONSTRAINT Strength_Workout
-    FOREIGN KEY (Workout_id)
-    REFERENCES Workout (id)  
-    NOT DEFERRABLE 
-    INITIALLY IMMEDIATE
-;
-
-
 -- Reference: Workout_Template (table: Workout)
 ALTER TABLE Workout ADD CONSTRAINT Workout_Template
     FOREIGN KEY (Template_id)
@@ -135,4 +80,3 @@ ALTER TABLE Workout ADD CONSTRAINT Workout_Template
 ;
 
 -- End of file.
-
