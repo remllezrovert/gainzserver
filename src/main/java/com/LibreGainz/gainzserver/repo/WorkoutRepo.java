@@ -23,12 +23,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 //import org.postgresql.util.PGobject;
 
 @Repository
+
 public class WorkoutRepo{
     public JdbcTemplate jdbcTemp;
 
     public JdbcTemplate getJdbcTemp() {
         return jdbcTemp;
     }
+    
     @Autowired
     public void setJdbcTemp(JdbcTemplate jdbcTemp) {
         this.jdbcTemp = jdbcTemp;
@@ -44,7 +46,13 @@ public class WorkoutRepo{
         } catch (JsonProcessingException jpe) {
             jpe.printStackTrace();
         }
-        jdbcTemp.update(sql,w.getId(), w.getTemplateId(), w.getDate(), w.getTags().toArray(new String[w.getTags().size()]),json);
+        jdbcTemp.update(sql,
+        w.getId(),
+        w.getTemplateId(),
+        w.getDate(),
+        w.getTags().toArray(new String[w.getTags().size()]),
+        json
+        );
     }
 
     public List<Workout> findAll(){

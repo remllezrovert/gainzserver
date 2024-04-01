@@ -1,10 +1,13 @@
 package com.LibreGainz.gainzserver.model;
 import java.sql.Date;
+
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 
 
 @Component
+@Primary
 public class Workout {
     private ArrayList<String> tags = new ArrayList<String>();
     private long id;
