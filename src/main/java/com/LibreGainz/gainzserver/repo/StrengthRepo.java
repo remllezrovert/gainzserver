@@ -23,17 +23,17 @@ public class StrengthRepo{
     public void save(Strength s){
         String sql = 
         """
-        INSERT INTO Workout (id, Template_id, workoutDate, weight, unit, timeArr, tagArr, jsonObject) 
-        VALUES (?,?,?,?,?,?::smallint[],?::varchar[],?::jsonb);
+        INSERT INTO Workout (id, Template_id, workoutDate, weight, unit, repArr, tagArr, jsonObject) 
+        VALUES (?,?,?,?,?::Unit,?::smallint[],?::varchar[],?::jsonb);
         """;
     jdbcTemp.update(sql, 
         s.getId(),
         s.getTemplateId(),
         s.getDate(),
         s.getWeight(),
-        s.getUnit(), 
-        s.getSet(),
-        s.getTags(),
+        s.getUnit().toString(), 
+        s.getSet().toArray(new Short[s.getSet().size()]),
+        s.getTags().toArray(new String[s.getTags().size()]),
         s.getjStr()
         );
     }

@@ -24,7 +24,7 @@ public class CardioRepo{
     String sql = 
         """
         INSERT INTO Workout (id, Template_id, workoutDate, distance, duration, unit, tagArr, jsonObject) 
-        VALUES (?,?,?,?,?,?::varchar[],?::jsonb);
+        VALUES (?,?,?,?,?::Unit,?::varchar[],?::jsonb);
         """;
     jdbcTemp.update(sql, 
         c.getId(),
@@ -32,8 +32,8 @@ public class CardioRepo{
         c.getDate(),
         c.getDistance(),
         c.getTime(), 
-        c.getUnit(), 
-        c.getTags(),
+        c.getUnit().toString(), 
+        c.getTags().toArray(new String[c.getTags().size()]),
         c.getjStr()
         );
     }
