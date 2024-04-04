@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import com.LibreGainz.gainzserver.model.*;
 import com.LibreGainz.gainzserver.repo.*;
+import com.LibreGainz.gainzserver.model.WeightObj;
 import java.util.ArrayList;
 @SpringBootApplication
 public class GainzserverApplication {
@@ -13,36 +14,48 @@ public class GainzserverApplication {
 
 
 		ConfigurableApplicationContext context = SpringApplication.run(GainzserverApplication.class, args);
-
-		//User tina = context.getBean(User.class);
-		//tina.setName("Tina");
-		//tina.setId(101);
+		User tina = context.getBean(User.class);
+		tina.setName("Tina");
+		tina.setId(0);
 		UserRepo ur = context.getBean(UserRepo.class);
 		//ur.save(tina);
 
 
 
-		//Template t = context.getBean(Template.class);
 		TemplateRepo tr = context.getBean(TemplateRepo.class);
-		//t.setUserId(101);
-		//t.setId(0);
-		//t.setName("Deadlift");
+		Template t = context.getBean(Template.class);
+		t.setUserId(0);
+		t.setId(0);
+		t.setName("Deadlift");
+		t.setDesc("Phat lifto");
 		//tr.save(t);
 	
 
 
 		
-	//Strength s = context.getBean(Strength.class);
+	Strength s = context.getBean(Strength.class);
 	StrengthRepo sr = context.getBean(StrengthRepo.class);
-	//s.setId(0);
-	//s.setWeight(s1);
-	//s.setUnit(Unit.KG);
+	//Strength stren = (Strength)ConfigurableApplicationContext.getBean("stren",0,1);
+	s.setId(1);
+	s.setTemplateId(0);
+	s.setWeight(new WeightObj(s1,Unit.KG));
+
+	
+
+	ArrayList<String> tags = new ArrayList<String>();
+	tags.add("helo");
+	tags.add("hi");
+	tags.add("bye");
+	s.setTags(tags);
+
+	ArrayList<Short> repsArr = new ArrayList<Short>();
+	repsArr.add((short)2);
+	repsArr.add((short)9);
+	repsArr.add((short)2);
+	repsArr.add((short)7);
+	s.setSet(repsArr);
 	//sr.save(s);
 
-	//ArrayList<String> tags = new ArrayList<String>();
-	//tags.add("helo");
-	//tags.add("hi");
-	//tags.add("bye");
 
 
 		WorkoutRepo wr = context.getBean(WorkoutRepo.class);
@@ -70,16 +83,13 @@ public class GainzserverApplication {
 	
 
 
-		System.out.println(tr.findAll().toString());
-		ur.findAll().forEach((u) -> System.out.println(u.getName()));
+		ur.findAll().forEach((u) -> System.out.print(u.getName() + ", "));
 
-		wr.getByTag("tags and stuff").forEach((thing) -> System.out.println(thing.getTags()));
-		sr.findAll();
+		//wr.getByTag("bye").forEach((thing) -> System.out.println(thing.getTags()));
 
-		wr.findAll().forEach((workout) -> System.out.println(workout.getId()
-		+ " " + workout.getDate().toString()
-		+ " " + workout.getTemplateId()
-		 + " " + workout.getTags()));
+		wr.findAll().forEach((workout) -> System.out.println(workout.toString()));
+		tr.findAll().forEach((tem)-> System.out.println(tem.toString()));
+
 
 
 
