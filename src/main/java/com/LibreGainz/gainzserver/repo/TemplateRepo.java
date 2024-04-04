@@ -23,21 +23,38 @@ public class TemplateRepo{
     }
 
     public void save(Template t){
-        String sql = "INSERT INTO Template (id, Client_id, title, workoutType,summary) VALUES (?,?,?,?,?);";
-        jdbcTemp.update(sql,t.getId(), t.getUserId(), t.getName(),t.getWorkoutType(),t.getDesc());
+        String sql = """
+        INSERT INTO Template (id, Client_id, title, workoutType,summary,jsonObject) 
+        VALUES (?,?,?,?,?,?::jsonb);
+        """;
+        jdbcTemp.update(sql,
+        t.getId(),
+        t.getUserId(),
+        t.getName(),
+        t.getWorkoutType(),
+        t.getDesc(),
+        t.getjStr());
+    }
+
+    public Template Extract(ResultSet rs){
+        Template t = new Template();
+        try {
+        t = new Template(rs.getInt("id"));
+        t.setWorkoutType(rs.getString("workoutType"));
+        t.setName(rs.getString("title"));
+        t.setDesc(rs.getString("summary"));
+        t.setjStr(rs.getString("jsonObject"));
+        }
+        catch (SQLException se){
+            System.out.println("SQL Exception has occured in TemplateRepo");
+            }
+        return t;
     }
 
     public List<Template> findAll(){
     String sql = "SELECT * FROM Template;";
     RowMapper<Template> mapper = (rs, rowNum) ->
-        {
-        Template t = new Template();
-        t.setId(rs.getInt("id"));
-        t.setWorkoutType(rs.getString("workoutType"));
-        t.setName(rs.getString("title"));
-        t.setDesc(rs.getString("summary"));
-        return t;
-        };
+        Extract(rs);
         List<Template> templateList= jdbcTemp.query(sql, mapper);
         return templateList;
     }

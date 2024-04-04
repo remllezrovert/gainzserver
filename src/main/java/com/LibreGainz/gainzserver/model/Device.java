@@ -1,6 +1,5 @@
 package com.LibreGainz.gainzserver.model;
 import java.sql.Timestamp;
-
 import org.springframework.stereotype.Component;
 
 @Component

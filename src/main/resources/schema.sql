@@ -26,9 +26,9 @@ CREATE INDEX IF NOT EXISTS ClientIdIndex on Device (Client_id ASC);
 CREATE TABLE IF NOT EXISTS Template (
     id serial  NOT NULL,
     Client_id serial NOT NULL,
-    title char(30)  NOT NULL,
+    title varchar(30)  NOT NULL,
     workoutType varchar(15)  NULL,
-    summary char(120)  NULL,
+    summary varchar(120)  NULL,
     jsonObject jsonb  NULL,
     CONSTRAINT Template_pk PRIMARY KEY (id)
 );
