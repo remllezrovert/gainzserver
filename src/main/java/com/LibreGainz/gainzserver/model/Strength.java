@@ -1,35 +1,133 @@
 package com.LibreGainz.gainzserver.model;
-import org.springframework.stereotype.Component;
 import java.util.ArrayList;
+import java.util.HashMap;
+import org.springframework.stereotype.Component;
 
-
+/**
+ * This class contains an ArrayList<Integer> of reps, and a weight
+ */
 
 @Component
 public class Strength extends Workout{
-    ArrayList<Short> set = new ArrayList<Short>();
-    Unit unit;
-    short weight;
+    private static String csvPath = "data//Strength.csv";
+    public static HashMap<Long, Strength> map = new HashMap<Long, Strength>();
+    private ArrayList<Short> set = new ArrayList<Short>();
+    private WeightObj weight;
 
-    public Unit getUnit() {
-        return unit;
-    }
-    public void setUnit(Unit unit) {
-        this.unit = unit;
+    public Strength(int templateId, long workoutId){
+        super(templateId, workoutId);
+        this.workoutId = super.workoutId;
+        map.putIfAbsent(workoutId, this);
     }
 
-    public ArrayList<Short> getSet() {
+    Strength(int templateId){
+        super(templateId);
+        this.workoutId = super.workoutId;
+        map.putIfAbsent(workoutId, this);
+    }
+
+    Strength(){
+        super(0);
+        map.putIfAbsent(workoutId, this);
+    }
+    /**
+     * Get the path where the csv file for the object is saved
+     * @return
+     */
+    public static String getCsvPath(){
+        return csvPath;
+    }
+    /**
+     * Set the path where this csv file is saved
+     * @return
+     */
+    public static void setCsvPath(String newCsvPath){
+        csvPath = newCsvPath;
+    }
+    
+
+    /**
+     * Add reps to the ArrayList<int>
+     * @param newReps
+     */
+    public void addReps(short newReps){
+        set.add(newReps);
+    }
+    /**
+     * Delete reps from the ArrayList<int>
+     * @param setIndex
+     */
+    public void delReps(short setIndex){
+        set.remove(setIndex);
+    }
+    /**
+     * Edit the ArrayList<int>
+     * @param setIndex
+     * @param newReps
+     */
+    public void editReps(int setIndex, short newReps){
+        set.set(setIndex, newReps);
+    }
+    /**
+     * Replace the ArrayList<int> with a new ArrayList<int>
+     * @param newSet
+     */
+    public void setSet(ArrayList<Short> newSet){
+        set = newSet;
+    }
+    /**
+     * Get the rep ArrayList<int>
+     * @return
+     */
+    public ArrayList<Short> getSet(){
         return set;
     }
-    public void setSet(ArrayList<Short> set) {
-        this.set = set;
+    
+    /**
+     * Set the weight for this workout
+     * @param newWeight
+     */
+    public void setWeight(WeightObj newWeight){
+        this.weight = newWeight;
     }
-
-    public short getWeight() {
+    /**
+     * Get the weight for this workout session
+     * @return
+     */
+    public WeightObj getWeight(){
         return weight;
     }
 
-    public void setWeight(short weight) {
-        this.weight = weight;
+    /**
+     * Remove this object from maps
+     */
+    public void deMap(){
+        map.remove(workoutId);
+        Workout.map.remove(workoutId);
+    }
+
+    /**
+     * Get the CSV friendly String that represents this object 
+     * @return String 
+     */
+    public String toString(){
+
+        return super.templateId+
+        "," + super.workoutId +
+        "," + weight.toString() +
+        ",\"" + set.toString().substring(1, set.toString().length() - 1) + "\"";
+    }
+    /**
+     * get a CSV friendly string representing this object's superclass
+     * @return csvStr
+     */
+    public String superToString(){
+        return super.toString();
+    }
+
+    public void csvAppend(){
+        CsvHandler.csvAppendStr(csvPath, this.toString());
+        CsvHandler.csvAppendStr(super.getCsvPath(), super.toString());
     }
 
 }

@@ -37,7 +37,11 @@ public class WorkoutRepo{
     }
 
     public void save(Workout w){
-        String sql = "INSERT INTO Workout (id, Template_id, workoutDate, tagArr, jsonObject) VALUES (?,?,?,?::varchar[],?::jsonb);";
+        String sql = 
+        """
+        INSERT INTO Workout (id, Template_id, workoutDate, tagArr, jsonObject) 
+        VALUES (?,?,?,?::varchar[],?::jsonb);
+        """;
         //This converts ArrayList<String> into json
         String json = "";
         try{
@@ -59,15 +63,14 @@ public class WorkoutRepo{
     String sql = "SELECT * FROM Workout;";
 
     RowMapper<Workout> mapper = (rs, rowNum) ->
-        extracted(rs);
+        Extract(rs);
     //String myTag = jdbcTemp.query(sql2);
     List<Workout> workoutList = jdbcTemp.query(sql, mapper);
     return workoutList;
     }
 
-    private Workout extracted(ResultSet rs) throws SQLException {
-        Workout w = new Workout();
-        w.setId(rs.getInt("id"));
+    private Workout Extract(ResultSet rs) throws SQLException {
+        Workout w = new Workout(rs.getInt("Template_id"),rs.getLong("id"));
         w.setDate(rs.getDate("workoutDate"));
         String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
         for (String tag :str.substring(1,str.length() -1).split(","))
@@ -80,11 +83,23 @@ public class WorkoutRepo{
     String sql = "SELECT * FROM Workout WHERE " +"'" + tag + "'" + "=ANY(tagArr);";
 
     RowMapper<Workout> mapper = (rs, rowNum) ->
-        extracted(rs);
+        Extract(rs);
     List<Workout> myList= jdbcTemp.query(sql, mapper);
     return myList;
         
     } 
+
+    public List<Workout> getByMatch(String col, String searchStr){
+    String sql = "SELECT * FROM Workout WHERE " + "'" + col + "' = '" + searchStr + "'";
+
+    RowMapper<Workout> mapper = (rs, rowNum) ->
+        Extract(rs);
+    List<Workout> myList= jdbcTemp.query(sql, mapper);
+    return myList;
+        
+    }
+
+
 
 }
 
