@@ -122,9 +122,15 @@ public class Cardio extends Workout{
      * Return a CSV friendly string representing this object
      */
     public String toString(){
+        if (time != null)
         return super.templateId+
         "," + super.workoutId +
         "," + distance + distanceUnit + "," + time.toString();
+        else
+
+        return super.templateId+
+        "," + super.workoutId +
+        "," + distance + distanceUnit + "," + "null";
     }
     /**
      * get a CSV friendly string representing this object's superclass

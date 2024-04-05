@@ -15,15 +15,21 @@ public class StrParse{
  * @param timeStr
  * @return TimeObj
  */
-public static TimeObj toTime(String timeStr) {
-    int[] tempArr = {0,0};
+public static TimeObj toTime(String timeStr) throws NullPointerException
+    {
+    int[] tempArr = {0,0,0};
     int i = 0;
+    try {
     for (String str : timeStr.split(":")) {
         int newInt = Integer.parseInt(str.trim());
         tempArr[i] = newInt;
         i += 1;
     }
-    return new TimeObj(tempArr[0], tempArr[1]);
+    }
+    catch (NullPointerException npe){
+        throw new NullPointerException("null values given");
+    }
+    return new TimeObj(tempArr[0], tempArr[1], tempArr[2]);
 }
 
 /**

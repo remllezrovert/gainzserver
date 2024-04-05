@@ -40,7 +40,13 @@ public class StrengthRepo{
     }
 
 public List<Strength> findAll(){
-    String sql = "SELECT * FROM Workout;";
+    String sql = """
+        SELECT * 
+        FROM workout as W
+        INNER JOIN template as T
+        ON T.id = W.template_id
+        AND T.workoutType = 'Strength';
+                """;
 
     RowMapper<Strength> mapper = (rs, rowNum) ->
         Extract(rs);

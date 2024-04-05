@@ -89,6 +89,18 @@ public class WorkoutRepo{
         
     } 
 
+    public List<Workout> getByMatch(String col, String searchStr){
+    String sql = "SELECT * FROM Workout WHERE " + "'" + col + "' = '" + searchStr + "'";
+
+    RowMapper<Workout> mapper = (rs, rowNum) ->
+        Extract(rs);
+    List<Workout> myList= jdbcTemp.query(sql, mapper);
+    return myList;
+        
+    }
+
+
+
 }
 
 
