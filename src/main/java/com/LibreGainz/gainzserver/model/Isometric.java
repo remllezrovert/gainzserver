@@ -2,10 +2,9 @@ package com.LibreGainz.gainzserver.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.springframework.stereotype.Component;
+import java.sql.*;
 
-/** @author Remllez
- * This class stores an ArrayList<TimeObj> and a weight object.
- */
+/** @author Remllez * This class stores an ArrayList<TimeObj> and a weight object.  */
 @Component
 public class Isometric extends Workout{
     private static String csvPath = "data//Isometric.csv";
@@ -78,6 +77,18 @@ public class Isometric extends Workout{
         return set;
     }
 
+    /**
+     * Get an sql friendly array of time objects
+     * @return
+     */
+    public ArrayList<Time> getSqlSet(){
+        ArrayList<Time> ret = new ArrayList<Time>();
+        for (TimeObj to : set)
+            ret.add(to.toSqlTime());
+        return ret;
+
+    }
+
 
 
 
@@ -127,4 +138,6 @@ public WeightObj getWeight(){
         CsvHandler.csvAppendStr(super.getCsvPath(), super.toString());
 
     }
+
+    
 }

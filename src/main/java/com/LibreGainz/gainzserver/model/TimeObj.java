@@ -1,4 +1,5 @@
 package com.LibreGainz.gainzserver.model;
+import java.sql.*;
 
 /**
  * @author Evan L
@@ -70,13 +71,21 @@ public class TimeObj{
     public String toString(){
     	
     	if (seconds < 10) {
-    		return minutes + ":0" + seconds;
+    		return hours + ":" + minutes + ":0" + seconds;
     	}
     	
     	else
-        return minutes + ":" + seconds;
+        return hours + ":" +minutes + ":" + seconds;
+
+
     
     	}
+
+	public Time toSqlTime(){
+		System.out.println(this.toString());
+		return Time.valueOf(this.toString());
+	}
     
+
 }
 
