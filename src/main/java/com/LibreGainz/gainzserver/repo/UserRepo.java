@@ -35,9 +35,8 @@ public class UserRepo {
         String sql = "SELECT * FROM Client;";
         RowMapper<User> mapper = (rs, rowNum) ->
             {
-            User u = new User();
+            User u = new User(rs.getString("title"));
             u.setId(rs.getInt("id"));
-            u.setName(rs.getString("title"));
             return u;
             };
 

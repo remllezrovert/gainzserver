@@ -1,8 +1,10 @@
 package com.LibreGainz.gainzserver.model;
-
-public enum Unit {
-LB,
-KG,
-MI,
-KM
+public enum Unit{
+    KG,
+    LB,
+    KM,
+    MI,
+    M,
+    FT,
 }
+

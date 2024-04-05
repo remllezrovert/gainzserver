@@ -3,7 +3,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import com.LibreGainz.gainzserver.model.Isometric;
-
+import com.LibreGainz.gainzserver.model.*;
 import net.sf.jsqlparser.expression.TimeValue;
 
 import java.util.ArrayList;
@@ -13,6 +13,9 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.time.format.*;
+
+
+
 @Repository
 public class IsometricRepo{
     public JdbcTemplate jdbcTemp;
@@ -35,16 +38,56 @@ public class IsometricRepo{
         i.getId(),
         i.getTemplateId(),
         i.getDate(),
-        i.getWeight(),
-        i.getUnit().toString(), 
-        i.getSet().toArray(new String[i.getSet().size()]),
+        i.getWeight().getWeight(),
+        i.getWeight().getUnit().toString(), 
+        i.getSqlSet().toArray(new Time[i.getSet().size()]),
         i.getTags().toArray(new String[i.getTags().size()]),
         i.getjStr()
         );
     }
 
-    public List<Isometric> findAll(){
-        return new ArrayList<Isometric>();
+public List<Isometric> findAll(){
+    String sql = """
+    SELECT W.id,template_id, workoutDate, weight, unit, timeArr, tagArr, W.jsonObject
+    FROM Workout AS W
+    INNER JOIN Template AS T
+    ON T.id = W.template_id
+    AND T.workoutType = 'Isometric';
+    """;
+
+    RowMapper<Isometric> mapper = (rs, rowNum) ->
+        Extract(rs);
+    List<Isometric> workoutList = jdbcTemp.query(sql, mapper);
+    return workoutList;
     }
+
+
+
+
+/**
+ * /Convert a single database row into an object
+ * @param rs
+ * @return Isometric
+ * @throws SQLException
+ */
+private Isometric Extract(ResultSet rs) throws SQLException {
+    Isometric s = new Isometric(rs.getInt("Template_id"),rs.getLong("id"));
+    s.setDate(rs.getDate("workoutDate"));
+
+    String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
+    s.setTags(StrParse.toTagArray(str.substring(1,str.length() -1)));
+
+    String repStr = rs.getString("timeArr");
+
+    //System.out.println(repStr);
+    s.setSet(StrParse.toIsometricSet(repStr.substring(1,repStr.length() -1)));
+    s.setWeight(StrParse.toWeight(rs.getString("weight") + rs.getString("unit")));
+
+    return s;
+    }
+
+
+
+
 
 }
