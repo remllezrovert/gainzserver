@@ -3,6 +3,8 @@ import org.springframework.stereotype.Component;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.sql.*;
+import java.io.*;
+import java.util.*;
 @Component
 public class Cardio extends Workout{
     private static String csvPath = "data//Cardio.csv";
@@ -117,7 +119,68 @@ public class Cardio extends Workout{
         Workout.map.remove(workoutId);
     }
   
-   
+   /**
+ * This converts a csv string into a Cardio object
+ * @param csvStr
+ * @return
+ * @throws Exception
+ */
+public static Cardio csvParse(String csvStr) throws Exception
+    {
+    List<String> read = new ArrayList<String>();
+    read = Arrays.asList(CsvHandler.csvParse(csvStr).toArray(new String[0]));
+    Cardio cdo = new Cardio(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
+    //cdo.setUnit(Isometric.strToSet(read.get(3)));
+    //String alphaStr = read.get(3).replaceAll("[^A-Za-z]+", "");
+    cdo.setDistance(Double.parseDouble(read.get(2).replaceAll("[^\\d.]", "")));
+    cdo.setTime(Time.valueOf(read.get(3)));
+    Unit unit; 
+    switch(read.get(3).replaceAll("[^A-Za-z]+", "").toUpperCase()){
+    case "KM":
+    case "KILOMETER":
+    case "K":
+        unit = Unit.KM; 
+        break;
+    case "MI":
+    case "MILES":
+    case "MILE":
+        unit = Unit.MI;
+        break;
+    default:
+        unit = Unit.MI;
+        break;
+    }
+    cdo.setUnit(unit);
+    return cdo;
+    }
+
+/**
+ * Opens a csv file and turns it's contents into cardio objects
+ * @param path
+ */
+public static void csvLoad(String path)
+{
+    String file = path;
+    BufferedReader reader = null;
+    String line = "";
+    try{
+        reader = new BufferedReader(new FileReader(file));
+        while((line = reader.readLine())!= null){
+            Cardio cdo = csvParse(line);
+            Workout wo = Cardio.map.get(cdo.workoutId);
+            cdo.setDate(wo.getDate());
+            cdo.setAnnotation(wo.getAnnotation());
+        }
+    }
+    catch(Exception e){
+    }
+    finally {
+    }
+}
+
+
+
+
     
     /**
      * Return a CSV friendly string representing this object
@@ -143,7 +206,7 @@ public class Cardio extends Workout{
     }
     public void csvAppend(){
         CsvHandler.csvAppendStr(csvPath, this.toString());
-        CsvHandler.csvAppendStr(super.getCsvPath(), super.toString());
+        //CsvHandler.csvAppendStr(super.getCsvPath(), super.toString());
     }
 
 }
