@@ -24,18 +24,18 @@ public class StrengthRepo{
     public void save(Strength s){
         String sql = 
         """
-        INSERT INTO Workout (id, Template_id, workoutDate, weight, unit, repArr, tagArr, jsonObject) 
-        VALUES (?,?,?,?,?::Unit,?::smallint[],?::varchar[],?::jsonb);
+        INSERT INTO Workout (Client_id, id, Template_id, workoutDate, weight, unit, repArr, tagArr) 
+        VALUES (?,?,?,?,?,?::Unit,?::smallint[],?::varchar[]);
         """;
     jdbcTemp.update(sql, 
+        s.getUserId(),
         s.getId(),
         s.getTemplateId(),
         s.getDate(),
         s.getWeight().getWeight(),
         s.getWeight().getUnit().toString(), 
         s.getSet().toArray(new Short[s.getSet().size()]),
-        s.getTags().toArray(new String[s.getTags().size()]),
-        s.getjStr()
+        s.getTags().toArray(new String[s.getTags().size()])
         );
     }
 
@@ -66,11 +66,11 @@ private Strength Extract(ResultSet rs) throws SQLException {
     s.setDate(rs.getDate("workoutDate"));
 
     String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
-    s.setTags(StrParse.toTagArray(str.substring(1,str.length() -1)));
+    s.setTags(Workout.strToTags(str.substring(1,str.length() -1)));
 
     String repStr = rs.getString("repArr").trim();
-    s.setSet(StrParse.toStrengthSet(repStr.substring(1,repStr.length() -1)));
-    s.setWeight(StrParse.toWeight(rs.getString("weight") + rs.getString("unit")));
+    s.setSet(Strength.strToSet(repStr.substring(1,repStr.length() -1)));
+    s.setWeight(WeightObj.strToWeight(rs.getString("weight") + rs.getString("unit")));
 
     return s;
     }
