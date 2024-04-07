@@ -39,6 +39,7 @@ CREATE INDEX IF NOT EXISTS TemplateTypeIndex on Template (workoutType ASC);
 
 -- Table: Workout
 CREATE TABLE IF NOT EXISTS Workout (
+    Client_id int NOT NULL,
     id bigserial  NOT NULL,
     Template_id int  NOT NULL,
     workoutDate date  NULL,
@@ -54,6 +55,8 @@ CREATE TABLE IF NOT EXISTS Workout (
 );
 
 CREATE INDEX IF NOT EXISTS WorkoutTemplateIndex on Workout (Template_id ASC);
+
+CREATE INDEX IF NOT EXISTS WorkoutClientIndex ON Workout (Client_id ASC);
 
 -- Reference: Device_Client (table: Device)
 ALTER TABLE Device ADD CONSTRAINT Device_Client
@@ -78,5 +81,15 @@ ALTER TABLE Workout ADD CONSTRAINT Workout_Template
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
 ;
+
+ALTER TABLE Workout ADD CONSTRAINT Workout_Client
+    FOREIGN KEY (Client_id)
+    REFERENCES Client (id)
+    NOT DEFERRABLE
+    INITIALLY IMMEDIATE
+;
+
+
+
 
 -- End of file.

@@ -6,7 +6,6 @@ import java.io.FileWriter;
 import java.util.HashMap;
 
 
-// TODO: fix the getjStr() method to actually work
 /**
  * @author Remllez
  */
@@ -18,7 +17,6 @@ private int templateId;
 private String name;
 private String desc;
 private String workoutType = "Workout";
-private String jStr = "{}";
 private int userId;
 private ArrayList<String> tags = new ArrayList<String>();
 
@@ -152,18 +150,5 @@ public void csvAppend(){
 
     }
 }
-
-/**
- *  This method should return a json string representing this object
- * @return jsonString
- */
-public String getjStr(){
-    return jStr;
-}
-
-public void setjStr(String jStr) {
-    this.jStr = jStr;
-}
-
 
 }

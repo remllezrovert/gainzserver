@@ -24,16 +24,16 @@ public class TemplateRepo{
 
     public void save(Template t){
         String sql = """
-        INSERT INTO Template (id, Client_id, title, workoutType,summary,jsonObject) 
-        VALUES (?,?,?,?,?,?::jsonb);
+        INSERT INTO Template (id, Client_id, title, workoutType,summary) 
+        VALUES (?,?,?,?,?);
         """;
         jdbcTemp.update(sql,
         t.getId(),
         t.getUserId(),
         t.getName(),
         t.getWorkoutType(),
-        t.getDesc(),
-        t.getjStr());
+        t.getDesc()
+        );
     }
 
     public Template Extract(ResultSet rs){
@@ -43,7 +43,6 @@ public class TemplateRepo{
         t.setWorkoutType(rs.getString("workoutType"));
         t.setName(rs.getString("title"));
         t.setDesc(rs.getString("summary"));
-        t.setjStr(rs.getString("jsonObject"));
         }
         catch (SQLException se){
             System.out.println("SQL Exception has occured in TemplateRepo");
