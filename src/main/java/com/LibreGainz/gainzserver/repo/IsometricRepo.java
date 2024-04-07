@@ -41,7 +41,7 @@ public class IsometricRepo{
         i.getDate(),
         i.getWeight().getWeight(),
         i.getWeight().getUnit().toString(), 
-        i.getSqlSet().toArray(new Time[i.getSet().size()]),
+        i.getSet().toArray(new Time[i.getSet().size()]),
         i.getTags().toArray(new String[i.getTags().size()])
         );
     }
@@ -75,13 +75,13 @@ private Isometric Extract(ResultSet rs) throws SQLException {
     s.setDate(rs.getDate("workoutDate"));
 
     String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
-    s.setTags(StrParse.toTagArray(str.substring(1,str.length() -1)));
+    s.setTags(Workout.strToTags(str.substring(1,str.length() -1)));
 
     String repStr = rs.getString("timeArr");
 
     //System.out.println(repStr);
-    s.setSet(StrParse.toIsometricSet(repStr.substring(1,repStr.length() -1)));
-    s.setWeight(StrParse.toWeight(rs.getString("weight") + rs.getString("unit")));
+    s.setSet(Isometric.strToSet(repStr.substring(1,repStr.length() -1)));
+    s.setWeight(WeightObj.strToWeight(rs.getString("weight") + rs.getString("unit")));
 
     return s;
     }

@@ -119,6 +119,11 @@ public Date getDate(){
 public void setAnnotation(String newAnnotation){
     annotation = newAnnotation;
 }
+
+
+
+
+
 /**
  * Get the annotation for this workout session
  * @return
@@ -129,6 +134,22 @@ public String getAnnotation(){
 public ArrayList<String> getTags(){
     return tags;
 }
+
+
+/**
+ * Convert comma separted list into an array of strings, or 'tags' for templates
+ * @param commaList
+ * @return
+ */
+public static ArrayList<String> strToTags(String commaList){
+    ArrayList<String> retArr = new ArrayList<String>();
+    for (String str : commaList.split(","))
+        retArr.add(str.trim());
+    return retArr;
+}
+
+
+
 /**
  * Replace the current tags array with a new one
  * @param newTags

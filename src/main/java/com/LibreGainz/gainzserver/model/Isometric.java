@@ -4,7 +4,7 @@ import java.util.HashMap;
 import org.springframework.stereotype.Component;
 import java.sql.*;
 
-/** @author Remllez * This class stores an ArrayList<TimeObj> and a weight object.  */
+/** @author Remllez * This class stores an ArrayList<Time> and a weight object.  */
 @Component
 public class Isometric extends Workout{
     private static String csvPath = "data//Isometric.csv";
@@ -38,14 +38,14 @@ public class Isometric extends Workout{
     }
 
     private WeightObj weight;
-    private ArrayList<TimeObj> set = new ArrayList<TimeObj>();
+    private ArrayList<Time> set = new ArrayList<Time>();
 
     /**
      * Add a time to the time ArrayList
      * @param newTime
      */
     public void addTime(String newTime){
-        set.add(StrParse.toTime(newTime));
+        set.add(Time.valueOf(newTime));
     }
     /**
      * Delete at time from the time ArrayList
@@ -60,36 +60,39 @@ public class Isometric extends Workout{
      * @param newTime
      */
     public void editTime(int timeIndex, String newTime){
-        set.set(timeIndex, StrParse.toTime(newTime));
+        set.set(timeIndex, Time.valueOf(newTime));
     }
+
+/**
+ * Convert a String into an ArrayList<TimeOj>
+ * @param commaList
+ * @return
+ */
+public static ArrayList<Time> strToSet(String commaList){
+    ArrayList<Time> retArr = new ArrayList<Time>();
+    for (String str : commaList.split(",")){
+        retArr.add(Time.valueOf(str.trim()));
+    }
+    return retArr;
+}
+
+
+
+
     /**
      * Replace the time ArrayList with new ArrayList
      * @param newSet
      */
-    public void setSet(ArrayList<TimeObj> newSet){
+    public void setSet(ArrayList<Time> newSet){
         set = newSet;
     }
     /**
      * Get the Object's time ArrayList
-     * @return ArrayList<TimeObj>
+     * @return ArrayList<Time>
      */
-    public ArrayList<TimeObj> getSet(){
+    public ArrayList<Time> getSet(){
         return set;
     }
-
-    /**
-     * Get an sql friendly array of time objects
-     * @return
-     */
-    public ArrayList<Time> getSqlSet(){
-        ArrayList<Time> ret = new ArrayList<Time>();
-        for (TimeObj to : set)
-            ret.add(to.toSqlTime());
-        return ret;
-
-    }
-
-
 
 
 /**
