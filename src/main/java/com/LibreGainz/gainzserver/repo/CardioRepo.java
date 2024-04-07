@@ -8,10 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.ResultSet;
 import org.springframework.jdbc.core.RowMapper;
-import java.sql.SQLException;
-/**
- * TODO: Write an Extract method for this class
- */
+import java.sql.*;
+
 @Repository
 public class CardioRepo{
     public JdbcTemplate jdbcTemp;
@@ -27,24 +25,24 @@ public class CardioRepo{
     public void save(Cardio c){
     String sql = 
         """
-        INSERT INTO Workout (id, Template_id, workoutDate, distance, durration, unit, tagArr, jsonObject) 
-        VALUES (?,?,?,?,?,?::Unit,?::varchar[],?::jsonb);
+        INSERT INTO Workout (Client_id, id, Template_id, workoutDate, distance, durration, unit, tagArr) 
+        VALUES (?,?,?,?,?,?,?::Unit,?::varchar[]);
         """;
     jdbcTemp.update(sql, 
+        c.getUserId(),
         c.getId(),
         c.getTemplateId(),
         c.getDate(),
         c.getDistance(),
         c.getTime(), 
         c.getUnit().toString(), 
-        c.getTags().toArray(new String[c.getTags().size()]),
-        c.getjStr()
+        c.getTags().toArray(new String[c.getTags().size()])
         );
     }
 
     public List<Cardio> findAll(){
     String sql = """
-    SELECT W.id,template_id, workoutDate, distance, unit, durration, tagArr, W.jsonObject
+    SELECT W.id,template_id, workoutDate, distance, unit, durration, tagArr
     FROM Workout AS W
     INNER JOIN Template AS T
     ON T.id = W.template_id
@@ -69,14 +67,19 @@ private Cardio Extract(ResultSet rs) throws SQLException {
     c.setDate(rs.getDate("workoutDate"));
 
     String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
-    c.setTags(StrParse.toTagArray(str.substring(1,str.length() -1)));
+    c.setTags(Workout.strToTags(str.substring(1,str.length() -1)));
 
     c.setDistance(Math.round(rs.getFloat("distance") * 1000.0) / 1000.0); 
     //c.setDistance(rs.getFloat("distance"));
     c.setUnit(Unit.valueOf(rs.getString("unit")));
     try{
-    c.setTime(StrParse.toTime(rs.getString("durration")));
+        System.out.println(Time.valueOf(rs.getString("durration")));
+    c.setTime(Time.valueOf(rs.getString("durration")));
+
     } catch(NullPointerException npe) {
+
+    }
+    catch(IllegalArgumentException iae){
 
     }
 

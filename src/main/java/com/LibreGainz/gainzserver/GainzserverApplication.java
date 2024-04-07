@@ -51,6 +51,8 @@ public class GainzserverApplication {
 	Strength s = context.getBean(Strength.class);
 	StrengthRepo sr = context.getBean(StrengthRepo.class);
 	//Strength stren = (Strength)ConfigurableApplicationContext.getBean("stren",0,1);
+
+	s.setUserId(0);
 	s.setId(1);
 	s.setTemplateId(0);
 	s.setWeight(new WeightObj(s1,Unit.KG));
@@ -70,20 +72,22 @@ public class GainzserverApplication {
 
 Isometric i = context.getBean(Isometric.class);
 	IsometricRepo ir = context.getBean(IsometricRepo.class);
+	i.setUserId(0);
 	i.setId(2);
 	i.setTemplateId(1);
 	i.setWeight(new WeightObj((short)45,Unit.LB));
-	i.setSet(StrParse.toIsometricSet("0:30,0:29,0:28,0:27,0:26"));
+	i.setSet(Isometric.strToSet("00:00:30,00:00:29,00:00:28,00:00:27,00:00:26"));
 	//ir.save(i);
 
 
 Cardio c = context.getBean(Cardio.class);
 		CardioRepo cr = context.getBean(CardioRepo.class);
+		c.setUserId(0);
 		c.setId(3);
 		c.setTemplateId(2);
 		c.setDistance((float)2.1);
 		c.setUnit(Unit.MI);
-		c.setTags(StrParse.toTagArray("running, fugly, kankles, scuba"));
+		c.setTags(Workout.strToTags("running, fugly, kankles, scuba"));
 		//cr.save(c);
 
 
@@ -113,16 +117,17 @@ Cardio c = context.getBean(Cardio.class);
 	
 
 
-		tr.findAll().forEach((tem)-> System.out.println(tem.toString()));
-		ur.findAll().forEach((u) -> System.out.print(u.getName() + ", "));
+		//tr.findAll().forEach((tem)-> System.out.println(tem.toString()));
+		//ur.findAll().forEach((u) -> System.out.print(u.getName() + ", "));
 
 		//wr.getByTag("bye").forEach((thing) -> System.out.println(thing.getTags()));
 
-		wr.findAll().forEach((workout) -> System.out.println(workout.toString()));
+		//wr.findAll().forEach((workout) -> System.out.println(workout.toString()));
 		System.out.println("");
-		sr.findAll().forEach((stn) -> System.out.println(stn.toString()));
-		ir.findAll().forEach((iso) -> System.out.println(iso.toString()));
-		cr.findAll().forEach((crd) -> System.out.println(crd.toString()));
+		//sr.findAll().forEach((stn) -> System.out.println(stn.toString()));
+		//ir.findAll().forEach((iso) -> System.out.println(iso.toString()));
+		//cr.findAll().forEach((crd) -> System.out.println(crd.toString()));
+
 
 
 

@@ -1,8 +1,11 @@
 package com.LibreGainz.gainzserver.model;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.HashMap;
-import org.springframework.stereotype.Component;
+import java.io.*;
 
+import org.springframework.stereotype.Component;
 /**
  * This class contains an ArrayList<Integer> of reps, and a weight
  */
@@ -46,6 +49,26 @@ public class Strength extends Workout{
     }
     
 
+
+public static ArrayList<Short> strToSet(String commaList){
+    ArrayList<Short> retArr = new ArrayList<Short>();
+
+    try{
+    for (String str : commaList.split(","))
+        retArr.add(Short.parseShort(str.trim()));
+    }
+    catch (NumberFormatException nfe){
+        System.out.println("NFE");
+        return retArr;
+    }
+
+    return retArr;
+
+    }
+
+
+
+    
     /**
      * Add reps to the ArrayList<int>
      * @param newReps
@@ -106,6 +129,52 @@ public class Strength extends Workout{
         Workout.map.remove(workoutId);
     }
 
+
+
+/**
+ * This coverts a single row from a CSV file into a Strength object
+ * @param line
+ * @return StrengthObject
+ */
+public static Strength csvParse(String csvStr) throws Exception
+    {
+    List<String> read = new ArrayList<String>();
+    read = Arrays.asList(CsvHandler.csvParse(csvStr).toArray(new String[0]));
+    Strength st = new Strength(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
+    st.setWeight(WeightObj.strToWeight(read.get(2)));
+    st.setSet(strToSet(read.get(3)));
+    return st;
+}
+
+/**
+ * Opens csv file and turns it's contents into strength objects
+ * @param path
+ */
+public static void csvLoad(String path)
+{
+    String file = path;
+    BufferedReader reader = null;
+    String line = "";
+    try{
+        reader = new BufferedReader(new FileReader(file));
+        while((line = reader.readLine())!= null){
+            Strength st = csvParse(line);
+            Workout wo = Workout.map.get(st.workoutId);
+            st.setDate(wo.getDate());
+            st.setAnnotation(wo.getAnnotation());
+        }
+    }
+    catch(Exception e){
+
+    }
+    finally {
+
+    }
+}
+
+
+
+
     /**
      * Get the CSV friendly String that represents this object 
      * @return String 
@@ -117,6 +186,10 @@ public class Strength extends Workout{
         "," + weight.toString() +
         ",\"" + set.toString().substring(1, set.toString().length() - 1) + "\"";
     }
+
+
+
+
     /**
      * get a CSV friendly string representing this object's superclass
      * @return csvStr
@@ -127,7 +200,6 @@ public class Strength extends Workout{
 
     public void csvAppend(){
         CsvHandler.csvAppendStr(csvPath, this.toString());
-        CsvHandler.csvAppendStr(super.getCsvPath(), super.toString());
     }
 
 }

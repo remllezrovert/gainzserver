@@ -1,12 +1,11 @@
 package com.LibreGainz.gainzserver.model;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Component;
-import java.util.ArrayList;
-import java.io.FileWriter;
+import java.util.*;
+import java.io.*;
 import java.util.HashMap;
 
 
-// TODO: fix the getjStr() method to actually work
 /**
  * @author Remllez
  */
@@ -18,7 +17,6 @@ private int templateId;
 private String name;
 private String desc;
 private String workoutType = "Workout";
-private String jStr = "{}";
 private int userId;
 private ArrayList<String> tags = new ArrayList<String>();
 
@@ -134,6 +132,51 @@ public void deMap(){
 }
 
 /**
+ * Convert a csvString into a template object
+ * @param csvStr
+ * @return
+ * @throws Exception
+ */
+public static Template csvParse(String csvStr) throws Exception
+    {
+    List<String> read = new ArrayList<String>();
+    try{
+    read = Arrays.asList(CsvHandler.csvParse(csvStr).toArray(new String[0]));
+    Template t1 = new Template(Integer.parseInt(read.get(0)));
+    t1.setName(read.get(1));
+    t1.setWorkoutType(read.get(2));
+    t1.setDesc(read.get(3));
+    //t1.setTags(Workout.strToTags(read.get(3)));
+    return t1;
+    }
+    catch(Exception e){}
+    return null;
+}
+
+
+public static void csvLoad(String path)
+{
+    String file = path;
+    BufferedReader reader = null;
+    String line = "";
+    try{
+        reader = new BufferedReader(new FileReader(file));
+        while((line = reader.readLine())!= null){
+            csvParse(line);
+        }
+    }
+    catch(Exception e){
+
+    }
+    finally {
+
+    }
+}
+
+
+
+
+/**
  * Get a String representing this object for use in CSV files
  */
 public String toString(){
@@ -152,18 +195,5 @@ public void csvAppend(){
 
     }
 }
-
-/**
- *  This method should return a json string representing this object
- * @return jsonString
- */
-public String getjStr(){
-    return jStr;
-}
-
-public void setjStr(String jStr) {
-    this.jStr = jStr;
-}
-
 
 }

@@ -29,7 +29,6 @@ CREATE TABLE IF NOT EXISTS Template (
     title varchar(30)  NOT NULL,
     workoutType varchar(15)  NULL,
     summary varchar(120)  NULL,
-    jsonObject jsonb  NULL,
     CONSTRAINT Template_pk PRIMARY KEY (id)
 );
 
@@ -39,6 +38,7 @@ CREATE INDEX IF NOT EXISTS TemplateTypeIndex on Template (workoutType ASC);
 
 -- Table: Workout
 CREATE TABLE IF NOT EXISTS Workout (
+    Client_id int NOT NULL,
     id bigserial  NOT NULL,
     Template_id int  NOT NULL,
     workoutDate date  NULL,
@@ -49,11 +49,12 @@ CREATE TABLE IF NOT EXISTS Workout (
     repArr smallint[]  NULL,
     timeArr time[]  NULL,
     tagArr varchar(20)[]  NULL,
-    jsonObject jsonb  NULL,
     CONSTRAINT Workout_pk PRIMARY KEY (id)
 );
 
 CREATE INDEX IF NOT EXISTS WorkoutTemplateIndex on Workout (Template_id ASC);
+
+CREATE INDEX IF NOT EXISTS WorkoutClientIndex ON Workout (Client_id ASC);
 
 -- Reference: Device_Client (table: Device)
 ALTER TABLE Device ADD CONSTRAINT Device_Client
@@ -78,5 +79,15 @@ ALTER TABLE Workout ADD CONSTRAINT Workout_Template
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
 ;
+
+ALTER TABLE Workout ADD CONSTRAINT Workout_Client
+    FOREIGN KEY (Client_id)
+    REFERENCES Client (id)
+    NOT DEFERRABLE
+    INITIALLY IMMEDIATE
+;
+
+
+
 
 -- End of file.

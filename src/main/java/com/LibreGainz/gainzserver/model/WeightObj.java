@@ -58,4 +58,50 @@ public void convert(){
         break;
     }
 }
+
+
+/**
+ * Convert a string into a weight object
+ * @param str
+ * @return WeightObj
+ */
+public static WeightObj strToWeight(String str){
+    StringBuffer unitBuffer = new StringBuffer(); 
+    StringBuffer weightBuffer = new StringBuffer();
+    for (int i=0; i < str.trim().length(); i++){
+        if (Character.isDigit(str.charAt(i))) 
+            weightBuffer.append(str.charAt(i));
+        else if (Character.isAlphabetic(str.charAt(i)))
+            unitBuffer.append(str.charAt(i));
+    }
+    Unit unit; 
+    switch(unitBuffer.toString().toLowerCase()){
+    case "kg":
+    case "kgs":
+    case "kilo":
+    case "kilos":
+        unit = Unit.KG; 
+        break;
+    case "lb":
+    case "lbs":
+    case "pounds":
+        unit = Unit.LB;
+        break;
+    default:
+        unit = User.getWeightUnit();
+        break;
+    }
+    try{
+    WeightObj retObj = new WeightObj(Short.parseShort(weightBuffer.toString()), unit);
+    return retObj;
+    }
+    catch (Exception e){
+        System.out.println(e);
+    return null;
+    }
+
+}
+
+
+
 }
