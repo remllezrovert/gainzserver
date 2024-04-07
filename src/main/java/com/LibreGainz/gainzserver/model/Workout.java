@@ -3,6 +3,9 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.*;
+import java.io.*;
+
 /** This class has general workout information 
  * It's attributes are used to describe and search for workouts
  * @author remllez
@@ -180,6 +183,50 @@ tags.remove(tagIndex);
         map.remove(workoutId);
     }
   
+/**
+ * This coverts a single row from a CSV file into a Workout object
+ * @param line
+ * @return WorkoutObject
+ */
+public static Workout csvParse(String csvStr) throws Exception
+    {
+    List<String> read = new ArrayList<String>();
+    try{
+    read = Arrays.asList(CsvHandler.csvParse(csvStr).toArray(new String[0]));
+    Workout wo = new Workout(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
+    wo.setDate(User.dateFormat.parse(read.get(2)));
+    wo.setAnnotation(read.get(3));
+    wo.setTags(Workout.strToTags(read.get(4)));
+
+    return wo;
+    }
+    catch(Exception e){}
+    return null;
+}
+
+/**
+ * This loads a csv file
+ * @param path
+ */
+public static void csvLoad(String path)
+{
+    String file = path;
+    BufferedReader reader = null;
+    String line = "";
+    try{
+        reader = new BufferedReader(new FileReader(file));
+        while((line = reader.readLine())!= null){
+            csvParse(line);
+        }
+    }
+    catch(Exception e){
+
+    }
+    finally {
+
+    }
+}
+
 
 /**
  * return a string summarizing this object for CSV files

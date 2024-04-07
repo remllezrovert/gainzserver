@@ -117,16 +117,17 @@ Cardio c = context.getBean(Cardio.class);
 	
 
 
-		tr.findAll().forEach((tem)-> System.out.println(tem.toString()));
-		ur.findAll().forEach((u) -> System.out.print(u.getName() + ", "));
+		//tr.findAll().forEach((tem)-> System.out.println(tem.toString()));
+		//ur.findAll().forEach((u) -> System.out.print(u.getName() + ", "));
 
 		//wr.getByTag("bye").forEach((thing) -> System.out.println(thing.getTags()));
 
-		wr.findAll().forEach((workout) -> System.out.println(workout.toString()));
+		//wr.findAll().forEach((workout) -> System.out.println(workout.toString()));
 		System.out.println("");
-		sr.findAll().forEach((stn) -> System.out.println(stn.toString()));
-		ir.findAll().forEach((iso) -> System.out.println(iso.toString()));
-		cr.findAll().forEach((crd) -> System.out.println(crd.toString()));
+		//sr.findAll().forEach((stn) -> System.out.println(stn.toString()));
+		//ir.findAll().forEach((iso) -> System.out.println(iso.toString()));
+		//cr.findAll().forEach((crd) -> System.out.println(crd.toString()));
+
 
 
 

@@ -3,6 +3,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import org.springframework.stereotype.Component;
 import java.sql.*;
+import java.io.*;
+import java.util.List;
+import java.util.Arrays;
 
 /** @author Remllez * This class stores an ArrayList<Time> and a weight object.  */
 @Component
@@ -116,7 +119,48 @@ public WeightObj getWeight(){
         map.remove(workoutId);
         Workout.map.remove(workoutId);
     }
-  
+/**
+ * This coverts a single row from a CSV file into a Isometric object
+ * @param line
+ * @return
+ */
+public static Isometric csvParse(String csvStr) throws Exception
+    {
+    List<String> read = new ArrayList<String>();
+    read = Arrays.asList(CsvHandler.csvParse(csvStr).toArray(new String[0]));
+    Isometric iso = new Isometric(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
+    iso.setWeight(WeightObj.strToWeight(read.get(2)));
+    iso.setSet(strToSet(read.get(3)));
+    return iso;
+    }
+
+
+ /**
+ * Opens a csv file and turns it's contents into isometric objects
+ * @param path
+ */
+public static void csvLoad(String path)
+{
+    String file = path;
+    BufferedReader reader = null;
+    String line = "";
+    try{
+        reader = new BufferedReader(new FileReader(file));
+        while((line = reader.readLine())!= null){
+            Isometric iso = csvParse(line);
+            Workout wo = map.get(iso.workoutId);
+            iso.setDate(wo.getDate());
+            iso.setAnnotation(wo.getAnnotation());
+        }
+    }
+    catch(Exception e){
+
+    }
+    finally {
+    }
+}
+
+ 
 
     /**
      * Return a string for use in CSV files
@@ -138,7 +182,7 @@ public WeightObj getWeight(){
     }
     public void csvAppend(){
         CsvHandler.csvAppendStr(csvPath, this.toString());
-        CsvHandler.csvAppendStr(super.getCsvPath(), super.toString());
+        //CsvHandler.csvAppendStr(super.getCsvPath(), super.toString());
 
     }
 
