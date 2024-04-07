@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.ResultSet;
 import org.springframework.jdbc.core.RowMapper;
-import java.sql.SQLException;
+import java.sql.*;
+
 @Repository
 public class CardioRepo{
     public JdbcTemplate jdbcTemp;
@@ -66,14 +67,19 @@ private Cardio Extract(ResultSet rs) throws SQLException {
     c.setDate(rs.getDate("workoutDate"));
 
     String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
-    c.setTags(StrParse.toTagArray(str.substring(1,str.length() -1)));
+    c.setTags(Workout.strToTags(str.substring(1,str.length() -1)));
 
     c.setDistance(Math.round(rs.getFloat("distance") * 1000.0) / 1000.0); 
     //c.setDistance(rs.getFloat("distance"));
     c.setUnit(Unit.valueOf(rs.getString("unit")));
     try{
-    c.setTime(StrParse.toTime(rs.getString("durration")));
+        System.out.println(Time.valueOf(rs.getString("durration")));
+    c.setTime(Time.valueOf(rs.getString("durration")));
+
     } catch(NullPointerException npe) {
+
+    }
+    catch(IllegalArgumentException iae){
 
     }
 

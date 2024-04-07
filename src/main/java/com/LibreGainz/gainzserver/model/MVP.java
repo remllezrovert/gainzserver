@@ -88,9 +88,9 @@ private static void strengthMenu(Scanner scnr){
     System.out.println("Enter a template number:");
     Strength s = new Strength(scnr.nextInt());
     System.out.println("Enter a Weight:");
-    s.setWeight(StrParse.toWeight(scnr.next()));
+    s.setWeight(WeightObj.strToWeight(scnr.next()));
     System.out.println("Enter Repetitions (comma separated):");
-    s.setSet(StrParse.toStrengthSet(scnr.next()));
+    s.setSet(Strength.strToSet(scnr.next()));
    } 
    catch(Exception e){
     //System.out.println(e);

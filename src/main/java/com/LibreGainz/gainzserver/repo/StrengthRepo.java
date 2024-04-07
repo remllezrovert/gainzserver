@@ -66,11 +66,11 @@ private Strength Extract(ResultSet rs) throws SQLException {
     s.setDate(rs.getDate("workoutDate"));
 
     String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
-    s.setTags(StrParse.toTagArray(str.substring(1,str.length() -1)));
+    s.setTags(Workout.strToTags(str.substring(1,str.length() -1)));
 
     String repStr = rs.getString("repArr").trim();
-    s.setSet(StrParse.toStrengthSet(repStr.substring(1,repStr.length() -1)));
-    s.setWeight(StrParse.toWeight(rs.getString("weight") + rs.getString("unit")));
+    s.setSet(Strength.strToSet(repStr.substring(1,repStr.length() -1)));
+    s.setWeight(WeightObj.strToWeight(rs.getString("weight") + rs.getString("unit")));
 
     return s;
     }

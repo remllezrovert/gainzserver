@@ -46,6 +46,26 @@ public class Strength extends Workout{
     }
     
 
+
+public static ArrayList<Short> strToSet(String commaList){
+    ArrayList<Short> retArr = new ArrayList<Short>();
+
+    try{
+    for (String str : commaList.split(","))
+        retArr.add(Short.parseShort(str.trim()));
+    }
+    catch (NumberFormatException nfe){
+        System.out.println("NFE");
+        return retArr;
+    }
+
+    return retArr;
+
+    }
+
+
+
+    
     /**
      * Add reps to the ArrayList<int>
      * @param newReps

@@ -2,12 +2,13 @@ package com.LibreGainz.gainzserver.model;
 import org.springframework.stereotype.Component;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.sql.*;
 @Component
 public class Cardio extends Workout{
     private static String csvPath = "data//Cardio.csv";
     public static HashMap<Long, Cardio> map = new HashMap<Long, Cardio>();
 	protected double distance;
-	private TimeObj time;
+	private Time time;
 	Unit distanceUnit;
     public Cardio(int templateId, long workoutId){
         super(templateId, workoutId);
@@ -88,7 +89,7 @@ public class Cardio extends Workout{
      * @param minutes
      * @param seconds
      */
-    public void setTime(TimeObj newTime) {
+    public void setTime(Time newTime) {
         time = newTime;
     }
 
@@ -96,7 +97,7 @@ public class Cardio extends Workout{
      * Get the time object corisponding to this Cardio object
      * @return
      */
-    public TimeObj getTime(){
+    public Time getTime(){
         return time;
     }
   
@@ -104,7 +105,7 @@ public class Cardio extends Workout{
     //user inputs if needs to edit a run 
     public void editRun(int setDistance, int setMinutes, int setSeconds){
         distance = setDistance;
-        TimeObj t1 = new TimeObj(setMinutes, setSeconds);
+        Time t1 = Time.valueOf(setMinutes + ":" + setSeconds);
         time = t1; 
     }
 

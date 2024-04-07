@@ -76,7 +76,7 @@ Isometric i = context.getBean(Isometric.class);
 	i.setId(2);
 	i.setTemplateId(1);
 	i.setWeight(new WeightObj((short)45,Unit.LB));
-	i.setSet(StrParse.toIsometricSet("0:30,0:29,0:28,0:27,0:26"));
+	i.setSet(Isometric.strToSet("00:00:30,00:00:29,00:00:28,00:00:27,00:00:26"));
 	//ir.save(i);
 
 
@@ -87,7 +87,7 @@ Cardio c = context.getBean(Cardio.class);
 		c.setTemplateId(2);
 		c.setDistance((float)2.1);
 		c.setUnit(Unit.MI);
-		c.setTags(StrParse.toTagArray("running, fugly, kankles, scuba"));
+		c.setTags(Workout.strToTags("running, fugly, kankles, scuba"));
 		//cr.save(c);
 
 

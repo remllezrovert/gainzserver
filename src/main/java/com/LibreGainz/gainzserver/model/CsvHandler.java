@@ -4,6 +4,7 @@ import java.util.regex.*;
 import java.util.*;
 import java.nio.file.*;
 import java.util.stream.*; 
+import java.sql.*;
 
 
 //TODO: all toStrength/toIsometric etc. need error handling for null values
@@ -273,7 +274,7 @@ public static Template strToTemplate(String csvStr) throws Exception
     t1.setName(read.get(1));
     t1.setWorkoutType(read.get(2));
     t1.setDesc(read.get(3));
-    //t1.setTags(StrParse.toTagArray(read.get(3)));
+    //t1.setTags(Workout.strToTags(read.get(3)));
     return t1;
     }
     catch(Exception e){}
@@ -292,9 +293,9 @@ public static Workout strToWorkout(String csvStr) throws Exception
     try{
     read = Arrays.asList(csvParse(csvStr).toArray(new String[0]));
     Workout wo = new Workout(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
-    wo.setDate(StrParse.toDate(read.get(2)));
+    wo.setDate(User.dateFormat.parse(read.get(2)));
     wo.setAnnotation(read.get(3));
-    wo.setTags(StrParse.toTagArray(read.get(4)));
+    wo.setTags(Workout.strToTags(read.get(4)));
     //wo.setAnnotation(read.get(3));
 
     return wo;
@@ -312,8 +313,8 @@ public static Strength strToStrength(String csvStr) throws Exception
     List<String> read = new ArrayList<String>();
     read = Arrays.asList(csvParse(csvStr).toArray(new String[0]));
     Strength st = new Strength(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
-    st.setWeight(StrParse.toWeight(read.get(2)));
-    st.setSet(StrParse.toStrengthSet(read.get(3)));
+    st.setWeight(WeightObj.strToWeight(read.get(2)));
+    st.setSet(Strength.strToSet(read.get(3)));
     return st;
 }
 
@@ -327,8 +328,8 @@ public static Isometric strToIsometric(String csvStr) throws Exception
     List<String> read = new ArrayList<String>();
     read = Arrays.asList(csvParse(csvStr).toArray(new String[0]));
     Isometric iso = new Isometric(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
-    iso.setWeight(StrParse.toWeight(read.get(2)));
-    iso.setSet(StrParse.toIsometricSet(read.get(3)));
+    iso.setWeight(WeightObj.strToWeight(read.get(2)));
+    iso.setSet(Isometric.strToSet(read.get(3)));
     return iso;
     }
 
@@ -343,10 +344,10 @@ public static Cardio strToCardio(String csvStr) throws Exception
     List<String> read = new ArrayList<String>();
     read = Arrays.asList(csvParse(csvStr).toArray(new String[0]));
     Cardio cdo = new Cardio(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
-    //cdo.setUnit(StrParse.toIsometricSet(read.get(3)));
+    //cdo.setUnit(Isometric.strToSet(read.get(3)));
     //String alphaStr = read.get(3).replaceAll("[^A-Za-z]+", "");
     cdo.setDistance(Double.parseDouble(read.get(2).replaceAll("[^\\d.]", "")));
-    cdo.setTime(StrParse.toTime(read.get(3)));
+    cdo.setTime(Time.valueOf(read.get(3)));
     Unit unit; 
     switch(read.get(3).replaceAll("[^A-Za-z]+", "").toUpperCase()){
     case "KM":

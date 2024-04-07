@@ -29,7 +29,6 @@ CREATE TABLE IF NOT EXISTS Template (
     title varchar(30)  NOT NULL,
     workoutType varchar(15)  NULL,
     summary varchar(120)  NULL,
-    jsonObject jsonb  NULL,
     CONSTRAINT Template_pk PRIMARY KEY (id)
 );
 
@@ -50,7 +49,6 @@ CREATE TABLE IF NOT EXISTS Workout (
     repArr smallint[]  NULL,
     timeArr time[]  NULL,
     tagArr varchar(20)[]  NULL,
-    jsonObject jsonb  NULL,
     CONSTRAINT Workout_pk PRIMARY KEY (id)
 );
 
