@@ -31,24 +31,24 @@ public class IsometricRepo{
     public void save(Isometric i){
         String sql = 
         """
-        INSERT INTO Workout (id, Template_id, workoutDate, weight, unit, timeArr, tagArr, jsonObject) 
-        VALUES (?,?,?,?,?::Unit,?::time[],?::varchar[],?::jsonb);
+        INSERT INTO Workout (Client_id, id, Template_id, workoutDate, weight, unit, timeArr, tagArr) 
+        VALUES (?,?,?,?,?,?::Unit,?::time[],?::varchar[]);
         """;
     jdbcTemp.update(sql, 
+        i.getUserId(),
         i.getId(),
         i.getTemplateId(),
         i.getDate(),
         i.getWeight().getWeight(),
         i.getWeight().getUnit().toString(), 
         i.getSqlSet().toArray(new Time[i.getSet().size()]),
-        i.getTags().toArray(new String[i.getTags().size()]),
-        i.getjStr()
+        i.getTags().toArray(new String[i.getTags().size()])
         );
     }
 
 public List<Isometric> findAll(){
     String sql = """
-    SELECT W.id,template_id, workoutDate, weight, unit, timeArr, tagArr, W.jsonObject
+    SELECT W.id,template_id, workoutDate, weight, unit, timeArr, tagArr
     FROM Workout AS W
     INNER JOIN Template AS T
     ON T.id = W.template_id

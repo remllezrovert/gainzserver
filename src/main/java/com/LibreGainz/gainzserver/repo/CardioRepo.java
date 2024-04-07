@@ -9,9 +9,6 @@ import java.util.List;
 import java.sql.ResultSet;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.SQLException;
-/**
- * TODO: Write an Extract method for this class
- */
 @Repository
 public class CardioRepo{
     public JdbcTemplate jdbcTemp;
@@ -27,24 +24,24 @@ public class CardioRepo{
     public void save(Cardio c){
     String sql = 
         """
-        INSERT INTO Workout (id, Template_id, workoutDate, distance, durration, unit, tagArr, jsonObject) 
-        VALUES (?,?,?,?,?,?::Unit,?::varchar[],?::jsonb);
+        INSERT INTO Workout (Client_id, id, Template_id, workoutDate, distance, durration, unit, tagArr) 
+        VALUES (?,?,?,?,?,?,?::Unit,?::varchar[]);
         """;
     jdbcTemp.update(sql, 
+        c.getUserId(),
         c.getId(),
         c.getTemplateId(),
         c.getDate(),
         c.getDistance(),
         c.getTime(), 
         c.getUnit().toString(), 
-        c.getTags().toArray(new String[c.getTags().size()]),
-        c.getjStr()
+        c.getTags().toArray(new String[c.getTags().size()])
         );
     }
 
     public List<Cardio> findAll(){
     String sql = """
-    SELECT W.id,template_id, workoutDate, distance, unit, durration, tagArr, W.jsonObject
+    SELECT W.id,template_id, workoutDate, distance, unit, durration, tagArr
     FROM Workout AS W
     INNER JOIN Template AS T
     ON T.id = W.template_id

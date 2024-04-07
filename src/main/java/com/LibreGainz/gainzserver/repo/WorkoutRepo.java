@@ -39,8 +39,8 @@ public class WorkoutRepo{
     public void save(Workout w){
         String sql = 
         """
-        INSERT INTO Workout (id, Template_id, workoutDate, tagArr, jsonObject) 
-        VALUES (?,?,?,?::varchar[],?::jsonb);
+        INSERT INTO Workout (Client_id, id, Template_id, workoutDate, tagArr) 
+        VALUES (?,?,?,?,?::varchar[]);
         """;
         //This converts ArrayList<String> into json
         String json = "";
@@ -51,6 +51,7 @@ public class WorkoutRepo{
             jpe.printStackTrace();
         }
         jdbcTemp.update(sql,
+        w.getUserId(),
         w.getId(),
         w.getTemplateId(),
         w.getDate(),
@@ -59,12 +60,11 @@ public class WorkoutRepo{
         );
     }
 
-    public List<Workout> findAll(){
-    String sql = "SELECT * FROM Workout;";
-
     RowMapper<Workout> mapper = (rs, rowNum) ->
         Extract(rs);
-    //String myTag = jdbcTemp.query(sql2);
+
+    public List<Workout> findAll(){
+    String sql = "SELECT * FROM Workout;";
     List<Workout> workoutList = jdbcTemp.query(sql, mapper);
     return workoutList;
     }
@@ -81,23 +81,46 @@ public class WorkoutRepo{
 
     public List<Workout> getByTag(String tag){
     String sql = "SELECT * FROM Workout WHERE " +"'" + tag + "'" + "=ANY(tagArr);";
-
-    RowMapper<Workout> mapper = (rs, rowNum) ->
-        Extract(rs);
     List<Workout> myList= jdbcTemp.query(sql, mapper);
     return myList;
-        
     } 
-
     public List<Workout> getByMatch(String col, String searchStr){
     String sql = "SELECT * FROM Workout WHERE " + "'" + col + "' = '" + searchStr + "'";
-
-    RowMapper<Workout> mapper = (rs, rowNum) ->
-        Extract(rs);
     List<Workout> myList= jdbcTemp.query(sql, mapper);
     return myList;
-        
     }
+     public List<Workout> getBySearch(String col, String searchStr){
+    String sql = "SELECT * FROM Workout WHERE " + "'" + col + "' LIKE '" + searchStr + "'";
+    List<Workout> myList= jdbcTemp.query(sql, mapper);
+    return myList;
+    }
+
+
+
+
+
+
+    public List<Workout> getByMatchUser(int userId, String col, String searchStr){
+    String sql = "SELECT * FROM Workout WHERE " +
+    "'" + col + "' = '" + searchStr +
+    "' AND Client_id = '" + userId + "';";
+    List<Workout> myList= jdbcTemp.query(sql, mapper);
+    return myList;
+    }
+    public List<Workout> getBySearchUser(int userId, String col, String searchStr){
+    String sql = "SELECT * FROM Workout WHERE " + 
+    "'" + col + "' LIKE '" + searchStr + 
+    "' AND Client_id = '" + userId + "';";
+    List<Workout> myList= jdbcTemp.query(sql, mapper);
+    return myList;
+    }
+    public List<Workout> getByTagUser(int userId, String tag){
+    String sql = "SELECT * FROM Workout WHERE " 
+    +"'" + tag + "'" + "=ANY(tagArr)"  +
+    " AND Client_id = '" + userId + "';";
+    List<Workout> myList= jdbcTemp.query(sql, mapper);
+    return myList;
+    } 
 
 
 

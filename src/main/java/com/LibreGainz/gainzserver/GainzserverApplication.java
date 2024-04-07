@@ -51,6 +51,8 @@ public class GainzserverApplication {
 	Strength s = context.getBean(Strength.class);
 	StrengthRepo sr = context.getBean(StrengthRepo.class);
 	//Strength stren = (Strength)ConfigurableApplicationContext.getBean("stren",0,1);
+
+	s.setUserId(0);
 	s.setId(1);
 	s.setTemplateId(0);
 	s.setWeight(new WeightObj(s1,Unit.KG));
@@ -70,6 +72,7 @@ public class GainzserverApplication {
 
 Isometric i = context.getBean(Isometric.class);
 	IsometricRepo ir = context.getBean(IsometricRepo.class);
+	i.setUserId(0);
 	i.setId(2);
 	i.setTemplateId(1);
 	i.setWeight(new WeightObj((short)45,Unit.LB));
@@ -79,6 +82,7 @@ Isometric i = context.getBean(Isometric.class);
 
 Cardio c = context.getBean(Cardio.class);
 		CardioRepo cr = context.getBean(CardioRepo.class);
+		c.setUserId(0);
 		c.setId(3);
 		c.setTemplateId(2);
 		c.setDistance((float)2.1);

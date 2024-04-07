@@ -11,10 +11,10 @@ import java.util.ArrayList;
 public class Workout{
 private static String csvPath = "data//Workout.csv";
 private Template template;
-private String jStr;
 public static HashMap<Long, Workout> map = new HashMap<Long, Workout>();
 protected int templateId; 
 protected long workoutId; 
+protected int userId;
 protected String annotation;
 protected Date date = new Date();
 protected ArrayList<String> tags = new ArrayList<String>();
@@ -72,7 +72,12 @@ public long getId(){
     return this.workoutId;
 }
 
-
+public int getUserId() {
+    return userId;
+}
+public void setUserId(int userId) {
+    this.userId = userId;
+}
 
 /**
  * Set the workoutId
@@ -176,19 +181,5 @@ public String superToString(){
 public void csvAppend(){
     CsvHandler.csvAppendStr(csvPath, this.toString());
 }
-/**
- * Return json string representing this object
- * @return
- */
-public String getjStr(){
-return jStr;
-}
 
-/**
- * Set this object's json string
- * @param jStr
- */
-public void setjStr(String jStr) {
-    this.jStr = jStr;
-}
 }

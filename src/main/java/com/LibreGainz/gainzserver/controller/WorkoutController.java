@@ -1,28 +1,72 @@
 package com.LibreGainz.gainzserver.controller;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import com.LibreGainz.gainzserver.repo.*;
+import com.LibreGainz.gainzserver.model.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+//import org.apache.catalina.core.ApplicationContext;
+
+import org.springframework.context.ApplicationContext;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.http.*;
 
 
 
 
 
-@RestController
-@RequestMapping("/workout")
+
+@RestController  
 public class WorkoutController{
 
-@GetMapping()
-public String getMethodName(@RequestParam String param) {
-    return new String();
+@Autowired
+    private final StrengthRepo strengthRepo;
+    private final IsometricRepo isometricRepo;
+    private final CardioRepo cardioRepo;
+    public WorkoutController(StrengthRepo strengthRepo, IsometricRepo isometricRepo, CardioRepo cardioRepo) {
+        this.strengthRepo = strengthRepo;
+        this.isometricRepo = isometricRepo;
+        this.cardioRepo = cardioRepo;
+    }
+
+    @GetMapping("/allWorkouts")
+    public List<Object> getAllWorkouts() {
+        List<Object> allWorkouts = new ArrayList<>();
+        
+        allWorkouts.addAll(strengthRepo.findAll());
+        allWorkouts.addAll(isometricRepo.findAll());
+        allWorkouts.addAll(cardioRepo.findAll());
+
+        return allWorkouts;
+    }
+
+
+@RequestMapping(value = "/helloworld", method=RequestMethod.GET)
+public String helloWorld() {
+    return "HelloWorld";
 }
+
+
+
+
+
 
 @PostMapping()
 public String postMethodName(@RequestBody String entity) {
@@ -40,9 +84,6 @@ public String putMethodName(@PathVariable String id, @RequestBody String entity)
 
     return entity;
 }
-
-
-
 
 
 
