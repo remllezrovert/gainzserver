@@ -49,33 +49,10 @@ public List<Strength> findAll(){
                 """;
 
     RowMapper<Strength> mapper = (rs, rowNum) ->
-        Extract(rs);
-    //String myTag = jdbcTemp.query(sql2);
+        new Strength(rs);
     List<Strength> workoutList = jdbcTemp.query(sql, mapper);
     return workoutList;
     }
-
-/**
- * Convert a single database row into an object
- * @param rs
- * @return Strength
- * @throws SQLException
- */
-private Strength Extract(ResultSet rs) throws SQLException {
-    Strength s = new Strength(rs.getInt("Template_id"),rs.getLong("id"));
-    s.setDate(rs.getDate("workoutDate"));
-
-    String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
-    s.setTags(Workout.strToTags(str.substring(1,str.length() -1)));
-
-    String repStr = rs.getString("repArr").trim();
-    s.setSet(Strength.strToSet(repStr.substring(1,repStr.length() -1)));
-    s.setWeight(WeightObj.strToWeight(rs.getString("weight") + rs.getString("unit")));
-
-    return s;
-    }
-
-
 
 
 

@@ -49,42 +49,12 @@ public class CardioRepo{
     AND T.workoutType = 'Cardio';
     """;
     RowMapper<Cardio> mapper = (rs, rowNum) ->
-        Extract(rs);
+        new Cardio(rs);
     //String myTag = jdbcTemp.query(sql2);
     List<Cardio> workoutList = jdbcTemp.query(sql, mapper);
     return workoutList;
     }
 
-
-/**
- * Convert a single database row into an object
- * @param rs
- * @return Cardio
- * @throws SQLException
- */
-private Cardio Extract(ResultSet rs) throws SQLException {
-    Cardio c = new Cardio(rs.getInt("Template_id"),rs.getLong("id"));
-    c.setDate(rs.getDate("workoutDate"));
-
-    String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
-    c.setTags(Workout.strToTags(str.substring(1,str.length() -1)));
-
-    c.setDistance(Math.round(rs.getFloat("distance") * 1000.0) / 1000.0); 
-    //c.setDistance(rs.getFloat("distance"));
-    c.setUnit(Unit.valueOf(rs.getString("unit")));
-    try{
-        System.out.println(Time.valueOf(rs.getString("durration")));
-    c.setTime(Time.valueOf(rs.getString("durration")));
-
-    } catch(NullPointerException npe) {
-
-    }
-    catch(IllegalArgumentException iae){
-
-    }
-
-    return c;
-    }
 
 
 

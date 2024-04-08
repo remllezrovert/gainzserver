@@ -56,35 +56,11 @@ public List<Isometric> findAll(){
     """;
 
     RowMapper<Isometric> mapper = (rs, rowNum) ->
-        Extract(rs);
+        new Isometric(rs);
     List<Isometric> workoutList = jdbcTemp.query(sql, mapper);
     return workoutList;
     }
 
-
-
-
-/**
- * /Convert a single database row into an object
- * @param rs
- * @return Isometric
- * @throws SQLException
- */
-private Isometric Extract(ResultSet rs) throws SQLException {
-    Isometric s = new Isometric(rs.getInt("Template_id"),rs.getLong("id"));
-    s.setDate(rs.getDate("workoutDate"));
-
-    String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
-    s.setTags(Workout.strToTags(str.substring(1,str.length() -1)));
-
-    String repStr = rs.getString("timeArr");
-
-    //System.out.println(repStr);
-    s.setSet(Isometric.strToSet(repStr.substring(1,repStr.length() -1)));
-    s.setWeight(WeightObj.strToWeight(rs.getString("weight") + rs.getString("unit")));
-
-    return s;
-    }
 
 
 

@@ -25,6 +25,27 @@ public class Isometric extends Workout{
     public Isometric(){
         super(0);
     }
+
+public Isometric(ResultSet rs) throws SQLException {
+    super(rs.getInt("Template_id"),rs.getLong("id"));
+    setDate(rs.getDate("workoutDate"));
+
+    String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
+    setTags(Workout.strToTags(str.substring(1,str.length() -1)));
+
+    String repStr = rs.getString("timeArr");
+
+    setSet(strToSet(repStr.substring(1,repStr.length() -1)));
+    setWeight(WeightObj.strToWeight(rs.getString("weight") + rs.getString("unit")));
+
+    map.putIfAbsent(workoutId, this);
+    }
+
+
+
+
+
+
     /**
      * Get the path where the csv file for the object is saved
      * @return
