@@ -61,23 +61,34 @@ public class WorkoutRepo{
     }
 
     RowMapper<Workout> mapper = (rs, rowNum) ->
-        Extract(rs);
+        new Workout(rs);
 
+    
     public List<Workout> findAll(){
-    String sql = "SELECT * FROM Workout;";
+    String sql = """
+        SELECT * FROM Workout AS W;
+                """;
     List<Workout> workoutList = jdbcTemp.query(sql, mapper);
     return workoutList;
     }
 
-    private Workout Extract(ResultSet rs) throws SQLException {
-        Workout w = new Workout(rs.getInt("Template_id"),rs.getLong("id"));
-        w.setDate(rs.getDate("workoutDate"));
-        String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
-        for (String tag :str.substring(1,str.length() -1).split(","))
-            w.addTag(tag);
-        return w;
-    }
 
+
+    public List<Object> findDownCast (String workoutType){
+
+    String sql = """
+        SELECT * FROM Workout AS W
+        INNER JOIN Template AS T
+        ON T.id = W.Template_id
+        AND T.workoutType = '
+                """ + workoutType + "';";
+
+    RowMapper<Object> downer = (rs, rowNum) ->
+        new Workout(rs);
+    List<Object> workoutList = jdbcTemp.query(sql, downer);
+    return workoutList;
+
+    }
 
     public List<Workout> getByTag(String tag){
     String sql = "SELECT * FROM Workout WHERE " +"'" + tag + "'" + "=ANY(tagArr);";
@@ -121,6 +132,9 @@ public class WorkoutRepo{
     List<Workout> myList= jdbcTemp.query(sql, mapper);
     return myList;
     } 
+
+
+    
 
 
 

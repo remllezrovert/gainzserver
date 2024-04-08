@@ -32,31 +32,75 @@ import org.springframework.http.*;
 
 
 
-
 @RestController  
 public class WorkoutController{
 
 @Autowired
+    private final WorkoutRepo workoutRepo;
     private final StrengthRepo strengthRepo;
     private final IsometricRepo isometricRepo;
     private final CardioRepo cardioRepo;
-    public WorkoutController(StrengthRepo strengthRepo, IsometricRepo isometricRepo, CardioRepo cardioRepo) {
+     
+    private final ApplicationContext applicatonContext;
+
+    public WorkoutController(
+        WorkoutRepo workoutRepo,
+        StrengthRepo strengthRepo,
+        IsometricRepo isometricRepo,
+        CardioRepo cardioRepo,
+        ApplicationContext applicationContext) {
+        this.workoutRepo = workoutRepo;
         this.strengthRepo = strengthRepo;
-        this.isometricRepo = isometricRepo;
+        this.isometricRepo= isometricRepo;
         this.cardioRepo = cardioRepo;
+        this.applicatonContext = applicationContext;
     }
 
     @GetMapping("/allWorkouts")
+    public List<Object> getAll(){
+        List<Object> wList= new ArrayList<>();
+        wList.add(getStrength());
+        wList.add(getIsometric());
+        wList.add(getCardio());
+        return wList;
+    }
+    
+    @GetMapping("/workout")
     public List<Object> getAllWorkouts() {
         List<Object> allWorkouts = new ArrayList<>();
-        
-        allWorkouts.addAll(strengthRepo.findAll());
-        allWorkouts.addAll(isometricRepo.findAll());
-        allWorkouts.addAll(cardioRepo.findAll());
-
+        allWorkouts.addAll(workoutRepo.findAll());
         return allWorkouts;
     }
 
+           
+ 
+    @GetMapping("/strength")
+    public List<Strength> getStrength(){
+
+        List<Strength> wList= new ArrayList<>();
+        wList.addAll(strengthRepo.findAll());
+        return wList;
+    }
+            
+     @GetMapping("/isometric")
+    public List<Isometric> getIsometric(){
+
+        List<Isometric> wList= new ArrayList<>();
+        wList.addAll(isometricRepo.findAll());
+        return wList;
+    }
+            
+      @GetMapping("/cardio")
+    public List<Cardio> getCardio(){
+
+        List<Cardio> wList= new ArrayList<>();
+        wList.addAll(cardioRepo.findAll());
+        return wList;
+    }
+            
+            
+            
+            
 
 @RequestMapping(value = "/helloworld", method=RequestMethod.GET)
 public String helloWorld() {

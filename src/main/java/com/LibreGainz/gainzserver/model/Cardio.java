@@ -6,12 +6,40 @@ import java.sql.*;
 import java.io.*;
 import java.util.*;
 @Component
-public class Cardio extends Workout{
+public class Cardio extends Workout {
     private static String csvPath = "data//Cardio.csv";
     public static HashMap<Long, Cardio> map = new HashMap<Long, Cardio>();
-	protected double distance;
+	private double distance;
 	private Time time;
 	Unit distanceUnit;
+
+public Cardio(ResultSet rs) throws SQLException {
+    super(rs.getInt("Template_id"), rs.getLong("id"));
+    setDate(rs.getDate("workoutDate"));
+    String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
+    setTags(Workout.strToTags(str.substring(1,str.length() -1)));
+
+    setDistance(rs.getFloat("distance")); 
+    setUnit(Unit.valueOf(rs.getString("unit")));
+
+    try{
+        System.out.println(Time.valueOf(rs.getString("durration")));
+        setTime(Time.valueOf(rs.getString("durration")));
+        map.putIfAbsent(workoutId, this);
+
+    } catch(NullPointerException npe) {
+
+    }
+    catch(IllegalArgumentException iae){
+
+    }
+
+    }
+
+
+
+
+
     public Cardio(int templateId, long workoutId){
         super(templateId, workoutId);
         map.putIfAbsent(workoutId, this);
@@ -23,6 +51,10 @@ public class Cardio extends Workout{
     public Cardio(){
         super(0);
     }
+
+
+
+
 
     /**
      * Get the path where the csv file for the object is saved
@@ -61,7 +93,7 @@ public class Cardio extends Workout{
   
  
     public void setDistance(double distance1) {
-    	distance = distance1;
+        this.distance = Math.round(distance1 * 1000.0 / 1000.0); 
     }
 
     /**
