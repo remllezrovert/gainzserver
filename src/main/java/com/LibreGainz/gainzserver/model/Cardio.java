@@ -49,7 +49,7 @@ public Cardio(ResultSet rs) throws SQLException {
         map.putIfAbsent(workoutId, this);
     }
     public Cardio(){
-        super(0);
+        super();
     }
 
 

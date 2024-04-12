@@ -54,16 +54,35 @@ public List<Isometric> findAll(){
     ON T.id = W.template_id
     AND T.workoutType = 'Isometric';
     """;
-
     RowMapper<Isometric> mapper = (rs, rowNum) ->
         new Isometric(rs);
     List<Isometric> workoutList = jdbcTemp.query(sql, mapper);
     return workoutList;
-    }
 
+}
 
+public List<Isometric> findAll(int userId, int limit){
+    String sql = """
+        SELECT * 
+        FROM workout as W
+        INNER JOIN template as T
+        ON T.id = W.template_id
+        AND T.workoutType = 'Isometric'
+        WHERE W.client_id =
+                """ + userId +" LIMIT " + limit + ";";
+    RowMapper<Isometric> mapper = (rs, rowNum) ->
+        new Isometric(rs);
+    List<Isometric> workoutList = jdbcTemp.query(sql, mapper);
+    return workoutList;
+}
 
 
 
 
 }
+
+
+
+
+
+

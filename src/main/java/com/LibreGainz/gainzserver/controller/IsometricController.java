@@ -1,17 +1,23 @@
 package com.LibreGainz.gainzserver.controller;
 
-
-import java.util.*;
 import com.LibreGainz.gainzserver.repo.*;
 import com.LibreGainz.gainzserver.model.*;
-//import org.apache.catalina.core.ApplicationContext;
 
-import org.springframework.context.ApplicationContext;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+//import org.apache.catalina.core.ApplicationContext;
+
+import org.springframework.context.ApplicationContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,35 +32,35 @@ import org.springframework.http.*;
 
 
 @RestController  
-public class TemplateController {
+public class IsometricController {
 @Autowired
     private final WorkoutRepo workoutRepo;
-    private final TemplateRepo templateRepo;
+    private final IsometricRepo isometricRepo;
      
 
-    public TemplateController(
+    public IsometricController(
         WorkoutRepo workoutRepo,
-        TemplateRepo templateRepo
+        IsometricRepo isometricRepo
         ) {
         this.workoutRepo = workoutRepo;
-        this.templateRepo = templateRepo;
+        this.isometricRepo = isometricRepo;
     }
 
  
 
-    @GetMapping("/template")
-    public List<Template> gettemplate(){
+    @GetMapping("/isometric")
+    public List<Isometric> getisometric(){
 
-        List<Template> wList= new ArrayList<>();
-        wList.addAll(templateRepo.findAll());
+        List<Isometric> wList= new ArrayList<>();
+        wList.addAll(isometricRepo.findAll());
         return wList;
     }
 
-    @GetMapping("/{userId}/template")
-    public List<Template> getUsertemplate(@PathVariable Integer userId){
+    @GetMapping("/{userId}/isometric")
+    public List<Isometric> getUserIsometric(@PathVariable Integer userId){
         int limit = 10;
-        List<Template> wList= new ArrayList<>();
-        wList.addAll(templateRepo.findAll(userId, limit));
+        List<Isometric> wList= new ArrayList<>();
+        wList.addAll(isometricRepo.findAll(userId, limit));
         return wList;
     }
 
@@ -63,5 +69,4 @@ public class TemplateController {
 
 
 }
-
 
