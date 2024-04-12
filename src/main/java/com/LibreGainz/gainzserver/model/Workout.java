@@ -51,7 +51,6 @@ Workout(int templateId)
     map.putIfAbsent(workoutId, this);
 }
 Workout(){
-
 }
 
 public Workout(ResultSet rs) throws SQLException {

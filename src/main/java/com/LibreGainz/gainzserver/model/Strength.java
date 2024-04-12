@@ -31,7 +31,7 @@ public class Strength extends Workout {
     }
 
     Strength(){
-        super(0);
+        super();
         map.putIfAbsent(workoutId, this);
     }
 

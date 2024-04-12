@@ -54,6 +54,21 @@ public class CardioRepo{
     List<Cardio> workoutList = jdbcTemp.query(sql, mapper);
     return workoutList;
     }
+    public List<Cardio> findAll(int userId, int limit){
+        String sql = """
+            SELECT * 
+            FROM workout as W
+            INNER JOIN template as T
+            ON T.id = W.template_id
+            AND T.workoutType = 'Cardio'
+            WHERE W.client_id =
+                    """ + userId +" LIMIT " + limit + ";";
+        RowMapper<Cardio> mapper = (rs, rowNum) ->
+            new Cardio(rs);
+        List<Cardio> workoutList = jdbcTemp.query(sql, mapper);
+        return workoutList;
+        }
+
 
 
 

@@ -6,6 +6,7 @@ import com.LibreGainz.gainzserver.model.Template;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.io.*;
 import java.sql.ResultSet;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.SQLException;
@@ -57,6 +58,20 @@ public class TemplateRepo{
         List<Template> templateList= jdbcTemp.query(sql, mapper);
         return templateList;
     }
+
+public List<Template> findAll(int userId, int limit){
+    String sql = """
+        SELECT * 
+        FROM Template
+        WHERE client_id =
+                """ + userId +" LIMIT " + limit + ";";
+    RowMapper<Template> mapper = (rs, rowNum) ->
+        new Template(rs);
+    List<Template> workoutList = jdbcTemp.query(sql, mapper);
+    return workoutList;
+    }
+
+
 
 
 

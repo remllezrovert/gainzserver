@@ -56,15 +56,7 @@ public class WorkoutController{
         this.applicatonContext = applicationContext;
     }
 
-    @GetMapping("/allWorkouts")
-    public List<Object> getAll(){
-        List<Object> wList= new ArrayList<>();
-        wList.add(getStrength());
-        wList.add(getIsometric());
-        wList.add(getCardio());
-        return wList;
-    }
-    
+   
     @GetMapping("/workout")
     public List<Object> getAllWorkouts() {
         List<Object> allWorkouts = new ArrayList<>();
@@ -74,31 +66,45 @@ public class WorkoutController{
 
            
  
-    @GetMapping("/strength")
-    public List<Strength> getStrength(){
 
-        List<Strength> wList= new ArrayList<>();
-        wList.addAll(strengthRepo.findAll());
-        return wList;
-    }
-            
-     @GetMapping("/isometric")
-    public List<Isometric> getIsometric(){
 
-        List<Isometric> wList= new ArrayList<>();
-        wList.addAll(isometricRepo.findAll());
-        return wList;
-    }
-            
-      @GetMapping("/cardio")
-    public List<Cardio> getCardio(){
 
-        List<Cardio> wList= new ArrayList<>();
-        wList.addAll(cardioRepo.findAll());
-        return wList;
-    }
             
-            
+//     @GetMapping("/isometric")
+//    public List<Isometric> getIsometric(){
+//
+//        List<Isometric> wList= new ArrayList<>();
+//        wList.addAll(isometricRepo.findAll());
+//        return wList;
+//    }
+//   
+//  @GetMapping("/{userId}/isometric")
+//    public List<Isometric> getUserIsometric(@PathVariable Integer userId){
+//        int limit = 10;
+//        List<Isometric> wList= new ArrayList<>();
+//        wList.addAll(isometricRepo.findAll(userId, limit));
+//        return wList;
+//    }
+//       
+//
+//
+//
+//    @GetMapping("/cardio")
+//    public List<Cardio> getCardio(){
+//
+//        List<Cardio> wList= new ArrayList<>();
+//        wList.addAll(cardioRepo.findAll());
+//        return wList;
+//    }
+//            
+//   @GetMapping("/{userId}/cardio")
+//    public List<Cardio> getUserCardio(@PathVariable Integer userId){
+//        int limit = 10;
+//        List<Cardio> wList= new ArrayList<>();
+//        wList.addAll(cardioRepo.findAll(userId, limit));
+//        return wList;
+//    }
+//            
             
             
 

@@ -53,6 +53,21 @@ public List<Strength> findAll(){
     List<Strength> workoutList = jdbcTemp.query(sql, mapper);
     return workoutList;
     }
+public List<Strength> findAll(int userId, int limit){
+    String sql = """
+        SELECT * 
+        FROM workout as W
+        INNER JOIN template as T
+        ON T.id = W.template_id
+        AND T.workoutType = 'Strength'
+        WHERE W.client_id =
+                """ + userId +" LIMIT " + limit + ";";
+    RowMapper<Strength> mapper = (rs, rowNum) ->
+        new Strength(rs);
+    List<Strength> workoutList = jdbcTemp.query(sql, mapper);
+    return workoutList;
+    }
+
 
 
 

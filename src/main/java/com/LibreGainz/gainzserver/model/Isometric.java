@@ -23,7 +23,7 @@ public class Isometric extends Workout{
     }
 
     public Isometric(){
-        super(0);
+        super();
     }
 
 public Isometric(ResultSet rs) throws SQLException {
