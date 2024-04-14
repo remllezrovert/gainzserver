@@ -22,6 +22,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -75,7 +76,25 @@ public class CardioController {
             e.printStackTrace();
         }
         //System.out.println(entity + "\n" + userId);
+
 }
+
+
+    @PatchMapping("{userId}/cardio")
+    public boolean patchUserCardio(@RequestBody String entity, @PathVariable Integer userId){
+    try {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Cardio> list = objectMapper.readValue(entity, objectMapper.getTypeFactory().constructCollectionType(List.class, Cardio.class));
+        list.forEach((cardio) -> cardioRepo.update(userId, cardio));
+        return true;
+        
+        } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+        }
+    }
+
+
 
 
 

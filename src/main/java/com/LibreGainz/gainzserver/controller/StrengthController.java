@@ -22,6 +22,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -71,9 +72,23 @@ public class StrengthController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    @PatchMapping("{userId}/strength")
+    public boolean patchUserStrength(@RequestBody String entity, @PathVariable Integer userId){
+    try {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Strength> list = objectMapper.readValue(entity, objectMapper.getTypeFactory().constructCollectionType(List.class, Strength.class));
+        list.forEach((strength) -> strengthRepo.update(userId, strength));
+        return true;
+        
+        } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+        }
+
+    }
 }
 
 
 
 
-}

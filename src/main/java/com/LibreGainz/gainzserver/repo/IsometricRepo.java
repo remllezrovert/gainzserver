@@ -45,6 +45,35 @@ public class IsometricRepo{
         );
     }
 
+    public boolean update(Integer userId, Isometric i){
+        String sql = 
+        """
+        UPDATE Workout SET 
+        Client_id = ?,
+        Template_id = ?,
+        workoutDate = ?,
+        weight = ?,
+        unit = ?::Unit,
+        timeArr = ?::time[],
+        tagArr = ?::varchar[]
+        WHERE id = ?
+        AND Client_id = ?;
+        """;
+    return jdbcTemp.update(sql, 
+        i.getUserId(),
+        i.getTemplateId(),
+        i.getDate(),
+        i.getWeight().getWeight(),
+        i.getWeight().getUnit().toString(), 
+        i.getSet().toArray(new Time[i.getSet().size()]),
+        i.getTags().toArray(new String[i.getTags().size()]),
+        i.getId(),
+        userId
+        ) == 1;
+    }
+
+
+
 public List<Isometric> findAll(){
     String sql = """
     SELECT W.id,template_id, workoutDate, weight, unit, timeArr, tagArr

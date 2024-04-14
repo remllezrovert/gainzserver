@@ -22,6 +22,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -74,10 +75,22 @@ public class IsometricController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
         //System.out.println(entity + "\n" + userId);
-}
 
-
+    @PatchMapping("{userId}/isometric")
+    public boolean patchUserIsometric(@RequestBody String entity, @PathVariable Integer userId){
+    try {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Isometric> list = objectMapper.readValue(entity, objectMapper.getTypeFactory().constructCollectionType(List.class, Isometric.class));
+        list.forEach((isometric) -> isometricRepo.update(userId, isometric));
+        return true;
+        
+        } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+        }
+    }
 
 
 

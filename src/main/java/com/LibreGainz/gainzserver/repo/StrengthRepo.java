@@ -69,5 +69,37 @@ public List<Strength> findAll(int userId, int limit){
 
 
 
+ public boolean update(Integer userId, Strength s){
+    String sql = 
+    """
+    UPDATE Workout SET
+    Client_id = ?,
+    Template_id = ?,
+    workoutDate = ?,
+    weight = ?,
+    unit = ?::Unit,
+    repArr = ?::smallint[],
+    tagArr = ?::varchar[]
+    WHERE id = ?
+    AND client_id = ?;
+    """;
+    return jdbcTemp.update(sql, 
+    s.getUserId(),
+    s.getTemplateId(),
+    s.getDate(),
+    s.getWeight().getWeight(),
+    s.getWeight().getUnit().toString(), 
+    s.getSet().toArray(new Short[s.getSet().size()]),
+    s.getTags().toArray(new String[s.getTags().size()]),
+    s.getId(),
+    userId
+    ) == 1;
+}
+
+
+
+
+
+
 
 }

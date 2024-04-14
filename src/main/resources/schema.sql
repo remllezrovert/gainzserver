@@ -75,14 +75,14 @@ ALTER TABLE Template ADD CONSTRAINT Template_Client
 -- Reference: Workout_Template (table: Workout)
 ALTER TABLE Workout ADD CONSTRAINT Workout_Template
     FOREIGN KEY (Template_id)
-    REFERENCES Template (id)  
+    REFERENCES Template (id) ON DELETE CASCADE
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
 ;
 
 ALTER TABLE Workout ADD CONSTRAINT Workout_Client
     FOREIGN KEY (Client_id)
-    REFERENCES Client (id)
+    REFERENCES Client (id) ON DELETE CASCADE
     NOT DEFERRABLE
     INITIALLY IMMEDIATE
 ;

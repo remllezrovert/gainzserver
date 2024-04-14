@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -69,6 +70,32 @@ public class TemplateController {
             e.printStackTrace();
         }
     }
+
+@PatchMapping("/{userId}/template")
+ public boolean patchUserTemplate(@RequestBody String entity, @PathVariable Integer userId){
+    try {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Template> list = objectMapper.readValue(entity, objectMapper.getTypeFactory().constructCollectionType(List.class, Template.class));
+        list.forEach((template) -> templateRepo.update(userId, template));
+        return true;
+        
+        } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+        }
+
+    }
+
+
+ @DeleteMapping("/{userId}/template/{id}")
+    public boolean deleteUserTemplate(@PathVariable Integer userId, @PathVariable Integer id){
+        return templateRepo.delete(userId, id);
+    }
+
+
+
+
+
 
 
 
