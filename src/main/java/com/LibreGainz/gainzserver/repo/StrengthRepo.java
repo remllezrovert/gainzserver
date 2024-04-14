@@ -24,12 +24,11 @@ public class StrengthRepo{
     public void save(Strength s){
         String sql = 
         """
-        INSERT INTO Workout (Client_id, id, Template_id, workoutDate, weight, unit, repArr, tagArr) 
-        VALUES (?,?,?,?,?,?::Unit,?::smallint[],?::varchar[]);
+        INSERT INTO Workout (Client_id, Template_id, workoutDate, weight, unit, repArr, tagArr) 
+        VALUES (?,?,?,?,?::Unit,?::smallint[],?::varchar[]);
         """;
     jdbcTemp.update(sql, 
         s.getUserId(),
-        s.getId(),
         s.getTemplateId(),
         s.getDate(),
         s.getWeight().getWeight(),

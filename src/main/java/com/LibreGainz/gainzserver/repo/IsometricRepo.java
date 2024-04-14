@@ -31,12 +31,11 @@ public class IsometricRepo{
     public void save(Isometric i){
         String sql = 
         """
-        INSERT INTO Workout (Client_id, id, Template_id, workoutDate, weight, unit, timeArr, tagArr) 
-        VALUES (?,?,?,?,?,?::Unit,?::time[],?::varchar[]);
+        INSERT INTO Workout (Client_id, Template_id, workoutDate, weight, unit, timeArr, tagArr) 
+        VALUES (?,?,?,?,?::Unit,?::time[],?::varchar[]);
         """;
     jdbcTemp.update(sql, 
         i.getUserId(),
-        i.getId(),
         i.getTemplateId(),
         i.getDate(),
         i.getWeight().getWeight(),

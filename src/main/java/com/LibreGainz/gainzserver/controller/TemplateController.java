@@ -3,6 +3,7 @@ package com.LibreGainz.gainzserver.controller;
 
 import java.util.*;
 import com.LibreGainz.gainzserver.repo.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.LibreGainz.gainzserver.model.*;
 //import org.apache.catalina.core.ApplicationContext;
 
@@ -58,6 +59,16 @@ public class TemplateController {
         return wList;
     }
 
+ @PostMapping("/{userId}/template")
+    public void postUserTemplate(@RequestBody String entity, @PathVariable Integer userId) {
+         try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<Template> list = objectMapper.readValue(entity, objectMapper.getTypeFactory().constructCollectionType(List.class, Template.class));
+            list.forEach((template) -> templateRepo.save(template));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 
