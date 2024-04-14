@@ -27,8 +27,8 @@ public class UserRepo {
 
     public void save(User user){
         System.out.println("added");
-        String sql = "INSERT INTO Client (id, title) VALUES (?,?);";
-        jdbcTemp.update(sql, user.getId(), user.getName());
+        String sql = "INSERT INTO Client (title) VALUES (?);";
+        jdbcTemp.update(sql, user.getName());
     }
 
     public List<User> findAll(){

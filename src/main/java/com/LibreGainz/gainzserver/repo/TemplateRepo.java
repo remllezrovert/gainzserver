@@ -25,11 +25,10 @@ public class TemplateRepo{
 
     public void save(Template t){
         String sql = """
-        INSERT INTO Template (id, Client_id, title, workoutType,summary) 
-        VALUES (?,?,?,?,?);
+        INSERT INTO Template (Client_id, title, workoutType,summary) 
+        VALUES (?,?,?,?);
         """;
         jdbcTemp.update(sql,
-        t.getId(),
         t.getUserId(),
         t.getName(),
         t.getWorkoutType(),
