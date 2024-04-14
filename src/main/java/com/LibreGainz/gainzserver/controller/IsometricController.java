@@ -1,6 +1,7 @@
 package com.LibreGainz.gainzserver.controller;
 
 import com.LibreGainz.gainzserver.repo.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.LibreGainz.gainzserver.model.*;
 
 import java.util.ArrayList;
@@ -63,6 +64,19 @@ public class IsometricController {
         wList.addAll(isometricRepo.findAll(userId, limit));
         return wList;
     }
+     @PostMapping("{userId}/isometric")
+    public void postUserIsometric(@RequestBody String entity, @PathVariable Integer userId) {
+         try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<Isometric> list = objectMapper.readValue(entity, objectMapper.getTypeFactory().constructCollectionType(List.class, Isometric.class));
+            list.forEach((isometric) -> isometricRepo.save(isometric));
+           
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //System.out.println(entity + "\n" + userId);
+}
+
 
 
 

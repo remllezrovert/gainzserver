@@ -23,7 +23,6 @@ public Cardio(ResultSet rs) throws SQLException {
     setUnit(Unit.valueOf(rs.getString("unit")));
 
     try{
-        System.out.println(Time.valueOf(rs.getString("durration")));
         setTime(Time.valueOf(rs.getString("durration")));
         map.putIfAbsent(workoutId, this);
 
@@ -93,7 +92,7 @@ public Cardio(ResultSet rs) throws SQLException {
   
  
     public void setDistance(double distance1) {
-        this.distance = Math.round(distance1 * 1000.0 / 1000.0); 
+        this.distance = Math.round(distance1 * 1000.0) / 1000.0; 
     }
 
     /**

@@ -14,6 +14,9 @@ public WeightObj(short weight, Unit unit){
     this.unit = unit;
 }
 
+public WeightObj(){
+}
+
 /**
  * Converts pounds to kilograms
  * @param lb

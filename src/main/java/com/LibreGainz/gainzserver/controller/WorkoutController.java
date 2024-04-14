@@ -64,48 +64,13 @@ public class WorkoutController{
         return allWorkouts;
     }
 
-           
+          
  
 
 
 
             
-//     @GetMapping("/isometric")
-//    public List<Isometric> getIsometric(){
-//
-//        List<Isometric> wList= new ArrayList<>();
-//        wList.addAll(isometricRepo.findAll());
-//        return wList;
-//    }
-//   
-//  @GetMapping("/{userId}/isometric")
-//    public List<Isometric> getUserIsometric(@PathVariable Integer userId){
-//        int limit = 10;
-//        List<Isometric> wList= new ArrayList<>();
-//        wList.addAll(isometricRepo.findAll(userId, limit));
-//        return wList;
-//    }
-//       
-//
-//
-//
-//    @GetMapping("/cardio")
-//    public List<Cardio> getCardio(){
-//
-//        List<Cardio> wList= new ArrayList<>();
-//        wList.addAll(cardioRepo.findAll());
-//        return wList;
-//    }
-//            
-//   @GetMapping("/{userId}/cardio")
-//    public List<Cardio> getUserCardio(@PathVariable Integer userId){
-//        int limit = 10;
-//        List<Cardio> wList= new ArrayList<>();
-//        wList.addAll(cardioRepo.findAll(userId, limit));
-//        return wList;
-//    }
-//            
-            
+           
             
 
 @RequestMapping(value = "/helloworld", method=RequestMethod.GET)
@@ -118,10 +83,6 @@ public String helloWorld() {
 
 
 
-@PostMapping()
-public String postMethodName(@RequestBody String entity) {
-    return entity;
-}
 
 @DeleteMapping
 public String deleteMethodName(@RequestBody String entity) {

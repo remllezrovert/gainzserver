@@ -2,6 +2,7 @@ package com.LibreGainz.gainzserver.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.LibreGainz.gainzserver.repo.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.LibreGainz.gainzserver.model.*;
 
 import java.util.ArrayList;
@@ -59,6 +60,19 @@ public class StrengthController {
         wList.addAll(strengthRepo.findAll(userId, limit));
         return wList;
     }
+
+    @PostMapping("{userId}/strength")
+    public void postUserStrength(@RequestBody String entity, @PathVariable Integer userId) {
+         try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<Strength> list = objectMapper.readValue(entity, objectMapper.getTypeFactory().constructCollectionType(List.class, Strength.class));
+            list.forEach((strength) -> strengthRepo.save(strength));
+           
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+}
+
 
 
 

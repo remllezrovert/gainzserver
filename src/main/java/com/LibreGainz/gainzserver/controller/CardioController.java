@@ -1,6 +1,7 @@
 package com.LibreGainz.gainzserver.controller;
 
 import com.LibreGainz.gainzserver.repo.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.LibreGainz.gainzserver.model.*;
 
 import java.util.ArrayList;
@@ -63,6 +64,19 @@ public class CardioController {
         wList.addAll(cardioRepo.findAll(userId, limit));
         return wList;
     }
+     @PostMapping("{userId}/cardio")
+    public void postUserCardio(@RequestBody String entity, @PathVariable Integer userId) {
+         try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<Cardio> list = objectMapper.readValue(entity, objectMapper.getTypeFactory().constructCollectionType(List.class, Cardio.class));
+            list.forEach((cardio) -> cardioRepo.save(cardio));
+           
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //System.out.println(entity + "\n" + userId);
+}
+
 
 
 
