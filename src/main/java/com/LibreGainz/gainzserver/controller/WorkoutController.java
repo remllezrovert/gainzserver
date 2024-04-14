@@ -66,8 +66,10 @@ public class WorkoutController{
 
           
  
-
-
+    @DeleteMapping("/{userId}/workout/{id}")
+    public boolean deleteUserWorkout(@PathVariable Integer userId, @PathVariable Integer id){
+        return workoutRepo.delete(userId, id);
+    }
 
             
            

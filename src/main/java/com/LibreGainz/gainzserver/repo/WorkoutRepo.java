@@ -1,23 +1,13 @@
 package com.LibreGainz.gainzserver.repo;
-import org.springframework.stereotype.Repository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import com.LibreGainz.gainzserver.model.Workout;
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.boot.*;
-import org.springframework.boot.json.*;
-import java.sql.ResultSet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import java.sql.SQLException;
-import org.json.*;
-import org.postgresql.util.PGobject;
+import org.springframework.stereotype.Repository;
 
-
+import com.LibreGainz.gainzserver.model.Workout;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 //import org.postgresql.util.PGobject;
@@ -89,6 +79,26 @@ public class WorkoutRepo{
     return workoutList;
 
     }
+
+        public boolean delete(Integer id){
+        Object[] args = new Object[]{id};
+        String sql = """
+            DELETE FROM workout
+            where id = ?;
+                """;
+            return jdbcTemp.update(sql,args) == 1;
+    }
+        public boolean delete(Integer userId, Integer id){
+        Object[] args = new Object[]{id, userId};
+        String sql = """
+            DELETE FROM workout
+            WHERE id = ?
+            AND Client_id = ?;
+                """;
+            return jdbcTemp.update(sql,args) == 1;
+    }
+
+
 
     public List<Workout> getByTag(String tag){
     String sql = "SELECT * FROM Workout WHERE " +"'" + tag + "'" + "=ANY(tagArr);";

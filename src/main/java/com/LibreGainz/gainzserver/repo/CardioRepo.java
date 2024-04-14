@@ -39,6 +39,41 @@ public class CardioRepo{
         );
     }
 
+
+
+public boolean update(Integer userId, Cardio c){
+    String sql = 
+        """
+        UPDATE Workout SET
+        Client_id = ?,
+        Template_id = ?,
+        workoutDate = ?,
+        distance = ?,
+        durration = ?,
+        unit = ?::Unit,
+        tagArr = ? ::varchar[]
+        WHERE id = ?
+        AND client_id = ?;
+        """;
+    return jdbcTemp.update(sql, 
+        c.getUserId(),
+        c.getTemplateId(),
+        c.getDate(),
+        c.getDistance(),
+        c.getTime(), 
+        c.getUnit().toString(), 
+        c.getTags().toArray(new String[c.getTags().size()]),
+        c.getId(),
+        userId
+        ) == 1;
+    }
+
+
+
+
+
+
+
     public List<Cardio> findAll(){
     String sql = """
     SELECT W.id,template_id, workoutDate, distance, unit, durration, tagArr

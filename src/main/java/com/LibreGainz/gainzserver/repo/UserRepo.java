@@ -44,5 +44,17 @@ public class UserRepo {
         return userList;
     }
 
+
+    public boolean delete(Integer userId){
+        Object[] args = new Object[]{userId};
+        String sql = """
+            DELETE FROM client 
+            where id = ?;
+                """;
+            return jdbcTemp.update(sql,args) == 1;
+    }
+ 
+
+
 }
 

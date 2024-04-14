@@ -36,6 +36,29 @@ public class TemplateRepo{
         );
     }
 
+public boolean update(Integer userId, Template t){
+        String sql = """
+        UPDATE Template SET 
+        Client_id = ?,
+        title = ?,
+        workoutType = ?, 
+        summary = ?
+        WHERE id = ?
+        AND client_id = ?;
+        """;
+        return jdbcTemp.update(sql,
+        t.getUserId(),
+        t.getName(),
+        t.getWorkoutType(),
+        t.getDesc(),
+        t.getId(),
+        userId
+        ) == 1;
+    }
+
+
+
+
     public Template Extract(ResultSet rs){
         Template t = new Template();
         try {
@@ -70,6 +93,24 @@ public List<Template> findAll(int userId, int limit){
     return workoutList;
     }
 
+
+ public boolean delete(Integer id){
+        Object[] args = new Object[]{id};
+        String sql = """
+            DELETE FROM template 
+            where id = ?;
+                """;
+            return jdbcTemp.update(sql,args) == 1;
+    }
+        public boolean delete(Integer userId, Integer id){
+        Object[] args = new Object[]{id, userId};
+        String sql = """
+            DELETE FROM template 
+            WHERE id = ?
+            AND Client_id = ?;
+                """;
+            return jdbcTemp.update(sql,args) == 1;
+    }
 
 
 
