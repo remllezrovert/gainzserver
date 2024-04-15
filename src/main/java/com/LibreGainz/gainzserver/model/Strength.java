@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.HashMap;
 import java.io.*;
+import java.sql.*;
 
 import org.springframework.stereotype.Component;
 /**
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class Strength extends Workout{
+public class Strength extends Workout {
     private static String csvPath = "data//Strength.csv";
     public static HashMap<Long, Strength> map = new HashMap<Long, Strength>();
     private ArrayList<Short> set = new ArrayList<Short>();
@@ -30,9 +31,27 @@ public class Strength extends Workout{
     }
 
     Strength(){
-        super(0);
+        super();
         map.putIfAbsent(workoutId, this);
     }
+
+
+public Strength(ResultSet rs) throws SQLException {
+    super(rs.getInt("Template_id"),rs.getLong("id"));
+    setDate(rs.getDate("workoutDate"));
+
+    String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
+    setTags(Workout.strToTags(str.substring(1,str.length() -1)));
+
+    String repStr = rs.getString("repArr").trim();
+    setSet(strToSet(repStr.substring(1,repStr.length() -1)));
+    setWeight(WeightObj.strToWeight(rs.getString("weight") + rs.getString("unit")));
+
+    map.putIfAbsent(workoutId, this);
+    }
+
+
+
     /**
      * Get the path where the csv file for the object is saved
      * @return

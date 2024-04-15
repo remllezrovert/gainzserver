@@ -6,6 +6,7 @@ import com.LibreGainz.gainzserver.model.Template;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.io.*;
 import java.sql.ResultSet;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.SQLException;
@@ -24,17 +25,39 @@ public class TemplateRepo{
 
     public void save(Template t){
         String sql = """
-        INSERT INTO Template (id, Client_id, title, workoutType,summary) 
-        VALUES (?,?,?,?,?);
+        INSERT INTO Template (Client_id, title, workoutType,summary) 
+        VALUES (?,?,?,?);
         """;
         jdbcTemp.update(sql,
-        t.getId(),
         t.getUserId(),
         t.getName(),
         t.getWorkoutType(),
         t.getDesc()
         );
     }
+
+public boolean update(Integer userId, Template t){
+        String sql = """
+        UPDATE Template SET 
+        Client_id = ?,
+        title = ?,
+        workoutType = ?, 
+        summary = ?
+        WHERE id = ?
+        AND client_id = ?;
+        """;
+        return jdbcTemp.update(sql,
+        t.getUserId(),
+        t.getName(),
+        t.getWorkoutType(),
+        t.getDesc(),
+        t.getId(),
+        userId
+        ) == 1;
+    }
+
+
+
 
     public Template Extract(ResultSet rs){
         Template t = new Template();
@@ -57,6 +80,38 @@ public class TemplateRepo{
         List<Template> templateList= jdbcTemp.query(sql, mapper);
         return templateList;
     }
+
+public List<Template> findAll(int userId, int limit){
+    String sql = """
+        SELECT * 
+        FROM Template
+        WHERE client_id =
+                """ + userId +" LIMIT " + limit + ";";
+    RowMapper<Template> mapper = (rs, rowNum) ->
+        new Template(rs);
+    List<Template> workoutList = jdbcTemp.query(sql, mapper);
+    return workoutList;
+    }
+
+
+ public boolean delete(Integer id){
+        Object[] args = new Object[]{id};
+        String sql = """
+            DELETE FROM template 
+            where id = ?;
+                """;
+            return jdbcTemp.update(sql,args) == 1;
+    }
+        public boolean delete(Integer userId, Integer id){
+        Object[] args = new Object[]{id, userId};
+        String sql = """
+            DELETE FROM template 
+            WHERE id = ?
+            AND Client_id = ?;
+                """;
+            return jdbcTemp.update(sql,args) == 1;
+    }
+
 
 
 

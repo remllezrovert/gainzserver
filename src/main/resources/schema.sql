@@ -1,9 +1,8 @@
--- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2024-03-17 03:24:41.32
 
--- tables
--- Table: Cardio
 CREATE TYPE Unit AS ENUM ('LB','KG','MI','KM');
+CREATE SEQUENCE workoutId START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE clientId START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE templateId START WITH 1 INCREMENT BY 1;
 
 -- Table: Client
 CREATE TABLE IF NOT EXISTS Client (
@@ -39,7 +38,7 @@ CREATE INDEX IF NOT EXISTS TemplateTypeIndex on Template (workoutType ASC);
 -- Table: Workout
 CREATE TABLE IF NOT EXISTS Workout (
     Client_id int NOT NULL,
-    id bigserial  NOT NULL,
+    id bigserial NOT NULL,
     Template_id int  NOT NULL,
     workoutDate date  NULL,
     unit Unit NULL,
@@ -53,10 +52,11 @@ CREATE TABLE IF NOT EXISTS Workout (
 );
 
 CREATE INDEX IF NOT EXISTS WorkoutTemplateIndex on Workout (Template_id ASC);
-
 CREATE INDEX IF NOT EXISTS WorkoutClientIndex ON Workout (Client_id ASC);
+ALTER TABLE workout ALTER COLUMN id SET DEFAULT nextval('workoutId');
+ALTER TABLE client ALTER COLUMN id SET DEFAULT nextval('clientId');
+ALTER TABLE template ALTER COLUMN id SET DEFAULT nextval('templateId');
 
--- Reference: Device_Client (table: Device)
 ALTER TABLE Device ADD CONSTRAINT Device_Client
     FOREIGN KEY (Client_id)
     REFERENCES Client (id)  
@@ -75,14 +75,14 @@ ALTER TABLE Template ADD CONSTRAINT Template_Client
 -- Reference: Workout_Template (table: Workout)
 ALTER TABLE Workout ADD CONSTRAINT Workout_Template
     FOREIGN KEY (Template_id)
-    REFERENCES Template (id)  
+    REFERENCES Template (id) ON DELETE CASCADE
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
 ;
 
 ALTER TABLE Workout ADD CONSTRAINT Workout_Client
     FOREIGN KEY (Client_id)
-    REFERENCES Client (id)
+    REFERENCES Client (id) ON DELETE CASCADE
     NOT DEFERRABLE
     INITIALLY IMMEDIATE
 ;

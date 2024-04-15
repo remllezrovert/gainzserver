@@ -31,12 +31,11 @@ public class IsometricRepo{
     public void save(Isometric i){
         String sql = 
         """
-        INSERT INTO Workout (Client_id, id, Template_id, workoutDate, weight, unit, timeArr, tagArr) 
-        VALUES (?,?,?,?,?,?::Unit,?::time[],?::varchar[]);
+        INSERT INTO Workout (Client_id, Template_id, workoutDate, weight, unit, timeArr, tagArr) 
+        VALUES (?,?,?,?,?::Unit,?::time[],?::varchar[]);
         """;
     jdbcTemp.update(sql, 
         i.getUserId(),
-        i.getId(),
         i.getTemplateId(),
         i.getDate(),
         i.getWeight().getWeight(),
@@ -46,6 +45,35 @@ public class IsometricRepo{
         );
     }
 
+    public boolean update(Integer userId, Isometric i){
+        String sql = 
+        """
+        UPDATE Workout SET 
+        Client_id = ?,
+        Template_id = ?,
+        workoutDate = ?,
+        weight = ?,
+        unit = ?::Unit,
+        timeArr = ?::time[],
+        tagArr = ?::varchar[]
+        WHERE id = ?
+        AND Client_id = ?;
+        """;
+    return jdbcTemp.update(sql, 
+        i.getUserId(),
+        i.getTemplateId(),
+        i.getDate(),
+        i.getWeight().getWeight(),
+        i.getWeight().getUnit().toString(), 
+        i.getSet().toArray(new Time[i.getSet().size()]),
+        i.getTags().toArray(new String[i.getTags().size()]),
+        i.getId(),
+        userId
+        ) == 1;
+    }
+
+
+
 public List<Isometric> findAll(){
     String sql = """
     SELECT W.id,template_id, workoutDate, weight, unit, timeArr, tagArr
@@ -54,40 +82,35 @@ public List<Isometric> findAll(){
     ON T.id = W.template_id
     AND T.workoutType = 'Isometric';
     """;
-
     RowMapper<Isometric> mapper = (rs, rowNum) ->
-        Extract(rs);
+        new Isometric(rs);
     List<Isometric> workoutList = jdbcTemp.query(sql, mapper);
     return workoutList;
-    }
 
+}
 
-
-
-/**
- * /Convert a single database row into an object
- * @param rs
- * @return Isometric
- * @throws SQLException
- */
-private Isometric Extract(ResultSet rs) throws SQLException {
-    Isometric s = new Isometric(rs.getInt("Template_id"),rs.getLong("id"));
-    s.setDate(rs.getDate("workoutDate"));
-
-    String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
-    s.setTags(Workout.strToTags(str.substring(1,str.length() -1)));
-
-    String repStr = rs.getString("timeArr");
-
-    //System.out.println(repStr);
-    s.setSet(Isometric.strToSet(repStr.substring(1,repStr.length() -1)));
-    s.setWeight(WeightObj.strToWeight(rs.getString("weight") + rs.getString("unit")));
-
-    return s;
-    }
-
+public List<Isometric> findAll(int userId, int limit){
+    String sql = """
+        SELECT * 
+        FROM workout as W
+        INNER JOIN template as T
+        ON T.id = W.template_id
+        AND T.workoutType = 'Isometric'
+        WHERE W.client_id =
+                """ + userId +" LIMIT " + limit + ";";
+    RowMapper<Isometric> mapper = (rs, rowNum) ->
+        new Isometric(rs);
+    List<Isometric> workoutList = jdbcTemp.query(sql, mapper);
+    return workoutList;
+}
 
 
 
 
 }
+
+
+
+
+
+

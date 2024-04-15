@@ -27,8 +27,8 @@ public class UserRepo {
 
     public void save(User user){
         System.out.println("added");
-        String sql = "INSERT INTO Client (id, title) VALUES (?,?);";
-        jdbcTemp.update(sql, user.getId(), user.getName());
+        String sql = "INSERT INTO Client (title) VALUES (?);";
+        jdbcTemp.update(sql, user.getName());
     }
 
     public List<User> findAll(){
@@ -43,6 +43,18 @@ public class UserRepo {
         List<User> userList = jdbcTemp.query(sql, mapper);
         return userList;
     }
+
+
+    public boolean delete(Integer userId){
+        Object[] args = new Object[]{userId};
+        String sql = """
+            DELETE FROM client 
+            where id = ?;
+                """;
+            return jdbcTemp.update(sql,args) == 1;
+    }
+ 
+
 
 }
 

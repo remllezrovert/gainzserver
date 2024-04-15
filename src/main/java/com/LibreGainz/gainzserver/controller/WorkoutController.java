@@ -32,31 +32,48 @@ import org.springframework.http.*;
 
 
 
-
 @RestController  
 public class WorkoutController{
 
 @Autowired
+    private final WorkoutRepo workoutRepo;
     private final StrengthRepo strengthRepo;
     private final IsometricRepo isometricRepo;
     private final CardioRepo cardioRepo;
-    public WorkoutController(StrengthRepo strengthRepo, IsometricRepo isometricRepo, CardioRepo cardioRepo) {
+     
+    private final ApplicationContext applicatonContext;
+
+    public WorkoutController(
+        WorkoutRepo workoutRepo,
+        StrengthRepo strengthRepo,
+        IsometricRepo isometricRepo,
+        CardioRepo cardioRepo,
+        ApplicationContext applicationContext) {
+        this.workoutRepo = workoutRepo;
         this.strengthRepo = strengthRepo;
-        this.isometricRepo = isometricRepo;
+        this.isometricRepo= isometricRepo;
         this.cardioRepo = cardioRepo;
+        this.applicatonContext = applicationContext;
     }
 
-    @GetMapping("/allWorkouts")
+   
+    @GetMapping("/workout")
     public List<Object> getAllWorkouts() {
         List<Object> allWorkouts = new ArrayList<>();
-        
-        allWorkouts.addAll(strengthRepo.findAll());
-        allWorkouts.addAll(isometricRepo.findAll());
-        allWorkouts.addAll(cardioRepo.findAll());
-
+        allWorkouts.addAll(workoutRepo.findAll());
         return allWorkouts;
     }
 
+          
+ 
+    @DeleteMapping("/{userId}/workout/{id}")
+    public boolean deleteUserWorkout(@PathVariable Integer userId, @PathVariable Integer id){
+        return workoutRepo.delete(userId, id);
+    }
+
+            
+           
+            
 
 @RequestMapping(value = "/helloworld", method=RequestMethod.GET)
 public String helloWorld() {
@@ -68,10 +85,6 @@ public String helloWorld() {
 
 
 
-@PostMapping()
-public String postMethodName(@RequestBody String entity) {
-    return entity;
-}
 
 @DeleteMapping
 public String deleteMethodName(@RequestBody String entity) {

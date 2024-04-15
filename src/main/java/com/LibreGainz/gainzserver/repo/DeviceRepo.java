@@ -8,6 +8,7 @@ import java.util.List;
 import java.sql.ResultSet;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.SQLException;
+//TODO: Finish writing the sync post method
 
 
 @Repository
@@ -27,6 +28,11 @@ public class DeviceRepo {
         String sql = "INSERT INTO Device (id, User_id, sync) VALUES (?,?,?);";
         jdbcTemp.update(sql,d.getId(), d.getUserId(), d.getSync());
     }
+
+    public void sync(){
+        String sql = "UPDATE Device SET sync";
+    }
+
 public List<Device> findAll(){
         String sql = "SELECT * FROM Device;";
         RowMapper<Device> mapper = (rs, rowNum) ->

@@ -24,12 +24,11 @@ public class StrengthRepo{
     public void save(Strength s){
         String sql = 
         """
-        INSERT INTO Workout (Client_id, id, Template_id, workoutDate, weight, unit, repArr, tagArr) 
-        VALUES (?,?,?,?,?,?::Unit,?::smallint[],?::varchar[]);
+        INSERT INTO Workout (Client_id, Template_id, workoutDate, weight, unit, repArr, tagArr) 
+        VALUES (?,?,?,?,?::Unit,?::smallint[],?::varchar[]);
         """;
     jdbcTemp.update(sql, 
         s.getUserId(),
-        s.getId(),
         s.getTemplateId(),
         s.getDate(),
         s.getWeight().getWeight(),
@@ -49,31 +48,55 @@ public List<Strength> findAll(){
                 """;
 
     RowMapper<Strength> mapper = (rs, rowNum) ->
-        Extract(rs);
-    //String myTag = jdbcTemp.query(sql2);
+        new Strength(rs);
+    List<Strength> workoutList = jdbcTemp.query(sql, mapper);
+    return workoutList;
+    }
+public List<Strength> findAll(int userId, int limit){
+    String sql = """
+        SELECT * 
+        FROM workout as W
+        INNER JOIN template as T
+        ON T.id = W.template_id
+        AND T.workoutType = 'Strength'
+        WHERE W.client_id =
+                """ + userId +" LIMIT " + limit + ";";
+    RowMapper<Strength> mapper = (rs, rowNum) ->
+        new Strength(rs);
     List<Strength> workoutList = jdbcTemp.query(sql, mapper);
     return workoutList;
     }
 
-/**
- * Convert a single database row into an object
- * @param rs
- * @return Strength
- * @throws SQLException
- */
-private Strength Extract(ResultSet rs) throws SQLException {
-    Strength s = new Strength(rs.getInt("Template_id"),rs.getLong("id"));
-    s.setDate(rs.getDate("workoutDate"));
 
-    String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
-    s.setTags(Workout.strToTags(str.substring(1,str.length() -1)));
 
-    String repStr = rs.getString("repArr").trim();
-    s.setSet(Strength.strToSet(repStr.substring(1,repStr.length() -1)));
-    s.setWeight(WeightObj.strToWeight(rs.getString("weight") + rs.getString("unit")));
+ public boolean update(Integer userId, Strength s){
+    String sql = 
+    """
+    UPDATE Workout SET
+    Client_id = ?,
+    Template_id = ?,
+    workoutDate = ?,
+    weight = ?,
+    unit = ?::Unit,
+    repArr = ?::smallint[],
+    tagArr = ?::varchar[]
+    WHERE id = ?
+    AND client_id = ?;
+    """;
+    return jdbcTemp.update(sql, 
+    s.getUserId(),
+    s.getTemplateId(),
+    s.getDate(),
+    s.getWeight().getWeight(),
+    s.getWeight().getUnit().toString(), 
+    s.getSet().toArray(new Short[s.getSet().size()]),
+    s.getTags().toArray(new String[s.getTags().size()]),
+    s.getId(),
+    userId
+    ) == 1;
+}
 
-    return s;
-    }
+
 
 
 

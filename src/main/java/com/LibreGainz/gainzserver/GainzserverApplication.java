@@ -52,21 +52,21 @@ public class GainzserverApplication {
 	StrengthRepo sr = context.getBean(StrengthRepo.class);
 	//Strength stren = (Strength)ConfigurableApplicationContext.getBean("stren",0,1);
 
-	s.setUserId(0);
-	s.setId(1);
-	s.setTemplateId(0);
-	s.setWeight(new WeightObj(s1,Unit.KG));
-	ArrayList<String> tags = new ArrayList<String>();
-	tags.add("helo");
-	tags.add("hi");
-	tags.add("bye");
-	s.setTags(tags);
-	ArrayList<Short> repsArr = new ArrayList<Short>();
-	repsArr.add((short)2);
-	repsArr.add((short)9);
-	repsArr.add((short)2);
-	repsArr.add((short)7);
-	s.setSet(repsArr);
+	//s.setUserId(0);
+	//s.setId(1);
+	//s.setTemplateId(0);
+	//s.setWeight(new WeightObj(s1,Unit.KG));
+	//ArrayList<String> tags = new ArrayList<String>();
+	//tags.add("helo");
+	//tags.add("hi");
+	//tags.add("bye");
+	//s.setTags(tags);
+	//ArrayList<Short> repsArr = new ArrayList<Short>();
+	//repsArr.add((short)2);
+	//repsArr.add((short)9);
+	//repsArr.add((short)2);
+	//repsArr.add((short)7);
+	//s.setSet(repsArr);
 	//sr.save(s);
 
 
@@ -80,14 +80,14 @@ Isometric i = context.getBean(Isometric.class);
 	//ir.save(i);
 
 
-Cardio c = context.getBean(Cardio.class);
+//Cardio c = context.getBean(Cardio.class);
 		CardioRepo cr = context.getBean(CardioRepo.class);
-		c.setUserId(0);
-		c.setId(3);
-		c.setTemplateId(2);
-		c.setDistance((float)2.1);
-		c.setUnit(Unit.MI);
-		c.setTags(Workout.strToTags("running, fugly, kankles, scuba"));
+		//c.setUserId(0);
+		//c.setId(3);
+		//c.setTemplateId(2);
+		//c.setDistance((float)2.1);
+		//c.setUnit(Unit.MI);
+		//c.setTags(Workout.strToTags("running, fugly, kankles, scuba"));
 		//cr.save(c);
 
 
@@ -117,16 +117,16 @@ Cardio c = context.getBean(Cardio.class);
 	
 
 
-		//tr.findAll().forEach((tem)-> System.out.println(tem.toString()));
 		//ur.findAll().forEach((u) -> System.out.print(u.getName() + ", "));
 
 		//wr.getByTag("bye").forEach((thing) -> System.out.println(thing.getTags()));
 
-		//wr.findAll().forEach((workout) -> System.out.println(workout.toString()));
+		tr.findAll().forEach((tem)-> System.out.println(tem.toString()));
+		wr.findAll().forEach((workout) -> System.out.println(workout.toString()));
 		System.out.println("");
-		//sr.findAll().forEach((stn) -> System.out.println(stn.toString()));
-		//ir.findAll().forEach((iso) -> System.out.println(iso.toString()));
-		//cr.findAll().forEach((crd) -> System.out.println(crd.toString()));
+		ir.findAll().forEach((iso) -> System.out.println(iso.toString()));
+		sr.findAll().forEach((stn) -> System.out.println(stn.toString()));
+		cr.findAll().forEach((crd) -> System.out.println(crd.toString()));
 
 
 
