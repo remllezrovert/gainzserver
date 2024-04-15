@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.*;
 import java.io.*;
+import java.sql.*;
 
 /** This class has general workout information 
  * It's attributes are used to describe and search for workouts
@@ -50,8 +51,22 @@ Workout(int templateId)
     map.putIfAbsent(workoutId, this);
 }
 Workout(){
-
 }
+
+public Workout(ResultSet rs) throws SQLException {
+        this.templateId = rs.getInt("Template_id");
+        this.workoutId = rs.getLong("id");
+        this.setDate(rs.getDate("workoutDate"));
+        String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
+        for (String tag :str.substring(1,str.length() -1).split(","))
+            addTag(tag);
+    }
+
+
+    public static HashMap<Long,Workout> getMap(){
+        return map;
+    }
+
     /**
      * Get the path where the csv file for the object is saved
      * @return
@@ -226,6 +241,8 @@ public static void csvLoad(String path)
 
     }
 }
+
+
 
 
 /**

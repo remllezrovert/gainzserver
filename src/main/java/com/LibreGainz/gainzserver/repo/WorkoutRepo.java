@@ -1,23 +1,13 @@
 package com.LibreGainz.gainzserver.repo;
-import org.springframework.stereotype.Repository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import com.LibreGainz.gainzserver.model.Workout;
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.boot.*;
-import org.springframework.boot.json.*;
-import java.sql.ResultSet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import java.sql.SQLException;
-import org.json.*;
-import org.postgresql.util.PGobject;
+import org.springframework.stereotype.Repository;
 
-
+import com.LibreGainz.gainzserver.model.Workout;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 //import org.postgresql.util.PGobject;
@@ -61,22 +51,53 @@ public class WorkoutRepo{
     }
 
     RowMapper<Workout> mapper = (rs, rowNum) ->
-        Extract(rs);
+        new Workout(rs);
 
+    
     public List<Workout> findAll(){
-    String sql = "SELECT * FROM Workout;";
+    String sql = """
+        SELECT * FROM Workout AS W;
+                """;
     List<Workout> workoutList = jdbcTemp.query(sql, mapper);
     return workoutList;
     }
 
-    private Workout Extract(ResultSet rs) throws SQLException {
-        Workout w = new Workout(rs.getInt("Template_id"),rs.getLong("id"));
-        w.setDate(rs.getDate("workoutDate"));
-        String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
-        for (String tag :str.substring(1,str.length() -1).split(","))
-            w.addTag(tag);
-        return w;
+
+
+    public List<Object> findDownCast (String workoutType){
+
+    String sql = """
+        SELECT * FROM Workout AS W
+        INNER JOIN Template AS T
+        ON T.id = W.Template_id
+        AND T.workoutType = '
+                """ + workoutType + "';";
+
+    RowMapper<Object> downer = (rs, rowNum) ->
+        new Workout(rs);
+    List<Object> workoutList = jdbcTemp.query(sql, downer);
+    return workoutList;
+
     }
+
+        public boolean delete(Integer id){
+        Object[] args = new Object[]{id};
+        String sql = """
+            DELETE FROM workout
+            where id = ?;
+                """;
+            return jdbcTemp.update(sql,args) == 1;
+    }
+        public boolean delete(Integer userId, Integer id){
+        Object[] args = new Object[]{id, userId};
+        String sql = """
+            DELETE FROM workout
+            WHERE id = ?
+            AND Client_id = ?;
+                """;
+            return jdbcTemp.update(sql,args) == 1;
+    }
+
 
 
     public List<Workout> getByTag(String tag){
@@ -121,6 +142,9 @@ public class WorkoutRepo{
     List<Workout> myList= jdbcTemp.query(sql, mapper);
     return myList;
     } 
+
+
+    
 
 
 

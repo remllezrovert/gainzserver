@@ -3,6 +3,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Component;
 import java.util.*;
 import java.io.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 
@@ -33,6 +35,22 @@ public Template(int templateId){
     this.templateId = templateId;
     map.putIfAbsent(templateId, this);
 }
+
+public Template(ResultSet rs){
+    try {
+    this.templateId = rs.getInt("id");
+    this.userId= rs.getInt("Client_id");
+    this.workoutType = rs.getString("workoutType");
+    this.name = rs.getString("title");
+    this.desc = rs.getString("summary");
+    map.putIfAbsent(templateId, this);
+    }catch(SQLException s){
+    s.printStackTrace();
+    };
+}
+
+
+
     /**
      * Get the path where the csv file for the object is saved
      * @return

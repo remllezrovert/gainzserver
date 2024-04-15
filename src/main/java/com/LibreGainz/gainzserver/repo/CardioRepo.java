@@ -25,12 +25,11 @@ public class CardioRepo{
     public void save(Cardio c){
     String sql = 
         """
-        INSERT INTO Workout (Client_id, id, Template_id, workoutDate, distance, durration, unit, tagArr) 
-        VALUES (?,?,?,?,?,?,?::Unit,?::varchar[]);
+        INSERT INTO Workout (Client_id, Template_id, workoutDate, distance, durration, unit, tagArr) 
+        VALUES (?,?,?,?,?,?::Unit,?::varchar[]);
         """;
     jdbcTemp.update(sql, 
         c.getUserId(),
-        c.getId(),
         c.getTemplateId(),
         c.getDate(),
         c.getDistance(),
@@ -39,6 +38,41 @@ public class CardioRepo{
         c.getTags().toArray(new String[c.getTags().size()])
         );
     }
+
+
+
+public boolean update(Integer userId, Cardio c){
+    String sql = 
+        """
+        UPDATE Workout SET
+        Client_id = ?,
+        Template_id = ?,
+        workoutDate = ?,
+        distance = ?,
+        durration = ?,
+        unit = ?::Unit,
+        tagArr = ? ::varchar[]
+        WHERE id = ?
+        AND client_id = ?;
+        """;
+    return jdbcTemp.update(sql, 
+        c.getUserId(),
+        c.getTemplateId(),
+        c.getDate(),
+        c.getDistance(),
+        c.getTime(), 
+        c.getUnit().toString(), 
+        c.getTags().toArray(new String[c.getTags().size()]),
+        c.getId(),
+        userId
+        ) == 1;
+    }
+
+
+
+
+
+
 
     public List<Cardio> findAll(){
     String sql = """
@@ -49,42 +83,27 @@ public class CardioRepo{
     AND T.workoutType = 'Cardio';
     """;
     RowMapper<Cardio> mapper = (rs, rowNum) ->
-        Extract(rs);
+        new Cardio(rs);
     //String myTag = jdbcTemp.query(sql2);
     List<Cardio> workoutList = jdbcTemp.query(sql, mapper);
     return workoutList;
     }
+    public List<Cardio> findAll(int userId, int limit){
+        String sql = """
+            SELECT * 
+            FROM workout as W
+            INNER JOIN template as T
+            ON T.id = W.template_id
+            AND T.workoutType = 'Cardio'
+            WHERE W.client_id =
+                    """ + userId +" LIMIT " + limit + ";";
+        RowMapper<Cardio> mapper = (rs, rowNum) ->
+            new Cardio(rs);
+        List<Cardio> workoutList = jdbcTemp.query(sql, mapper);
+        return workoutList;
+        }
 
 
-/**
- * Convert a single database row into an object
- * @param rs
- * @return Cardio
- * @throws SQLException
- */
-private Cardio Extract(ResultSet rs) throws SQLException {
-    Cardio c = new Cardio(rs.getInt("Template_id"),rs.getLong("id"));
-    c.setDate(rs.getDate("workoutDate"));
-
-    String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
-    c.setTags(Workout.strToTags(str.substring(1,str.length() -1)));
-
-    c.setDistance(Math.round(rs.getFloat("distance") * 1000.0) / 1000.0); 
-    //c.setDistance(rs.getFloat("distance"));
-    c.setUnit(Unit.valueOf(rs.getString("unit")));
-    try{
-        System.out.println(Time.valueOf(rs.getString("durration")));
-    c.setTime(Time.valueOf(rs.getString("durration")));
-
-    } catch(NullPointerException npe) {
-
-    }
-    catch(IllegalArgumentException iae){
-
-    }
-
-    return c;
-    }
 
 
 
