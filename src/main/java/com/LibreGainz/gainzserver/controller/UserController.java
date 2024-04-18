@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RestController
 
 @RequestMapping()
-
+//TODO: Add patch request to modify user
 public class UserController {
     private UserRepo userRepo;
     public UserController(UserRepo userRepo){
@@ -40,9 +40,12 @@ public int postNew(@RequestBody String entity){
     try {
     User user = new ObjectMapper().readValue(entity, User.class);
     userRepo.save(user);
+    user = userRepo.findName(user).get(0);
     return user.getId();
+    
     }catch(JsonProcessingException jpe){
         System.out.println("Json Parse Exception in UserController");
+        jpe.printStackTrace();
         return -1;
     }
 

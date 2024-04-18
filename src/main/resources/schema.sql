@@ -8,6 +8,9 @@ CREATE SEQUENCE templateId START WITH 1 INCREMENT BY 1;
 CREATE TABLE IF NOT EXISTS Client (
     id serial  NOT NULL,
     title varchar(30)  NOT NULL,
+    dateFormatStr VARCHAR(10) DEFAULT 'MM/dd/yyyy',
+    longDistanceUnit Unit DEFAULT 'MI',
+    weightUnit Unit DEFAULT 'LB',
     CONSTRAINT Client_pk PRIMARY KEY (id)
 );
 

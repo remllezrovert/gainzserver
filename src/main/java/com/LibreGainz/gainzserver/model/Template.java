@@ -172,13 +172,12 @@ public static Template csvParse(String csvStr) throws Exception
 }
 
 
-public static void csvLoad(String path)
+public static void csvLoad()
 {
-    String file = path;
     BufferedReader reader = null;
     String line = "";
     try{
-        reader = new BufferedReader(new FileReader(file));
+        reader = new BufferedReader(new FileReader(csvPath));
         while((line = reader.readLine())!= null){
             csvParse(line);
         }
@@ -213,5 +212,11 @@ public void csvAppend(){
 
     }
 }
+
+
+public static void csvOverwrite(){
+    CsvHandler.csvWipe(csvPath);
+    map.forEach((k,v) -> v.csvAppend());
+    }
 
 }

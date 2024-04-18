@@ -1,6 +1,13 @@
 
 package com.LibreGainz.gainzserver.model;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 /**
  * @author Remllez
@@ -10,14 +17,13 @@ import org.springframework.stereotype.Component;
 
  @Component
 public class User{
-    private static String dateFormatStr = "MM/dd/yyyy";
-    public static SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatStr);
-    public static Unit weightUnit = Unit.LB;
-    public static Unit longDistanceUnit = Unit.MI;
-    public static Unit shortDistanceUnit = Unit.M;
-
+    private String dateFormatStr = "MM/dd/yyyy";
+    public Unit weightUnit = Unit.LB;
+    public Unit longDistanceUnit = Unit.MI;
     private int userId = 1;
     private String name;
+    private static String csvPath = "data//User.csv";
+    public static HashMap<Integer,User> map = new HashMap<Integer,User>();
 
     public User(String name){
         this.name = name;
@@ -46,30 +52,105 @@ public class User{
         this.userId = id;
     }
     
-    public static void setWeightUnit(Unit newWeightUnit) {
+    public void setWeightUnit(Unit newWeightUnit) {
     	weightUnit = newWeightUnit;
     }
     
-    public static void setLongDistanceUnit (Unit newLongDistanceUnit) {
+    public void setLongDistanceUnit (Unit newLongDistanceUnit) {
     	longDistanceUnit = newLongDistanceUnit;
     }
-    public static void setShortDistanceUnit (Unit newShortDistanceUnit) {
-    	shortDistanceUnit = newShortDistanceUnit;
-    }
-    
-    public static Unit getWeightUnit() {
+   
+    public Unit getWeightUnit() {
     	return weightUnit;
     }
     
-    public static Unit getLongDistanceUnit() {
+    public Unit getLongDistanceUnit() {
     	return longDistanceUnit;
     }
     
-    public static Unit getShortDistanceUnit() {
-    	return shortDistanceUnit;
+    public String getDateFormatStr() {
+        return dateFormatStr;
     }
+    public void setDateFormatStr(String dateFormatStr) {
+        this.dateFormatStr = dateFormatStr;
+    }
+
+    public static String getCsvPath() {
+        return csvPath;
+    }
+    public static void setCsvPath(String csvPath) {
+        User.csvPath = csvPath;
+    }
+
+
+/**
+ * This coverts a single row from a CSV file into a User object
+ * @param line
+ * @return StrengthObject
+ */
+public static User csvParse(String csvStr) throws Exception
+    {
+    List<String> read = new ArrayList<String>();
+    read = Arrays.asList(CsvHandler.csvParse(csvStr).toArray(new String[0]));
+    User u = new User(read.get(0));
+    u.setId(Integer.valueOf(read.get(1)));
+    u.setDateFormatStr(read.get(2));
+    u.setLongDistanceUnit(Unit.valueOf(read.get(3)));
+    u.setWeightUnit(Unit.valueOf(read.get(4)));
+
+    return u;
+}
+
+/**
+ * Opens csv file and turns it's contents into strength objects
+ * @param path
+ */
+public static void csvLoad(String path)
+{
+    String file = path;
+    BufferedReader reader = null;
+    String line = "";
+    try{
+        reader = new BufferedReader(new FileReader(file));
+        while((line = reader.readLine())!= null){
+            User u = csvParse(line);
+        }
+    }
+    catch(Exception e){
+
+    }
+    finally {
+
+    }
+
+
+}
+
+public void csvAppend(){
+    CsvHandler.csvAppendStr(csvPath,this.toString());
+}
+
+
+public static void csvOverwrite(){
+    CsvHandler.csvWipe(csvPath);
+    map.forEach((k,v) -> v.csvAppend());
+    }
+
+    public String toString(){
+    return 
     
-    
-    
-    
+    name + "," +
+    userId + "," + 
+    dateFormatStr + "," +
+    longDistanceUnit.toString() + "," +
+    weightUnit.toString() + ","; 
+    }
+
+
+
+
+
+
+
+
 }
