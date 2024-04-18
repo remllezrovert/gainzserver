@@ -7,6 +7,7 @@ public class Device {
     private long id;
     private int userId;
     private Timestamp sync;
+    private static User user = new User("tina");
 
     public long getId() {
         return id;
@@ -26,6 +27,17 @@ public class Device {
     public void setSync(Timestamp sync) {
         this.sync = sync;
     }
+
+
+    public static User getUser() {
+        return user;
+    }
+
+    public static void setUser(User user) {
+        Device.user = user;
+    }
+    
+    
 
 
 

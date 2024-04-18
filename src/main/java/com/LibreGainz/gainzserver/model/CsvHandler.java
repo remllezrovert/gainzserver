@@ -171,21 +171,11 @@ public static void csvWipe(String path){
      * Wipes CSV files, overwriting them with data from maps
      */
 public static void overWrite(){
-
-    csvWipe(Template.getCsvPath());
-    Template.map.forEach((k, v) -> v.csvAppend());
-
-    csvWipe("data//Workout.csv");
-    Workout.map.forEach((k, v) -> v.csvAppend());
-
-    csvWipe(Strength.getCsvPath());
-    Strength.map.forEach((k, v) -> v.csvAppend());
-
-    csvWipe(Isometric.getCsvPath());
-    Isometric.map.forEach((k, v) -> v.csvAppend());
-
-    csvWipe(Cardio.getCsvPath());
-    Cardio.map.forEach((k, v) -> v.csvAppend());
+    Template.csvOverwrite();
+    Workout.csvOverwrite();
+    Strength.csvOverwrite();
+    Isometric.csvOverwrite();
+    Cardio.csvOverwrite();
 
 
 

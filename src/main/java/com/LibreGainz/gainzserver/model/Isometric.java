@@ -160,13 +160,12 @@ public static Isometric csvParse(String csvStr) throws Exception
  * Opens a csv file and turns it's contents into isometric objects
  * @param path
  */
-public static void csvLoad(String path)
+public static void csvLoad()
 {
-    String file = path;
     BufferedReader reader = null;
     String line = "";
     try{
-        reader = new BufferedReader(new FileReader(file));
+        reader = new BufferedReader(new FileReader(csvPath));
         while((line = reader.readLine())!= null){
             Isometric iso = csvParse(line);
             Workout wo = map.get(iso.workoutId);

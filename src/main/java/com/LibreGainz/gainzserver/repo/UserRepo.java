@@ -27,8 +27,17 @@ public class UserRepo {
 
     public void save(User user){
         System.out.println("added");
-        String sql = "INSERT INTO Client (title) VALUES (?);";
-        jdbcTemp.update(sql, user.getName());
+        String sql = """
+            INSERT INTO Client (title,dateFormatStr,longDistanceUnit,weightUnit)
+            VALUES (?,?,?::Unit,?::Unit);
+            """;
+        jdbcTemp.update(
+            sql, user.getName(),
+            user.getDateFormatStr(),
+            user.getLongDistanceUnit().toString(),
+            user.getWeightUnit().toString()
+            );
+    
     }
 
     public List<User> findAll(){
@@ -43,6 +52,21 @@ public class UserRepo {
         List<User> userList = jdbcTemp.query(sql, mapper);
         return userList;
     }
+
+     public List<User> findName(User user){
+        String sql = "SELECT * FROM Client WHERE title LIKE '" + user.getName() + "';";
+        RowMapper<User> mapper = (rs, rowNum) ->
+            {
+            User u = new User(rs.getString("title"));
+            u.setId(rs.getInt("id"));
+            return u;
+            };
+
+        List<User> userList = jdbcTemp.query(sql, mapper);
+        return userList;
+    }
+
+
 
 
     public boolean delete(Integer userId){

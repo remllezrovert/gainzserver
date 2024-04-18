@@ -95,6 +95,32 @@ public Cardio(ResultSet rs) throws SQLException {
         this.distance = Math.round(distance1 * 1000.0) / 1000.0; 
     }
 
+public void setDistanceStr(String distance){
+Unit unit;
+
+switch(distance.replaceAll("[^A-Za-z]+", "").toUpperCase()){
+    case "KM":
+    case "KILOMETER":
+    case "K":
+        unit = Unit.KM; 
+        break;
+    case "MI":
+    case "MILES":
+    case "MILE":
+        unit = Unit.MI;
+        break;
+    default:
+        unit = Unit.MI;
+        break;
+    }
+    setUnit(unit);
+    setDistance(Double.parseDouble(distance.replaceAll("[^\\d.]", "")));
+    }
+
+
+
+
+
     /**
      * get the distance ran
      * @return distance
@@ -161,27 +187,9 @@ public static Cardio csvParse(String csvStr) throws Exception
     List<String> read = new ArrayList<String>();
     read = Arrays.asList(CsvHandler.csvParse(csvStr).toArray(new String[0]));
     Cardio cdo = new Cardio(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
-    //cdo.setUnit(Isometric.strToSet(read.get(3)));
-    //String alphaStr = read.get(3).replaceAll("[^A-Za-z]+", "");
-    cdo.setDistance(Double.parseDouble(read.get(2).replaceAll("[^\\d.]", "")));
+    cdo.setDistanceStr(read.get(2));
     cdo.setTime(Time.valueOf(read.get(3)));
-    Unit unit; 
-    switch(read.get(3).replaceAll("[^A-Za-z]+", "").toUpperCase()){
-    case "KM":
-    case "KILOMETER":
-    case "K":
-        unit = Unit.KM; 
-        break;
-    case "MI":
-    case "MILES":
-    case "MILE":
-        unit = Unit.MI;
-        break;
-    default:
-        unit = Unit.MI;
-        break;
-    }
-    cdo.setUnit(unit);
+   
     return cdo;
     }
 
@@ -189,13 +197,12 @@ public static Cardio csvParse(String csvStr) throws Exception
  * Opens a csv file and turns it's contents into cardio objects
  * @param path
  */
-public static void csvLoad(String path)
+public static void csvLoad()
 {
-    String file = path;
     BufferedReader reader = null;
     String line = "";
     try{
-        reader = new BufferedReader(new FileReader(file));
+        reader = new BufferedReader(new FileReader(csvPath));
         while((line = reader.readLine())!= null){
             Cardio cdo = csvParse(line);
             Workout wo = Cardio.map.get(cdo.workoutId);
