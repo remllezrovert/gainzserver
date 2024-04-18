@@ -77,7 +77,7 @@ public static ArrayList<Short> strToSet(String commaList){
         retArr.add(Short.parseShort(str.trim()));
     }
     catch (NumberFormatException nfe){
-        System.out.println("NFE");
+        nfe.printStackTrace();
         return retArr;
     }
 
@@ -169,13 +169,12 @@ public static Strength csvParse(String csvStr) throws Exception
  * Opens csv file and turns it's contents into strength objects
  * @param path
  */
-public static void csvLoad(String path)
+public static void csvLoad()
 {
-    String file = path;
     BufferedReader reader = null;
     String line = "";
     try{
-        reader = new BufferedReader(new FileReader(file));
+        reader = new BufferedReader(new FileReader(csvPath));
         while((line = reader.readLine())!= null){
             Strength st = csvParse(line);
             Workout wo = Workout.map.get(st.workoutId);
