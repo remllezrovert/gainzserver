@@ -10,6 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,10 +31,21 @@ public class UserController {
         this.userRepo = userRepo;
     }
 
- @DeleteMapping("/user/{userId}/")
+ @DeleteMapping("/user/{userId}")
     public boolean deleteUser(@PathVariable Integer userId){
         return userRepo.delete(userId);
     }
+@GetMapping("/user/{userId}")
+    public List<User> getUser(@PathVariable Integer userId){
+    return userRepo.find(userId);
+    }
+
+
+@GetMapping("/user/{name}")
+    public List<User> getUser(@PathVariable String name){
+    return userRepo.find(name);
+    }
+
 
 
 //newUser post request returns userId of a brand new user
@@ -40,7 +54,7 @@ public int postNew(@RequestBody String entity){
     try {
     User user = new ObjectMapper().readValue(entity, User.class);
     userRepo.save(user);
-    user = userRepo.findName(user).get(0);
+    user = userRepo.find(user.getName()).get(0);
     return user.getId();
     
     }catch(JsonProcessingException jpe){
