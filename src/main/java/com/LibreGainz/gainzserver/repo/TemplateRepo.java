@@ -93,6 +93,23 @@ public List<Template> findAll(int userId, int limit){
     return workoutList;
     }
 
+public List<Template> find(int templateId){
+    String sql = """
+        SELECT * 
+        FROM Template
+        WHERE client_id =
+                """ + String.valueOf(templateId) + ";";
+    RowMapper<Template> mapper = (rs, rowNum) ->
+        new Template(rs);
+    List<Template> workoutList = jdbcTemp.query(sql, mapper);
+    return workoutList;
+    }
+
+
+
+
+
+
 
  public boolean delete(Integer id){
         Object[] args = new Object[]{id};

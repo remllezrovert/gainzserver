@@ -53,8 +53,8 @@ public class UserRepo {
         return userList;
     }
 
-     public List<User> findName(User user){
-        String sql = "SELECT * FROM Client WHERE title LIKE '" + user.getName() + "';";
+     public List<User> find(String name){
+        String sql = "SELECT * FROM Client WHERE title LIKE '" + name + "';";
         RowMapper<User> mapper = (rs, rowNum) ->
             {
             User u = new User(rs.getString("title"));
@@ -65,6 +65,23 @@ public class UserRepo {
         List<User> userList = jdbcTemp.query(sql, mapper);
         return userList;
     }
+
+
+     public List<User> find(int id){
+        String sql = "SELECT * FROM Client WHERE id = " + String.valueOf(id) +";";
+        RowMapper<User> mapper = (rs, rowNum) ->
+            {
+            User u = new User(rs.getString("title"));
+            u.setId(rs.getInt("id"));
+            return u;
+            };
+
+        List<User> userList = jdbcTemp.query(sql, mapper);
+        return userList;
+    }
+
+
+
 
 
 
