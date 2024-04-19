@@ -51,12 +51,21 @@ public class IsometricController {
  
 
     @GetMapping("/isometric")
-    public List<Isometric> getisometric(){
+    public List<Isometric> getisometricAll(){
 
         List<Isometric> wList= new ArrayList<>();
         wList.addAll(isometricRepo.findAll());
         return wList;
     }
+
+
+ @GetMapping("/isometric/{workoutId}")
+    public List<Isometric> getIsometric(@PathVariable Integer workoutId){
+        List<Isometric> wList= new ArrayList<>();
+        wList.addAll(isometricRepo.find(workoutId));
+        return wList;
+    }
+
 
     @GetMapping("/{userId}/isometric")
     public List<Isometric> getUserIsometric(@PathVariable Integer userId){
