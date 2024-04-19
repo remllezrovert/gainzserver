@@ -51,12 +51,21 @@ public class CardioController {
  
 
     @GetMapping("/cardio")
-    public List<Cardio> getcardio(){
+    public List<Cardio> getCardioAll(){
 
         List<Cardio> wList= new ArrayList<>();
         wList.addAll(cardioRepo.findAll());
         return wList;
     }
+
+    @GetMapping("/cardio/{workoutId}")
+    public List<Cardio> getCardio(@PathVariable Integer workoutId){
+        List<Cardio> wList= new ArrayList<>();
+        wList.addAll(cardioRepo.find(workoutId));
+        return wList;
+    }
+
+
 
     @GetMapping("/{userId}/cardio")
     public List<Cardio> getUserCardio(@PathVariable Integer userId){

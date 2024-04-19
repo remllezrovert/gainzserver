@@ -104,6 +104,21 @@ public List<Isometric> findAll(int userId, int limit){
     return workoutList;
 }
 
+ public List<Isometric> find(int id){
+        String sql = """
+            SELECT * 
+            FROM workout as W
+            INNER JOIN template as T
+            ON T.id = W.template_id
+            AND T.workoutType = 'Isometric'
+            WHERE W.id =
+                    """ + String.valueOf(id);
+        RowMapper<Isometric> mapper = (rs, rowNum) ->
+            new Isometric(rs);
+        List<Isometric> workoutList = jdbcTemp.query(sql, mapper);
+        return workoutList;
+        }
+
 
 
 

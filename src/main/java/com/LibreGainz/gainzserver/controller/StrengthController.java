@@ -48,11 +48,26 @@ public class StrengthController {
  
 
     @GetMapping("/strength")
-    public List<Strength> getStrength(){
+    public List<Strength> getStrengthAll(){
         List<Strength> wList= new ArrayList<>();
         wList.addAll(strengthRepo.findAll());
         return wList;
     }
+
+ @GetMapping("/strength/{workoutId}")
+    public List<Strength> getStrength(@PathVariable Integer workoutId){
+        List<Strength> wList= new ArrayList<>();
+        wList.addAll(strengthRepo.find(workoutId));
+        return wList;
+    }
+
+
+
+
+
+
+
+
 
     @GetMapping("/{userId}/strength")
     public List<Strength> getUserStrength(@PathVariable Integer userId){

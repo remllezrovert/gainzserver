@@ -104,6 +104,21 @@ public boolean update(Integer userId, Cardio c){
         }
 
 
+ public List<Cardio> find(int id){
+        String sql = """
+            SELECT * 
+            FROM workout as W
+            INNER JOIN template as T
+            ON T.id = W.template_id
+            AND T.workoutType = 'Cardio'
+            WHERE W.id =
+                    """ + String.valueOf(id);
+        RowMapper<Cardio> mapper = (rs, rowNum) ->
+            new Cardio(rs);
+        List<Cardio> workoutList = jdbcTemp.query(sql, mapper);
+        return workoutList;
+        }
+
 
 
 

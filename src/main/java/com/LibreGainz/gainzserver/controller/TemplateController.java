@@ -45,10 +45,17 @@ public class TemplateController {
  
 
     @GetMapping("/template")
-    public List<Template> gettemplate(){
+    public List<Template> getTemplateAll(){
 
         List<Template> wList= new ArrayList<>();
         wList.addAll(templateRepo.findAll());
+        return wList;
+    }
+
+    @GetMapping("/template/{templateId}")
+    public List<Template> getTemplate(@PathVariable Integer templateId){
+        List<Template> wList= new ArrayList<>();
+        wList.addAll(templateRepo.find(templateId));
         return wList;
     }
 

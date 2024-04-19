@@ -68,6 +68,21 @@ public List<Strength> findAll(int userId, int limit){
     }
 
 
+public List<Strength> find(int id ){
+    String sql = """
+        SELECT * 
+        FROM workout as W
+        INNER JOIN template as T
+        ON T.id = W.template_id
+        AND T.workoutType = 'Strength'
+        AND w.id =
+        """ + String.valueOf(id) + ";";
+
+    RowMapper<Strength> mapper = (rs, rowNum) ->
+        new Strength(rs);
+    List<Strength> workoutList = jdbcTemp.query(sql, mapper);
+    return workoutList;
+    }
 
  public boolean update(Integer userId, Strength s){
     String sql = 
