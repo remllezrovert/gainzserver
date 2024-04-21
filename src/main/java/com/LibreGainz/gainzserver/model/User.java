@@ -7,13 +7,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.sql.Timestamp;
 
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 /**
  * @author Remllez
  * This class is for users, which have a name and unqiue id.
  * Possible plans to impliment multi-user mode
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 
  @Component
 public class User{
@@ -22,6 +26,7 @@ public class User{
     public Unit longDistanceUnit = Unit.MI;
     private int userId = 1;
     private String name;
+    private Timestamp timestamp;
     private static String csvPath = "data//User.csv";
     public static HashMap<Integer,User> map = new HashMap<Integer,User>();
 
@@ -73,6 +78,13 @@ public class User{
     }
     public void setDateFormatStr(String dateFormatStr) {
         this.dateFormatStr = dateFormatStr;
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
     }
 
     public static String getCsvPath() {

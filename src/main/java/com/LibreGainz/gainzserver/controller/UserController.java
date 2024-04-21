@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.sql.SQLException;
 import java.util.List;
 
+import org.postgresql.util.PSQLException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,37 +39,44 @@ public class UserController {
         return userRepo.delete(userId);
     }
 @GetMapping("/user/{userId}")
-    public List<User> getUser(@PathVariable Integer userId){
-    return userRepo.find(userId);
+    public User getUser(@PathVariable Integer userId){
+    List<User> list = userRepo.find(userId);
+    return (list.size() > 0) ? list.get(0) : null;
     }
 
 
-@GetMapping("/user/{name}")
-    public List<User> getUser(@PathVariable String name){
-    return userRepo.find(name);
+@GetMapping("/user")
+    public User getUser(@RequestParam String name){
+    try {
+        User u = userRepo.find(name).get(0);
+        return u;
+    } catch(Exception e){
+        return null;
+    }
     }
 
 
 
 //newUser post request returns userId of a brand new user
+
 @PostMapping("/user")
 public int postNew(@RequestBody String entity){
     try {
     User user = new ObjectMapper().readValue(entity, User.class);
+    try{
     userRepo.save(user);
+    } catch (DuplicateKeyException e) {
+        user = userRepo.find(user.getName()).get(0);
+        return user.getId();
+    }
     user = userRepo.find(user.getName()).get(0);
     return user.getId();
-    
-    }catch(JsonProcessingException jpe){
-        System.out.println("Json Parse Exception in UserController");
-        jpe.printStackTrace();
+
+    }catch(JsonProcessingException e){
+        System.out.println("Exception in UserController");
+        e.printStackTrace();
         return -1;
     }
-
-
-
-
-
 }
 
 
