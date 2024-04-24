@@ -12,6 +12,10 @@ import java.sql.*;
 
 @Repository
 public class CardioRepo{
+    private UserRepo userRepo;
+    public CardioRepo(UserRepo userRepo){
+        this.userRepo = userRepo;
+    }
     public JdbcTemplate jdbcTemp;
 
     public JdbcTemplate getJdbcTemp() {
@@ -76,18 +80,27 @@ public boolean update(Integer userId, Cardio c){
 
     public List<Cardio> findAll(){
     String sql = """
-    SELECT W.id,template_id, workoutDate, distance, unit, durration, tagArr
+    SELECT *
     FROM Workout AS W
     INNER JOIN Template AS T
     ON T.id = W.template_id
     AND T.workoutType = 'Cardio';
     """;
+
     RowMapper<Cardio> mapper = (rs, rowNum) ->
-        new Cardio(rs);
-    //String myTag = jdbcTemp.query(sql2);
+    {
+        Cardio cardio = new Cardio(rs);
+        cardio.setUser(userRepo.find(rs.getInt("client_id")).get(0));
+        return cardio;
+    };
     List<Cardio> workoutList = jdbcTemp.query(sql, mapper);
     return workoutList;
     }
+
+
+
+
+
     public List<Cardio> findAll(int userId, int limit){
         String sql = """
             SELECT * 
@@ -97,11 +110,15 @@ public boolean update(Integer userId, Cardio c){
             AND T.workoutType = 'Cardio'
             WHERE W.client_id =
                     """ + userId +" LIMIT " + limit + ";";
-        RowMapper<Cardio> mapper = (rs, rowNum) ->
-            new Cardio(rs);
-        List<Cardio> workoutList = jdbcTemp.query(sql, mapper);
-        return workoutList;
-        }
+    RowMapper<Cardio> mapper = (rs, rowNum) ->
+    {
+        Cardio cardio = new Cardio(rs);
+        cardio.setUser(userRepo.find(rs.getInt("client_id")).get(0));
+        return cardio;
+    };
+    List<Cardio> workoutList = jdbcTemp.query(sql, mapper);
+    return workoutList;
+    }
 
 
  public List<Cardio> find(int id){
@@ -113,8 +130,12 @@ public boolean update(Integer userId, Cardio c){
             AND T.workoutType = 'Cardio'
             WHERE W.id =
                     """ + String.valueOf(id);
-        RowMapper<Cardio> mapper = (rs, rowNum) ->
-            new Cardio(rs);
+    RowMapper<Cardio> mapper = (rs, rowNum) ->
+    {
+        Cardio cardio = new Cardio(rs);
+        cardio.setUser(userRepo.find(rs.getInt("client_id")).get(0));
+        return cardio;
+    };
         List<Cardio> workoutList = jdbcTemp.query(sql, mapper);
         return workoutList;
         }
