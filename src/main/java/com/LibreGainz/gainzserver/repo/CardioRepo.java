@@ -141,6 +141,62 @@ public boolean update(Integer userId, Cardio c){
         }
 
 
+public List<Cardio> findAll(int userId, Date startDate, Date endDate, int limit){
+    Object[] args = new Object[]{userId, startDate, endDate, limit};
+    String sql = """
+        SELECT * 
+        FROM workout as W
+        INNER JOIN template as T
+        ON T.id = W.template_id
+        AND T.workoutType = 'Cardio'
+        WHERE W.client_id = ?
+        AND W.workoutDate >= ?
+        AND w.workoutDate <= ?
+        LIMIT ?
+        ;
+                """;
+
+    RowMapper<Cardio> mapper = (rs, rowNum) ->
+    {
+        Cardio cardio = new Cardio(rs);
+        cardio.setUser(userRepo.find(rs.getInt("client_id")).get(0));
+        return cardio;
+    };
+    List<Cardio> workoutList = jdbcTemp.query(sql,mapper, args);
+    return workoutList;
+    }
+
+
+
+
+public List<Cardio> findAll(int userId, int templateId, Date startDate, Date endDate, int limit){
+    Object[] args = new Object[]{templateId, userId, startDate, endDate, limit};
+    String sql = """
+        SELECT * 
+        FROM workout as W
+        INNER JOIN template as T
+        ON T.id = W.template_id
+        AND T.id = ?  
+        WHERE W.client_id = ?
+        AND W.workoutDate >= ?
+        AND w.workoutDate <= ?
+        LIMIT ?
+        ;
+                """;
+
+    RowMapper<Cardio> mapper = (rs, rowNum) ->
+    {
+        Cardio cardio = new Cardio(rs);
+        cardio.setUser(userRepo.find(rs.getInt("client_id")).get(0));
+        return cardio;
+    };
+
+    List<Cardio> workoutList = jdbcTemp.query(sql, mapper, args);
+    return workoutList;
+    }
+
+
+
 
 
 }

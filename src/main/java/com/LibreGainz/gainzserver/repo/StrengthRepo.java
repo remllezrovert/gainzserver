@@ -123,7 +123,6 @@ public List<Strength> findAll(int userId, Date startDate, Date endDate, int limi
 
 
 public List<Strength> findAll(int userId, int templateId, Date startDate, Date endDate, int limit){
-
     Object[] args = new Object[]{templateId, userId, startDate, endDate, limit};
     String sql = """
         SELECT * 

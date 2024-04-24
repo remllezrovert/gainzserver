@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.http.*;
 
+import java.sql.Date;
+
 
 
 
@@ -74,6 +76,40 @@ public class IsometricController {
         wList.addAll(isometricRepo.findAll(userId, limit));
         return wList;
     }
+
+
+    @GetMapping("/{userId}/isometric/date/template")
+    public List<Isometric> getUserIsometric(
+        @PathVariable Integer userId, 
+        @RequestParam Integer templateId,
+        @RequestParam Date startDate,
+        @RequestParam Date endDate,
+        @RequestParam Integer limit
+    )
+    {
+        List<Isometric> wList= new ArrayList<>();
+        wList.addAll(isometricRepo.findAll(userId, templateId, startDate, endDate, limit));
+        return wList;
+    }
+
+
+@GetMapping("/{userId}/isometric/date")
+    public List<Isometric> getUserIsometric(
+        @PathVariable Integer userId, 
+        @RequestParam Date startDate,
+        @RequestParam Date endDate,
+        @RequestParam Integer limit
+    )
+    {
+        List<Isometric> wList= new ArrayList<>();
+        wList.addAll(isometricRepo.findAll(userId, startDate, endDate, limit));
+        return wList;
+    }
+
+
+
+
+
      @PostMapping("{userId}/isometric")
     public void postUserIsometric(@RequestBody String entity, @PathVariable Integer userId) {
          try {
