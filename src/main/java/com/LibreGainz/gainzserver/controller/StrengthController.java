@@ -8,6 +8,7 @@ import com.LibreGainz.gainzserver.model.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.sql.Date;
 
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,6 +70,9 @@ public class StrengthController {
 
 
 
+
+
+
     @GetMapping("/{userId}/strength")
     public List<Strength> getUserStrength(@PathVariable Integer userId){
         int limit = 10;
@@ -76,6 +80,49 @@ public class StrengthController {
         wList.addAll(strengthRepo.findAll(userId, limit));
         return wList;
     }
+
+
+
+    @GetMapping("/{userId}/strength/date/template")
+    public List<Strength> getUserStrength(
+        @PathVariable Integer userId, 
+        @RequestParam Integer templateId,
+        @RequestParam Date startDate,
+        @RequestParam Date endDate,
+        @RequestParam Integer limit
+    )
+    {
+        List<Strength> wList= new ArrayList<>();
+        wList.addAll(strengthRepo.findAll(userId, templateId, startDate, endDate, limit));
+        return wList;
+    }
+
+
+@GetMapping("/{userId}/strength/date")
+    public List<Strength> getUserStrength(
+        @PathVariable Integer userId, 
+        @RequestParam Date startDate,
+        @RequestParam Date endDate,
+        @RequestParam Integer limit
+    )
+    {
+        List<Strength> wList= new ArrayList<>();
+        wList.addAll(strengthRepo.findAll(userId, startDate, endDate, limit));
+        return wList;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @PostMapping("{userId}/strength")
     public void postUserStrength(@RequestBody String entity, @PathVariable Integer userId) {

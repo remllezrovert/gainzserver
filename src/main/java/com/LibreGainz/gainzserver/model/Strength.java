@@ -73,8 +73,10 @@ public static ArrayList<Short> strToSet(String commaList){
     ArrayList<Short> retArr = new ArrayList<Short>();
 
     try{
-    for (String str : commaList.split(","))
+    for (String str : commaList.split(",")) {
+        str.replaceAll("[^0-9]", "");
         retArr.add(Short.parseShort(str.trim()));
+    }
     }
     catch (NumberFormatException nfe){
         nfe.printStackTrace();

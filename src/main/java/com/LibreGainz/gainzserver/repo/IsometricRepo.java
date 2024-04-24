@@ -18,6 +18,10 @@ import java.time.format.*;
 
 @Repository
 public class IsometricRepo{
+    private UserRepo userRepo;
+    public IsometricRepo(UserRepo userRepo){
+        this.userRepo = userRepo;
+    }
     public JdbcTemplate jdbcTemp;
 
     public JdbcTemplate getJdbcTemp() {
@@ -76,14 +80,19 @@ public class IsometricRepo{
 
 public List<Isometric> findAll(){
     String sql = """
-    SELECT W.id,template_id, workoutDate, weight, unit, timeArr, tagArr
+    SELECT *
     FROM Workout AS W
     INNER JOIN Template AS T
     ON T.id = W.template_id
     AND T.workoutType = 'Isometric';
     """;
     RowMapper<Isometric> mapper = (rs, rowNum) ->
-        new Isometric(rs);
+    {
+        Isometric isometric = new Isometric(rs);
+        isometric.setUser(userRepo.find(rs.getInt("client_id")).get(0));
+        return isometric;
+    };
+
     List<Isometric> workoutList = jdbcTemp.query(sql, mapper);
     return workoutList;
 
@@ -99,7 +108,13 @@ public List<Isometric> findAll(int userId, int limit){
         WHERE W.client_id =
                 """ + userId +" LIMIT " + limit + ";";
     RowMapper<Isometric> mapper = (rs, rowNum) ->
-        new Isometric(rs);
+    {
+        Isometric isometric = new Isometric(rs);
+        isometric.setUser(userRepo.find(rs.getInt("client_id")).get(0));
+        return isometric;
+    };
+
+
     List<Isometric> workoutList = jdbcTemp.query(sql, mapper);
     return workoutList;
 }
@@ -113,15 +128,16 @@ public List<Isometric> findAll(int userId, int limit){
             AND T.workoutType = 'Isometric'
             WHERE W.id =
                     """ + String.valueOf(id);
-        RowMapper<Isometric> mapper = (rs, rowNum) ->
-            new Isometric(rs);
+
+    RowMapper<Isometric> mapper = (rs, rowNum) ->
+    {
+        Isometric isometric = new Isometric(rs);
+        isometric.setUser(userRepo.find(rs.getInt("client_id")).get(0));
+        return isometric;
+    };
         List<Isometric> workoutList = jdbcTemp.query(sql, mapper);
         return workoutList;
         }
-
-
-
-
 }
 
 
