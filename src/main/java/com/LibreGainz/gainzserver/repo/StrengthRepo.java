@@ -5,12 +5,17 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import com.LibreGainz.gainzserver.model.Strength;
 import com.LibreGainz.gainzserver.model.*;
 import java.sql.SQLException;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.ResultSet;
 import org.springframework.jdbc.core.RowMapper;
 @Repository
 public class StrengthRepo{
+    UserRepo userRepo;
+    public StrengthRepo(UserRepo userRepo){
+        this.userRepo = userRepo;
+    }
     public JdbcTemplate jdbcTemp;
 
     public JdbcTemplate getJdbcTemp() {
@@ -48,10 +53,18 @@ public List<Strength> findAll(){
                 """;
 
     RowMapper<Strength> mapper = (rs, rowNum) ->
-        new Strength(rs);
+    {
+        Strength strength = new Strength(rs);
+        strength.setUser(userRepo.find(rs.getInt("client_id")).get(0));
+        return strength;
+    };
+
     List<Strength> workoutList = jdbcTemp.query(sql, mapper);
     return workoutList;
     }
+
+
+
 public List<Strength> findAll(int userId, int limit){
     String sql = """
         SELECT * 
@@ -61,11 +74,89 @@ public List<Strength> findAll(int userId, int limit){
         AND T.workoutType = 'Strength'
         WHERE W.client_id =
                 """ + userId +" LIMIT " + limit + ";";
+
     RowMapper<Strength> mapper = (rs, rowNum) ->
-        new Strength(rs);
+    {
+        Strength strength = new Strength(rs);
+        strength.setUser(userRepo.find(rs.getInt("client_id")).get(0));
+        return strength;
+    };
+
+
+
+
     List<Strength> workoutList = jdbcTemp.query(sql, mapper);
     return workoutList;
     }
+
+
+
+
+
+
+public List<Strength> findAll(int userId, Date startDate, Date endDate, int limit){
+    Object[] args = new Object[]{userId, startDate, endDate, limit};
+    String sql = """
+        SELECT * 
+        FROM workout as W
+        INNER JOIN template as T
+        ON T.id = W.template_id
+        AND T.workoutType = 'Strength'
+        WHERE W.client_id = ?
+        AND W.workoutDate >= ?
+        AND w.workoutDate <= ?
+        LIMIT ?
+        ;
+                """;
+
+    RowMapper<Strength> mapper = (rs, rowNum) ->
+    {
+        Strength strength = new Strength(rs);
+        strength.setUser(userRepo.find(rs.getInt("client_id")).get(0));
+        return strength;
+    };
+    List<Strength> workoutList = jdbcTemp.query(sql,mapper, args);
+    return workoutList;
+    }
+
+
+
+
+public List<Strength> findAll(int userId, int templateId, Date startDate, Date endDate, int limit){
+    Object[] args = new Object[]{templateId, userId, startDate, endDate, limit};
+    String sql = """
+        SELECT * 
+        FROM workout as W
+        INNER JOIN template as T
+        ON T.id = W.template_id
+        AND T.id = ?  
+        WHERE W.client_id = ?
+        AND W.workoutDate >= ?
+        AND w.workoutDate <= ?
+        LIMIT ?
+        ;
+                """;
+
+    RowMapper<Strength> mapper = (rs, rowNum) ->
+    {
+        Strength strength = new Strength(rs);
+        strength.setUser(userRepo.find(rs.getInt("client_id")).get(0));
+        return strength;
+    };
+
+
+
+
+    List<Strength> workoutList = jdbcTemp.query(sql, mapper, args);
+    return workoutList;
+    }
+
+
+
+
+
+
+
 
 
 public List<Strength> find(int id ){
@@ -79,7 +170,14 @@ public List<Strength> find(int id ){
         """ + String.valueOf(id) + ";";
 
     RowMapper<Strength> mapper = (rs, rowNum) ->
-        new Strength(rs);
+    {
+        Strength strength = new Strength(rs);
+        strength.setUser(userRepo.find(rs.getInt("client_id")).get(0));
+        return strength;
+    };
+
+
+
     List<Strength> workoutList = jdbcTemp.query(sql, mapper);
     return workoutList;
     }
