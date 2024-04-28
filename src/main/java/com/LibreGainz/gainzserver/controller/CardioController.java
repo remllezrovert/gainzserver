@@ -7,6 +7,7 @@ import com.LibreGainz.gainzserver.model.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.sql.Date;
 
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,6 +75,40 @@ public class CardioController {
         wList.addAll(cardioRepo.findAll(userId, limit));
         return wList;
     }
+
+
+    @GetMapping("/{userId}/cardio/date/template")
+    public List<Cardio> getUserCardio(
+        @PathVariable Integer userId, 
+        @RequestParam Integer templateId,
+        @RequestParam Date startDate,
+        @RequestParam Date endDate,
+        @RequestParam Integer limit
+    )
+    {
+        List<Cardio> wList= new ArrayList<>();
+        wList.addAll(cardioRepo.findAll(userId, templateId, startDate, endDate, limit));
+        return wList;
+    }
+
+
+@GetMapping("/{userId}/cardio/date")
+    public List<Cardio> getUserCardio(
+        @PathVariable Integer userId, 
+        @RequestParam Date startDate,
+        @RequestParam Date endDate,
+        @RequestParam Integer limit
+    )
+    {
+        List<Cardio> wList= new ArrayList<>();
+        wList.addAll(cardioRepo.findAll(userId, startDate, endDate, limit));
+        return wList;
+    }
+
+
+
+
+
      @PostMapping("{userId}/cardio")
     public void postUserCardio(@RequestBody String entity, @PathVariable Integer userId) {
          try {

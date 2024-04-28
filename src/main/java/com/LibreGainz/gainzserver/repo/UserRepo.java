@@ -1,7 +1,11 @@
 package com.LibreGainz.gainzserver.repo;
+import com.LibreGainz.gainzserver.model.Unit;
 import com.LibreGainz.gainzserver.model.User;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.ResultSet;
@@ -24,8 +28,8 @@ public class UserRepo {
         this.jdbcTemp= jdbcTemp;
     }
 
-
-    public void save(User user){
+    public void save(User user) throws DuplicateKeyException
+    {
         System.out.println("added");
         String sql = """
             INSERT INTO Client (title,dateFormatStr,longDistanceUnit,weightUnit)
@@ -53,14 +57,19 @@ public class UserRepo {
         return userList;
     }
 
-     public List<User> find(String name){
+     public List<User> find(String name) 
+     {
         String sql = "SELECT * FROM Client WHERE title LIKE '" + name + "';";
         RowMapper<User> mapper = (rs, rowNum) ->
             {
             User u = new User(rs.getString("title"));
             u.setId(rs.getInt("id"));
+            u.setDateFormatStr(rs.getString("dateformatstr"));
+            u.setLongDistanceUnit(Unit.valueOf(rs.getString("longdistanceunit")));
+            u.setWeightUnit(Unit.valueOf(rs.getString("weightunit")));
             return u;
             };
+
 
         List<User> userList = jdbcTemp.query(sql, mapper);
         return userList;
