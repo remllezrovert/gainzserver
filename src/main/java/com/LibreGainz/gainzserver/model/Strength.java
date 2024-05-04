@@ -42,9 +42,12 @@ public Strength(ResultSet rs) throws SQLException {
 
     String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
     setTags(Workout.strToTags(str.substring(1,str.length() -1)));
-
+    try{
     String repStr = rs.getString("repArr").trim();
     setSet(strToSet(repStr.substring(1,repStr.length() -1)));
+    } catch(Exception e){
+
+    }
     setWeight(WeightObj.strToWeight(rs.getString("weight") + rs.getString("unit")));
 
     map.putIfAbsent(workoutId, this);
