@@ -18,7 +18,7 @@ public class Strength extends Workout {
     private ArrayList<Short> set = new ArrayList<Short>();
     private WeightObj weight;
 
-    public Strength(int templateId, long workoutId){
+    public Strength(int templateId, Long workoutId){
         super(templateId, workoutId);
         this.workoutId = super.workoutId;
         map.putIfAbsent(workoutId, this);
@@ -165,7 +165,7 @@ public static Strength csvParse(String csvStr) throws Exception
     {
     List<String> read = new ArrayList<String>();
     read = Arrays.asList(CsvHandler.csvParse(csvStr).toArray(new String[0]));
-    Strength st = new Strength(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
+    Strength st = new Strength(Integer.valueOf(read.get(0)),Long.valueOf(read.get(1)));
     st.setWeight(WeightObj.strToWeight(read.get(2)));
     st.setSet(strToSet(read.get(3)));
     return st;

@@ -93,6 +93,24 @@ public class TemplateController {
 
     }
 
+@PatchMapping("/template/{templateId}")
+ public boolean patchTemplate(@RequestBody String entity, @PathVariable Integer templateId){
+    try {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Template> list = objectMapper.readValue(entity, objectMapper.getTypeFactory().constructCollectionType(List.class, Template.class));
+        list.forEach((template) -> templateRepo.update(list.get(0).getUserId(), template));
+        return true;
+        
+        } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+        }
+
+    }
+
+
+
+
 
  @DeleteMapping("/{userId}/template/{id}")
     public boolean deleteUserTemplate(@PathVariable Integer userId, @PathVariable Integer id){

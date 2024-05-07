@@ -1,6 +1,7 @@
 package com.LibreGainz.gainzserver.repo;
 import org.springframework.stereotype.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import com.LibreGainz.gainzserver.model.Template;
 import java.util.ArrayList;
@@ -23,7 +24,8 @@ public class TemplateRepo{
         this.jdbcTemp = jdbcTemp;
     }
 
-    public void save(Template t){
+    public void save(Template t) throws DuplicateKeyException
+    {
         String sql = """
         INSERT INTO Template (Client_id, title, workoutType,summary) 
         VALUES (?,?,?,?);
@@ -36,7 +38,8 @@ public class TemplateRepo{
         );
     }
 
-public boolean update(Integer userId, Template t){
+public boolean update(Integer userId, Template t) throws DuplicateKeyException
+{
         String sql = """
         UPDATE Template SET 
         Client_id = ?,
