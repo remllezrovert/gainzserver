@@ -30,7 +30,6 @@ public class UserRepo {
 
     public void save(User user) throws DuplicateKeyException
     {
-        System.out.println("added");
         String sql = """
             INSERT INTO Client (title,dateFormatStr,longDistanceUnit,weightUnit)
             VALUES (?,?,?::Unit,?::Unit);

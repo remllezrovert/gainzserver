@@ -1,6 +1,7 @@
 package com.LibreGainz.gainzserver.repo;
 import org.springframework.stereotype.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import com.LibreGainz.gainzserver.model.Isometric;
 import com.LibreGainz.gainzserver.model.*;
@@ -33,7 +34,8 @@ public class IsometricRepo{
         this.jdbcTemp = jdbcTemp;
     }
 
-    public void save(Isometric i){
+    public void save(Isometric i) 
+    {
         String sql = 
         """
         INSERT INTO Workout (Client_id, Template_id, workoutDate, weight, unit, timeArr, tagArr) 
@@ -120,7 +122,7 @@ public List<Isometric> findAll(int userId, int limit){
     return workoutList;
 }
 
- public List<Isometric> find(int id){
+ public List<Isometric> find(Long id){
         String sql = """
             SELECT * 
             FROM workout as W
