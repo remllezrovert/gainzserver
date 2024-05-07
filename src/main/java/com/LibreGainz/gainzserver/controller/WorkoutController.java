@@ -3,6 +3,7 @@ package com.LibreGainz.gainzserver.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.LibreGainz.gainzserver.repo.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.LibreGainz.gainzserver.model.*;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -37,22 +39,13 @@ public class WorkoutController{
 
 @Autowired
     private final WorkoutRepo workoutRepo;
-    private final StrengthRepo strengthRepo;
-    private final IsometricRepo isometricRepo;
-    private final CardioRepo cardioRepo;
      
     private final ApplicationContext applicatonContext;
 
     public WorkoutController(
         WorkoutRepo workoutRepo,
-        StrengthRepo strengthRepo,
-        IsometricRepo isometricRepo,
-        CardioRepo cardioRepo,
         ApplicationContext applicationContext) {
         this.workoutRepo = workoutRepo;
-        this.strengthRepo = strengthRepo;
-        this.isometricRepo= isometricRepo;
-        this.cardioRepo = cardioRepo;
         this.applicatonContext = applicationContext;
     }
 
@@ -63,6 +56,18 @@ public class WorkoutController{
         allWorkouts.addAll(workoutRepo.findAll());
         return allWorkouts;
     }
+
+
+
+
+    @GetMapping("/workout/{workoutId}")
+    public List<Workout> getWorkout(@PathVariable Long workoutId)
+    {
+        List<Workout> wList= new ArrayList<>();
+        wList.addAll(workoutRepo.find(workoutId));
+        return wList;
+    }
+
 
      @DeleteMapping("/workout/{id}")
     public boolean deleteWorkout(@PathVariable Integer id){
@@ -77,7 +82,24 @@ public class WorkoutController{
     }
 
             
-           
+    @PatchMapping("/workout/{workoutId}")
+    public boolean patchWorkout(@RequestBody String entity, @PathVariable Long workoutId){
+    try {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Workout> list = objectMapper.readValue(entity, objectMapper.getTypeFactory().constructCollectionType(List.class, Workout.class));
+        list.forEach((workout) -> {
+            int userId = workout.getUserId();
+            workoutRepo.update(userId, workout);
+        });
+        return true;
+        
+        } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+        }
+    }
+
+
             
 
 @RequestMapping(value = "/helloworld", method=RequestMethod.GET)

@@ -122,11 +122,11 @@ Isometric i = context.getBean(Isometric.class);
 		//wr.getByTag("bye").forEach((thing) -> System.out.println(thing.getTags()));
 
 		tr.findAll().forEach((tem)-> System.out.println(tem.toString()));
-		wr.findAll().forEach((workout) -> System.out.println(workout.toString()));
-		System.out.println("");
-		ir.findAll().forEach((iso) -> System.out.println(iso.toString()));
-		sr.findAll().forEach((stn) -> System.out.println(stn.toString()));
-		cr.findAll().forEach((crd) -> System.out.println(crd.toString()));
+		//wr.findAll().forEach((workout) -> System.out.println(workout.toString()));
+		//System.out.println("");
+		//ir.findAll().forEach((iso) -> System.out.println(iso.toString()));
+		//sr.findAll().forEach((stn) -> System.out.println(stn.toString()));
+		//cr.findAll().forEach((crd) -> System.out.println(crd.toString()));
 
 
 

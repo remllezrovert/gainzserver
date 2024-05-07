@@ -3,6 +3,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.LibreGainz.gainzserver.repo.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.deser.std.NumberDeserializers.IntegerDeserializer;
 import com.LibreGainz.gainzserver.model.*;
 
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class StrengthController {
     }
 
  @GetMapping("/strength/{workoutId}")
-    public List<Strength> getStrength(@PathVariable Integer workoutId){
+    public List<Strength> getStrength(@PathVariable Long workoutId){
         List<Strength> wList= new ArrayList<>();
         wList.addAll(strengthRepo.find(workoutId));
         return wList;
@@ -124,7 +125,7 @@ public class StrengthController {
 
 
 
-    @PostMapping("{userId}/strength")
+    @PostMapping("/{userId}/strength")
     public void postUserStrength(@RequestBody String entity, @PathVariable Integer userId) {
          try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -135,7 +136,7 @@ public class StrengthController {
             e.printStackTrace();
         }
     }
-    @PatchMapping("{userId}/strength")
+    @PatchMapping("/{userId}/strength")
     public boolean patchUserStrength(@RequestBody String entity, @PathVariable Integer userId){
     try {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -149,6 +150,30 @@ public class StrengthController {
         }
 
     }
+
+
+
+    @PatchMapping("/strength/{workoutId}")
+    public boolean patchStrength(@RequestBody String entity, @PathVariable Long workoutId){
+    try {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Strength> list = objectMapper.readValue(entity, objectMapper.getTypeFactory().constructCollectionType(List.class, Strength.class));
+        list.forEach((strength) -> {
+            int userId = strength.getUserId();
+            strengthRepo.update(userId, strength);
+        });
+        return true;
+        
+        } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+        }
+    }
+
+
+
+
+
 }
 
 

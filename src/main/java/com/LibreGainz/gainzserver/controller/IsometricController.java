@@ -62,7 +62,7 @@ public class IsometricController {
 
 
  @GetMapping("/isometric/{workoutId}")
-    public List<Isometric> getIsometric(@PathVariable Integer workoutId){
+    public List<Isometric> getIsometric(@PathVariable Long workoutId){
         List<Isometric> wList= new ArrayList<>();
         wList.addAll(isometricRepo.find(workoutId));
         return wList;
@@ -110,7 +110,7 @@ public class IsometricController {
 
 
 
-     @PostMapping("{userId}/isometric")
+     @PostMapping("/{userId}/isometric")
     public void postUserIsometric(@RequestBody String entity, @PathVariable Integer userId) {
          try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -123,7 +123,7 @@ public class IsometricController {
     }
         //System.out.println(entity + "\n" + userId);
 
-    @PatchMapping("{userId}/isometric")
+    @PatchMapping("/{userId}/isometric")
     public boolean patchUserIsometric(@RequestBody String entity, @PathVariable Integer userId){
     try {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -136,6 +136,26 @@ public class IsometricController {
         return false;
         }
     }
+
+
+@PatchMapping("/isometric/{workoutId}")
+    public boolean patchIsometric(@RequestBody String entity, @PathVariable Long workoutId){
+    try {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Isometric> list = objectMapper.readValue(entity, objectMapper.getTypeFactory().constructCollectionType(List.class, Isometric.class));
+        list.forEach((isometric) -> {
+            int userId = isometric.getUserId();
+            isometricRepo.update(userId, isometric);
+        });
+        return true;
+        
+        } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+        }
+    }
+
+
 
 
 

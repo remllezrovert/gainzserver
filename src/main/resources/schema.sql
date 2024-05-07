@@ -7,7 +7,7 @@ CREATE SEQUENCE templateId START WITH 1 INCREMENT BY 1;
 -- Table: Client
 CREATE TABLE IF NOT EXISTS Client (
     id serial  NOT NULL,
-    title varchar(30)  NOT NULL,
+    title varchar(30)  NOT NULL UNIQUE,
     dateFormatStr VARCHAR(10) DEFAULT 'MM/dd/yyyy',
     longDistanceUnit Unit DEFAULT 'MI',
     weightUnit Unit DEFAULT 'LB',
@@ -28,7 +28,7 @@ CREATE INDEX IF NOT EXISTS ClientIdIndex on Device (Client_id ASC);
 CREATE TABLE IF NOT EXISTS Template (
     id serial  NOT NULL,
     Client_id serial NOT NULL,
-    title varchar(30)  NOT NULL,
+    title varchar(30)  NOT NULL UNIQUE,
     workoutType varchar(15)  NULL,
     summary varchar(120)  NULL,
     CONSTRAINT Template_pk PRIMARY KEY (id)

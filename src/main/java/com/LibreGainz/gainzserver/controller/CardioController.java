@@ -60,7 +60,7 @@ public class CardioController {
     }
 
     @GetMapping("/cardio/{workoutId}")
-    public List<Cardio> getCardio(@PathVariable Integer workoutId){
+    public List<Cardio> getCardio(@PathVariable Long workoutId){
         List<Cardio> wList= new ArrayList<>();
         wList.addAll(cardioRepo.find(workoutId));
         return wList;
@@ -109,7 +109,7 @@ public class CardioController {
 
 
 
-     @PostMapping("{userId}/cardio")
+     @PostMapping("/{userId}/cardio")
     public void postUserCardio(@RequestBody String entity, @PathVariable Integer userId) {
          try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -124,7 +124,7 @@ public class CardioController {
 }
 
 
-    @PatchMapping("{userId}/cardio")
+    @PatchMapping("/{userId}/cardio")
     public boolean patchUserCardio(@RequestBody String entity, @PathVariable Integer userId){
     try {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -138,6 +138,23 @@ public class CardioController {
         }
     }
 
+
+    @PatchMapping("/cardio/{workoutId}")
+    public boolean patchCardio(@RequestBody String entity, @PathVariable Long workoutId){
+    try {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Cardio> list = objectMapper.readValue(entity, objectMapper.getTypeFactory().constructCollectionType(List.class, Cardio.class));
+        list.forEach((cardio) -> {
+            int userId = cardio.getUserId();
+            cardioRepo.update(userId, cardio);
+        });
+        return true;
+        
+        } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+        }
+    }
 
 
 
