@@ -159,7 +159,7 @@ public List<Strength> findAll(int userId, int templateId, Date startDate, Date e
 
 
 
-public List<Strength> find(int id ){
+public List<Strength> find(long id ){
     String sql = """
         SELECT * 
         FROM workout as W

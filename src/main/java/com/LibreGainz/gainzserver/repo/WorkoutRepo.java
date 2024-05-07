@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.LibreGainz.gainzserver.model.Workout;
+import com.LibreGainz.gainzserver.repo.UserRepo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -15,6 +16,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Repository
 
 public class WorkoutRepo{
+
+    private UserRepo userRepo;    
+    WorkoutRepo(UserRepo userRepo){
+        this.userRepo = userRepo;
+    }
     public JdbcTemplate jdbcTemp;
 
     public JdbcTemplate getJdbcTemp() {
@@ -53,7 +59,67 @@ public class WorkoutRepo{
     RowMapper<Workout> mapper = (rs, rowNum) ->
         new Workout(rs);
 
-    
+
+    public boolean update(Integer userId, Workout w){
+    String sql = 
+    """
+    UPDATE Workout SET
+    Client_id = ?,
+    Template_id = ?,
+    workoutDate = ?,
+    tagArr = ?::varchar[]
+    WHERE id = ?
+    AND client_id = ?;
+    """;
+    return jdbcTemp.update(sql, 
+    w.getUserId(),
+    w.getTemplateId(),
+    w.getDate(),
+    w.getTags().toArray(new String[w.getTags().size()]),
+    w.getId(),
+    userId
+    ) == 1;
+}
+
+
+
+
+
+
+    public List<Workout> find(long id ){
+    String sql = """
+        SELECT * 
+        FROM workout as W
+        INNER JOIN template as T
+        ON T.id = W.template_id
+        AND w.id =
+        """ + String.valueOf(id) + ";";
+
+    RowMapper<Workout> mapper = (rs, rowNum) ->
+    {
+        Workout workout= new Workout(rs);
+        workout.setUser(userRepo.find(rs.getInt("client_id")).get(0));
+        return workout;
+    };
+    List<Workout> workoutList = jdbcTemp.query(sql, mapper);
+    return workoutList;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public List<Workout> findAll(){
     String sql = """
         SELECT * FROM Workout AS W;
@@ -79,6 +145,9 @@ public class WorkoutRepo{
     return workoutList;
 
     }
+
+
+
 
         public boolean delete(Integer id){
         Object[] args = new Object[]{id};

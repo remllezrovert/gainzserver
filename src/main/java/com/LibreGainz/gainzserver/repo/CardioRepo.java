@@ -121,7 +121,7 @@ public boolean update(Integer userId, Cardio c){
     }
 
 
- public List<Cardio> find(int id){
+ public List<Cardio> find(Long id){
         String sql = """
             SELECT * 
             FROM workout as W

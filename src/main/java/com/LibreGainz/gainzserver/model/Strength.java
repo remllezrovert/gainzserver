@@ -18,7 +18,7 @@ public class Strength extends Workout {
     private ArrayList<Short> set = new ArrayList<Short>();
     private WeightObj weight;
 
-    public Strength(int templateId, long workoutId){
+    public Strength(int templateId, Long workoutId){
         super(templateId, workoutId);
         this.workoutId = super.workoutId;
         map.putIfAbsent(workoutId, this);
@@ -42,9 +42,12 @@ public Strength(ResultSet rs) throws SQLException {
 
     String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
     setTags(Workout.strToTags(str.substring(1,str.length() -1)));
-
+    try{
     String repStr = rs.getString("repArr").trim();
     setSet(strToSet(repStr.substring(1,repStr.length() -1)));
+    } catch(Exception e){
+
+    }
     setWeight(WeightObj.strToWeight(rs.getString("weight") + rs.getString("unit")));
 
     map.putIfAbsent(workoutId, this);
@@ -162,7 +165,7 @@ public static Strength csvParse(String csvStr) throws Exception
     {
     List<String> read = new ArrayList<String>();
     read = Arrays.asList(CsvHandler.csvParse(csvStr).toArray(new String[0]));
-    Strength st = new Strength(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
+    Strength st = new Strength(Integer.valueOf(read.get(0)),Long.valueOf(read.get(1)));
     st.setWeight(WeightObj.strToWeight(read.get(2)));
     st.setSet(strToSet(read.get(3)));
     return st;
