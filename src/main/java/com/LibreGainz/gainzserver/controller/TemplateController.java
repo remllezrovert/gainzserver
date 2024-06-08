@@ -108,6 +108,17 @@ public class TemplateController {
 
     }
 
+@DeleteMapping("/template/{templateId}")
+public boolean deleteTemplate(@PathVariable Integer templateId){
+    try {
+        templateRepo.delete(templateId);
+        return true;
+    }
+    catch (Exception e){
+        e.printStackTrace();
+        return false;
+    }
+}
 
 
 
