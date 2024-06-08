@@ -4,7 +4,11 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.sql.*;
 import java.io.*;
-import java.util.*;
+import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @Component
 public class Cardio extends Workout {
     private static String csvPath = "data//Cardio.csv";
@@ -15,7 +19,13 @@ public class Cardio extends Workout {
 
 public Cardio(ResultSet rs) throws SQLException {
     super(rs.getInt("Template_id"), rs.getLong("id"));
-    setDate(rs.getDate("workoutDate"));
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(rs.getDate("workoutDate"));
+    calendar.add(Calendar.DAY_OF_MONTH, 1);
+    setDate(new Date(calendar.getTimeInMillis()));
+
+
+
     String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
     setTags(Workout.strToTags(str.substring(1,str.length() -1)));
 
