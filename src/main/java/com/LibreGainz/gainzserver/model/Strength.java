@@ -1,4 +1,5 @@
 package com.LibreGainz.gainzserver.model;
+import java.util.Calendar;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +39,17 @@ public class Strength extends Workout {
 
 public Strength(ResultSet rs) throws SQLException {
     super(rs.getInt("Template_id"),rs.getLong("id"));
-    setDate(rs.getDate("workoutDate"));
+
+
+
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(rs.getDate("workoutDate"));
+    calendar.add(Calendar.DAY_OF_MONTH, 1);
+    setDate(new Date(calendar.getTimeInMillis()));
+    //setDate(rs.getDate("workoutDate"));
+
+
+
 
     String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
     setTags(Workout.strToTags(str.substring(1,str.length() -1)));

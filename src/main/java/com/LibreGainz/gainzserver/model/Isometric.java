@@ -6,6 +6,7 @@ import java.sql.*;
 import java.io.*;
 import java.util.List;
 import java.util.Arrays;
+import java.util.Calendar;
 
 /** @author Remllez * This class stores an ArrayList<Time> and a weight object.  */
 @Component
@@ -28,7 +29,10 @@ public class Isometric extends Workout{
 
 public Isometric(ResultSet rs) throws SQLException {
     super(rs.getInt("Template_id"),rs.getLong("id"));
-    setDate(rs.getDate("workoutDate"));
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(rs.getDate("workoutDate"));
+    calendar.add(Calendar.DAY_OF_MONTH, 1);
+    setDate(new Date(calendar.getTimeInMillis()));
 
     String str = rs.getString("tagArr").replace("\\","").replace("\"", "");
     setTags(Workout.strToTags(str.substring(1,str.length() -1)));
