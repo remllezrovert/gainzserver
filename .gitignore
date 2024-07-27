@@ -38,4 +38,4 @@ out/
 
 
 ## Properties file ##
-application.properties
+*.properties

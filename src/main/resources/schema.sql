@@ -1,13 +1,17 @@
+CREATE SCHEMA IF NOT EXISTS gainzdb;
+SET search_path TO gainzdb;
+CREATE EXTENSION IF NOT EXISTS hstore;
+
 CREATE TYPE Unit AS ENUM ('BW','LB','KG','MI','KM','FT','M');
 
-CREATE TYPE Weight (
-    quantity smallint NULL;
-    weightUnit Unit NULL,
+CREATE TYPE Weight AS (
+    weightValue smallint,
+    weightUnit Unit 
 );
 
-CREATE TYPE Distance (
-    distance decimal(6,3),
-    Unit Unit NULL,
+CREATE TYPE Distance AS (
+    distanceValue decimal(6,3),
+    distanceUnit Unit 
 );
 
 CREATE TYPE dataType AS ENUM (
@@ -16,7 +20,6 @@ CREATE TYPE dataType AS ENUM (
     'Cardio',
     'JsonObject',
     'Blob'
-    );
 );
 
 CREATE SEQUENCE exerciseId START WITH 1 INCREMENT BY 1;
@@ -52,7 +55,7 @@ CREATE TABLE IF NOT EXISTS Template (
 
 CREATE INDEX IF NOT EXISTS TemplateTitleIndex on Template (title ASC);
 
-CREATE INDEX IF NOT EXISTS TemplateTypeIndex on Template (exerciseType ASC);
+CREATE INDEX IF NOT EXISTS TemplateTypeIndex on Template (dataType ASC);
 
 -- Table: Exercise
 CREATE TABLE IF NOT EXISTS Exercise (
@@ -66,39 +69,39 @@ CREATE TABLE IF NOT EXISTS Exercise (
 
 CREATE TABLE IF NOT EXISTS Strength(
 Exercise_id bigint NOT NULL,
-content hstore(varchar(10) smallint[]) NULL, 
-CONSTRAINT Exercise_pk PRIMARY KEY (Exercise_id)
+attr hstore,
+CONSTRAINT Strength_pk PRIMARY KEY (Exercise_id)
 );
 
 CREATE TABLE IF NOT EXISTS Isometric(
 Exercise_id bigint NOT NULL,
-content hstore(varchar(10) time[]) NULL, 
-CONSTRAINT Exercise_pk PRIMARY KEY (Exercise_id)
+attr hstore,
+CONSTRAINT Isometric_pk PRIMARY KEY (Exercise_id)
 );
 
 CREATE TABLE IF NOT EXISTS Cardio(
 Exercise_id bigint NOT NULL,
-content hstore(distance, time[])
-CONSTRAINT Exercise_pk PRIMARY KEY (Exercise_id)
+attr hstore,
+CONSTRAINT Cardio_pk PRIMARY KEY (Exercise_id)
 );
 
 CREATE TABLE IF NOT EXISTS JsonObject(
 Exercise_id bigint NOT NULL,
 content JSONB NULL,
-CONSTRAINT Exercise_pk PRIMARY KEY (Exercise_id)
+CONSTRAINT JsonObject_pk PRIMARY KEY (Exercise_id)
 );
 
 CREATE TABLE IF NOT EXISTS Blob(
 Exercise_id bigint NOT NULL,
 content BYTEA NULL,
-CONSTRAINT Exercise_pk PRIMARY KEY (Exercise_id)
+CONSTRAINT Blob_pk PRIMARY KEY (Exercise_id)
 );
 
 
 
 CREATE INDEX IF NOT EXISTS ExerciseTemplateIndex on Exercise (Template_id ASC);
 CREATE INDEX IF NOT EXISTS ExerciseClientIndex ON Exercise (Client_id ASC);
-ALTER TABLE exercise ALTER COLUMN id SET DEFAULT nextval('workoutId');
+ALTER TABLE exercise ALTER COLUMN id SET DEFAULT nextval('exerciseId');
 ALTER TABLE client ALTER COLUMN id SET DEFAULT nextval('clientId');
 ALTER TABLE template ALTER COLUMN id SET DEFAULT nextval('templateId');
 
@@ -106,6 +109,7 @@ ALTER TABLE template ALTER COLUMN id SET DEFAULT nextval('templateId');
 ALTER TABLE Strength ADD CONSTRAINT Strength_Exercise
     FOREIGN KEY (Exercise_id)
     REFERENCES Exercise (id)
+    ON DELETE CASCADE
     NOT DEFERRABLE
     INITIALLY IMMEDIATE
 ;
@@ -114,6 +118,7 @@ ALTER TABLE Strength ADD CONSTRAINT Strength_Exercise
 ALTER TABLE Isometric ADD CONSTRAINT Isometric_Exercise 
     FOREIGN KEY (Exercise_id)
     REFERENCES Exercise (id)
+    ON DELETE CASCADE
     NOT DEFERRABLE
     INITIALLY IMMEDIATE
 ;
@@ -121,6 +126,7 @@ ALTER TABLE Isometric ADD CONSTRAINT Isometric_Exercise
 ALTER TABLE Cardio ADD CONSTRAINT Cardio_Exercise 
     FOREIGN KEY (Exercise_id)
     REFERENCES Exercise (id)
+    ON DELETE CASCADE
     NOT DEFERRABLE
     INITIALLY IMMEDIATE
 ;
@@ -128,12 +134,14 @@ ALTER TABLE Cardio ADD CONSTRAINT Cardio_Exercise
 ALTER TABLE JsonObject ADD CONSTRAINT JsonObject_Exercise 
     FOREIGN KEY (Exercise_id)
     REFERENCES Exercise (id)
+    ON DELETE CASCADE
     NOT DEFERRABLE
     INITIALLY IMMEDIATE
 ;
 ALTER TABLE Blob ADD CONSTRAINT Blob_Exercise 
     FOREIGN KEY (Exercise_id)
     REFERENCES Exercise (id)
+    ON DELETE CASCADE
     NOT DEFERRABLE
     INITIALLY IMMEDIATE
 ;
@@ -148,12 +156,7 @@ ALTER TABLE Device ADD CONSTRAINT Device_Client
 ;
 
 -- Reference: Template_Client (table: Device)
-ALTER TABLE Template ADD CONSTRAINT Template_Client
-    FOREIGN KEY (Client_id)
-    REFERENCES Client (id)  
-    NOT DEFERRABLE 
-    INITIALLY IMMEDIATE
-;
+
 
 -- Reference: Exercise_Template (table: Exercise)
 ALTER TABLE Exercise ADD CONSTRAINT Exercise_Template
