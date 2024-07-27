@@ -1,47 +1,48 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.2.3'
-	id 'io.spring.dependency-management' version '1.1.4'
-    id 'application'
+	id 'org.springframework.boot' version '3.3.1'
+	id 'io.spring.dependency-management' version '1.1.5'
+	id 'org.graalvm.buildtools.native' version '0.10.2'
 }
 
-group = 'com.LibreGainz'
+group = 'com.libregainz'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '17'
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
 }
 
 repositories {
 	mavenCentral()
 }
 
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.postgresql:postgresql'
-	implementation 'org.json:json:20211205'
-
-	//implementation group: 'org.springframework', name: 'spring-jdbc', version: '6.1.6'
-	//implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.17.0'
-	//implementation 'com.fasterxml.jackson.core:jackson-core:2.17.0'
-
-
-	implementation 'org.codehaus.jackson:jackson-core-asl:1.9.13'
-	implementation 'org.springframework.data:spring-data-relational:3.2.3'
-	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.15.4'
-	implementation 'com.fasterxml.jackson.core:jackson-core:2.15.4'
-
-	runtimeOnly 'com.h2database:h2'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
+ext {
+	set('springShellVersion', "3.3.1")
 }
 
-//this stuff is new
-mainClassName = 'com.LibreGainz.gainzserver.GainzserverApplication'
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.shell:spring-shell-starter'
+	runtimeOnly 'org.postgresql:postgresql'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+	testImplementation 'org.springframework.shell:spring-shell-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
 
-
-
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.shell:spring-shell-dependencies:${springShellVersion}"
+	}
+}
+/*
 tasks.named('test') {
 	useJUnitPlatform()
 }
+*/
