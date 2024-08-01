@@ -136,7 +136,17 @@ public List<Client> find(String title){
             return jdbcTemp.update(sql,args) == 1;
     }
 
-
+    public Client findByEmail(String email) {
+    String sql = """
+        SELECT * 
+        FROM Client
+        WHERE title =
+                """ + String.valueOf(email) + ";";
+    RowMapper<Client> mapper = (rs, rowNum) ->
+        extract(rs);
+    List<Client> clientList = jdbcTemp.query(sql, mapper);
+    return clientList.get(0);
+    }
 
 
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.libregainz.server.model.*;
 import com.libregainz.server.repo.*;
+import com.libregainz.server.service.ClientService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 //import org.apache.catalina.core.ApplicationContext;
@@ -34,30 +35,65 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.http.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 
 
 
+@RequestMapping("/client")
 @RestController  
 public class ClientController {
+
+
+    private final ClientService clientService;
 @Autowired
     private ClientRepo clientRepo;
-    public ClientController(ClientRepo clientRepo){
+    public ClientController(ClientRepo clientRepo, ClientService clientService){
         this.clientRepo = clientRepo;
+        this.clientService = clientService;
+
     }
 
- @DeleteMapping("/client/{clientId}")
+
+    public ClientController(ClientService clientService){
+        this.clientService = clientService;
+    }
+
+
+    public ClientController(){
+        this.clientService = new ClientService();
+    }
+
+
+    @GetMapping("/me")
+    public ResponseEntity<Client> authenticatedClient(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Client currentClient = (Client) authentication.getPrincipal();
+        return ResponseEntity.ok(currentClient);
+
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<List<Client>> allUsers(){
+        List<Client> clients = clientService.allClients();
+        return ResponseEntity.ok(clients);
+    }
+
+
+
+ @DeleteMapping("/{clientId}")
     public boolean deleteClient(@PathVariable Integer clientId){
         return clientRepo.delete(clientId);
     }
-@GetMapping("/client/{clientId}")
+@GetMapping("/{clientId}")
     public Client getClient(@PathVariable Integer clientId){
     List<Client> list = clientRepo.find(clientId);
     return (list.size() > 0) ? list.get(0) : null;
     }
 
 
-@GetMapping("/client")
+@GetMapping("/name")
     public Client getClient(@RequestParam String name){
     try {
         Client u = clientRepo.find(name).get(0);
@@ -71,7 +107,7 @@ public class ClientController {
 
 //newClient post request returns clientId of a brand new client
 
-@PostMapping("/client")
+@PostMapping("/post")
 public int postNew(@RequestBody String entity){
     try {
     Client client = new ObjectMapper().readValue(entity, Client.class);

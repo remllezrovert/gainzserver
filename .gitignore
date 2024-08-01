@@ -1,5 +1,6 @@
-## Properties file ##
-*.properties
+## Secrets ##
+*.env
+.env
 
 HELP.md
 .gradle
