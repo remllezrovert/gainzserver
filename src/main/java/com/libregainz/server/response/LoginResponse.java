@@ -1,4 +1,4 @@
-package response;
+package com.libregainz.server.response;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -12,10 +12,9 @@ import com.libregainz.server.dto.LoginClientDto;
 import com.libregainz.server.dto.RegisterClientDto;
 import com.libregainz.server.dto.VerifyClientDto;
 import com.libregainz.server.model.Client;
+import com.libregainz.server.response.LoginResponse;
 import com.libregainz.server.service.AuthenticationService;
 import com.libregainz.server.service.JwtService;
-
-import response.LoginResponse;
 
 @RestController
 
@@ -36,7 +35,6 @@ public class AuthController {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
     }
-
     @PostMapping("/signup")
     public ResponseEntity<Client> register(@RequestBody RegisterClientDto registerClientDto) {
         Client registeredClient = authenticationService.signup(registerClientDto);

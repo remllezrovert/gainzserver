@@ -14,6 +14,7 @@ import java.io.*;
 import java.sql.ResultSet;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 @Repository
 public class ClientRepo{
@@ -30,11 +31,10 @@ public class ClientRepo{
     public void save(Client c) throws DuplicateKeyException
     {
         String sql = """
-        INSERT INTO Client (title) 
+        INSERT INTO client (title) 
         VALUES (?);
         """;
-        jdbcTemp.update(sql,
-        c.getTitle()
+        jdbcTemp.update(sql,c.getTitle()
         );
     }
 
@@ -57,7 +57,13 @@ public boolean update(Client c) throws DuplicateKeyException
     public Client extract(ResultSet rs){
         try {
        Client c = new Client(rs.getInt("Id"));
+        c.setId(rs.getInt("id"));
         c.setTitle(rs.getString("title"));
+        c.setEmail(rs.getString("email"));
+        c.setEnabled(rs.getBoolean("clientEnabled"));
+        c.setPassword(rs.getString("clientPassword"));
+        c.setVerificationCode(rs.getString("verificationCode"));
+        c.setVerificationExpire(rs.getObject("verificationExpire", LocalDateTime.class));
         return c;
         }
         catch (SQLException se){

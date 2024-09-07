@@ -28,8 +28,13 @@ CREATE SEQUENCE templateId START WITH 1 INCREMENT BY 1;
 
 -- Table: Client
 CREATE TABLE IF NOT EXISTS Client (
+    title varchar(32)  NOT NULL UNIQUE,
     id serial  NOT NULL,
-    title varchar(30)  NOT NULL UNIQUE,
+    email varchar(64) NULL,
+    clientEnabled boolean null,
+    clientPassword varchar(32) NOT NULL,
+    verificationCode varchar(32) NULL,
+    verificationExpire timestamp NULL,
     CONSTRAINT Client_pk PRIMARY KEY (id)
 );
 
@@ -47,9 +52,9 @@ CREATE INDEX IF NOT EXISTS ClientIdIndex on Device (Client_id ASC);
 CREATE TABLE IF NOT EXISTS Template (
     id serial NOT NULL,
     Client_id serial NOT NULL,
-    title varchar(30)  NOT NULL UNIQUE,
+    title varchar(32)  NOT NULL UNIQUE,
     dataType dataType NULL,
-    summary varchar(120)  NULL,
+    summary varchar(128)  NULL,
     CONSTRAINT Template_pk PRIMARY KEY (id)
 );
 
