@@ -1,5 +1,7 @@
 package com.libregainz.server.config;
-
+import java.util.ArrayList;
+import java.util.List;
+import com.libregainz.server.model.Client;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,8 +25,8 @@ public class ApplicationConfiguration {
 
     @Bean
     UserDetailsService userDetailsService(){
-        return username -> clientRepo.find(username).get(0);
-    }
+        return username -> clientRepo.findByEmail(username);
+        }
     @Bean
     BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();

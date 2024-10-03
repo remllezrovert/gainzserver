@@ -28,11 +28,11 @@ CREATE SEQUENCE templateId START WITH 1 INCREMENT BY 1;
 
 -- Table: Client
 CREATE TABLE IF NOT EXISTS Client (
-    title varchar(32)  NOT NULL UNIQUE,
+    title varchar(32)  NOT NULL,
     id serial  NOT NULL,
-    email varchar(64) NULL,
+    email varchar(64) NULL UNIQUE,
     clientEnabled boolean null,
-    clientPassword varchar(32) NOT NULL,
+    clientPassword varchar(64) NOT NULL,
     verificationCode varchar(32) NULL,
     verificationExpire timestamp NULL,
     CONSTRAINT Client_pk PRIMARY KEY (id)

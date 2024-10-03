@@ -46,8 +46,11 @@ public class AuthController {
         Client authenticatedClient = authenticationService.authenticate(loginClientDto);
         String jwtToken = jwtService.generateToken(authenticatedClient);
         LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());
+        System.out.println(loginResponse);
         return ResponseEntity.ok(loginResponse);
     }
+
+
 
     @PostMapping("/verify")
     public ResponseEntity<?> verifyClient(@RequestBody VerifyClientDto verifyClientDto) {

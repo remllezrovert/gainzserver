@@ -31,10 +31,17 @@ public class ClientRepo{
     public void save(Client c) throws DuplicateKeyException
     {
         String sql = """
-        INSERT INTO client (title) 
-        VALUES (?);
+        INSERT INTO client (title,email,clientPassword,verificationCode,verificationExpire,clientEnabled) 
+        VALUES (?,?,?,?,?,?);
         """;
-        jdbcTemp.update(sql,c.getTitle()
+        jdbcTemp.update(
+            sql,
+            c.getTitle(),
+            c.getEmail(),
+            c.getPassword(),
+            c.getVerificationCode(),
+            c.getVerificationExpire(),
+            c.getEnabled()
         );
     }
 
@@ -43,11 +50,21 @@ public boolean update(Client c) throws DuplicateKeyException
         String sql = """
         UPDATE Client SET 
         title = ?,
+        email = ?,
+        clientPassword = ?,
+        verificationCode = ?,
+        verificationExpire = ?,
+        clientEnabled = ?
         WHERE id = ?
         """;
         return jdbcTemp.update(sql,
-        c.getTitle(),
-        c.getId()
+            c.getTitle(),
+            c.getEmail(),
+            c.getPassword(),
+            c.getVerificationCode(),
+            c.getVerificationExpire(),
+            c.getEnabled(),
+            c.getId()
         ) == 1;
     }
 
@@ -109,8 +126,8 @@ public List<Client> find(String title){
     String sql = """
         SELECT * 
         FROM Client
-        WHERE title =
-                """ + String.valueOf(title) + ";";
+        WHERE title = '""" 
+        + String.valueOf(title) + "';";
     RowMapper<Client> mapper = (rs, rowNum) ->
         extract(rs);
     List<Client> clientList = jdbcTemp.query(sql, mapper);
@@ -146,8 +163,8 @@ public List<Client> find(String title){
     String sql = """
         SELECT * 
         FROM Client
-        WHERE title =
-                """ + String.valueOf(email) + ";";
+        WHERE email = '""" 
+        + String.valueOf(email) + "';";
     RowMapper<Client> mapper = (rs, rowNum) ->
         extract(rs);
     List<Client> clientList = jdbcTemp.query(sql, mapper);

@@ -80,7 +80,7 @@ public class AuthenticationService {
                 client.setEnabled(true);
                 client.setVerificationCode(null);
                 client.setVerificationExpire(null);
-                clientRepo.save(client);
+                clientRepo.update(client);
 
             } else {
                throw new RuntimeException("Invalid verification code");
@@ -101,7 +101,7 @@ public class AuthenticationService {
             user.setVerificationCode(generateVerificationCode());
             user.setVerificationExpire(LocalDateTime.now().plusHours(1));
             sendVerificationEmail(user);
-            clientRepo.save(user);
+            clientRepo.update(user);
         } else {
             throw new RuntimeException("Client not found");
         }

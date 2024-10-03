@@ -37,6 +37,9 @@ public class Client implements UserDetails{
         this.id = id;
     }
 
+
+
+
     public String getVerificationCode() {
         return verificationCode;
     }
@@ -88,6 +91,9 @@ public class Client implements UserDetails{
     }
     public void setEnabled(boolean b) {
         this.enabled = b;
+    }
+    public boolean getEnabled(){
+        return enabled;
     }
 
     public void setPassword(String password) {

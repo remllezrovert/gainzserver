@@ -2,6 +2,7 @@ package com.libregainz.server.config;
 
 import java.util.List;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,6 +46,7 @@ public class SecurityConfig {
             try {
                 authorize
                     .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers(HttpMethod.OPTIONS).permitAll()
                     .anyRequest()
                     .anonymous();
             } catch (Exception e) {
@@ -56,9 +58,9 @@ public class SecurityConfig {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
         .authenticationProvider(authenticationProvider)
-        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         //.addFilterBefore(jwtAuthenticationFilter, AnonymousAuthenticationFilter.class)
-        .anonymous();
+        //.anonymous();
         return http.build();
     }
 
@@ -66,7 +68,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("https://remllez.com","http://localhost:8081","*"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH","OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
