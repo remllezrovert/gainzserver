@@ -1,16 +1,40 @@
+CREATE SCHEMA IF NOT EXISTS gainzdb;
+SET search_path TO gainzdb;
+CREATE EXTENSION IF NOT EXISTS hstore;
 
-CREATE TYPE Unit AS ENUM ('LB','KG','MI','KM');
-CREATE SEQUENCE workoutId START WITH 1 INCREMENT BY 1;
+CREATE TYPE Unit AS ENUM ('BW','LB','KG','MI','KM','FT','M');
+
+CREATE TYPE Weight AS (
+    weightValue smallint,
+    weightUnit Unit 
+);
+
+CREATE TYPE Distance AS (
+    distanceValue decimal(6,3),
+    distanceUnit Unit 
+);
+
+CREATE TYPE dataType AS ENUM (
+    'Strength',
+    'Isometric',
+    'Cardio',
+    'JsonObject',
+    'Blob'
+);
+
+CREATE SEQUENCE exerciseId START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE clientId START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE templateId START WITH 1 INCREMENT BY 1;
 
 -- Table: Client
 CREATE TABLE IF NOT EXISTS Client (
+    title varchar(32)  NOT NULL,
     id serial  NOT NULL,
-    title varchar(30)  NOT NULL UNIQUE,
-    dateFormatStr VARCHAR(10) DEFAULT 'MM/dd/yyyy',
-    longDistanceUnit Unit DEFAULT 'MI',
-    weightUnit Unit DEFAULT 'LB',
+    email varchar(64) NULL UNIQUE,
+    clientEnabled boolean null,
+    clientPassword varchar(64) NOT NULL,
+    verificationCode varchar(32) NULL,
+    verificationExpire timestamp NULL,
     CONSTRAINT Client_pk PRIMARY KEY (id)
 );
 
@@ -26,39 +50,108 @@ CREATE INDEX IF NOT EXISTS ClientIdIndex on Device (Client_id ASC);
 
 -- Table: Template
 CREATE TABLE IF NOT EXISTS Template (
-    id serial  NOT NULL,
+    id serial NOT NULL,
     Client_id serial NOT NULL,
-    title varchar(30)  NOT NULL UNIQUE,
-    workoutType varchar(15)  NULL,
-    summary varchar(120)  NULL,
+    title varchar(32)  NOT NULL UNIQUE,
+    dataType dataType NULL,
+    summary varchar(128)  NULL,
     CONSTRAINT Template_pk PRIMARY KEY (id)
 );
 
 CREATE INDEX IF NOT EXISTS TemplateTitleIndex on Template (title ASC);
 
-CREATE INDEX IF NOT EXISTS TemplateTypeIndex on Template (workoutType ASC);
+CREATE INDEX IF NOT EXISTS TemplateTypeIndex on Template (dataType ASC);
 
--- Table: Workout
-CREATE TABLE IF NOT EXISTS Workout (
-    Client_id int NOT NULL,
+-- Table: Exercise
+CREATE TABLE IF NOT EXISTS Exercise (
     id bigserial NOT NULL,
+    Client_id int NOT NULL,
     Template_id int  NOT NULL,
-    workoutDate date  NULL,
-    unit Unit NULL,
-    weight smallint  NULL,
-    distance decimal(3,3)  NULL,
-    durration time  NULL,
-    repArr smallint[]  NULL,
-    timeArr time[]  NULL,
-    tagArr varchar(20)[]  NULL,
-    CONSTRAINT Workout_pk PRIMARY KEY (id)
+    dateValue date  NULL,
+    CONSTRAINT Exercise_pk PRIMARY KEY (id)
 );
 
-CREATE INDEX IF NOT EXISTS WorkoutTemplateIndex on Workout (Template_id ASC);
-CREATE INDEX IF NOT EXISTS WorkoutClientIndex ON Workout (Client_id ASC);
-ALTER TABLE workout ALTER COLUMN id SET DEFAULT nextval('workoutId');
+
+CREATE TABLE IF NOT EXISTS Strength(
+Exercise_id bigint NOT NULL,
+attr hstore,
+CONSTRAINT Strength_pk PRIMARY KEY (Exercise_id)
+);
+
+CREATE TABLE IF NOT EXISTS Isometric(
+Exercise_id bigint NOT NULL,
+attr hstore,
+CONSTRAINT Isometric_pk PRIMARY KEY (Exercise_id)
+);
+
+CREATE TABLE IF NOT EXISTS Cardio(
+Exercise_id bigint NOT NULL,
+attr hstore,
+CONSTRAINT Cardio_pk PRIMARY KEY (Exercise_id)
+);
+
+CREATE TABLE IF NOT EXISTS JsonObject(
+Exercise_id bigint NOT NULL,
+content JSONB NULL,
+CONSTRAINT JsonObject_pk PRIMARY KEY (Exercise_id)
+);
+
+CREATE TABLE IF NOT EXISTS Blob(
+Exercise_id bigint NOT NULL,
+content BYTEA NULL,
+CONSTRAINT Blob_pk PRIMARY KEY (Exercise_id)
+);
+
+
+
+CREATE INDEX IF NOT EXISTS ExerciseTemplateIndex on Exercise (Template_id ASC);
+CREATE INDEX IF NOT EXISTS ExerciseClientIndex ON Exercise (Client_id ASC);
+ALTER TABLE exercise ALTER COLUMN id SET DEFAULT nextval('exerciseId');
 ALTER TABLE client ALTER COLUMN id SET DEFAULT nextval('clientId');
 ALTER TABLE template ALTER COLUMN id SET DEFAULT nextval('templateId');
+
+
+ALTER TABLE Strength ADD CONSTRAINT Strength_Exercise
+    FOREIGN KEY (Exercise_id)
+    REFERENCES Exercise (id)
+    ON DELETE CASCADE
+    NOT DEFERRABLE
+    INITIALLY IMMEDIATE
+;
+
+
+ALTER TABLE Isometric ADD CONSTRAINT Isometric_Exercise 
+    FOREIGN KEY (Exercise_id)
+    REFERENCES Exercise (id)
+    ON DELETE CASCADE
+    NOT DEFERRABLE
+    INITIALLY IMMEDIATE
+;
+
+ALTER TABLE Cardio ADD CONSTRAINT Cardio_Exercise 
+    FOREIGN KEY (Exercise_id)
+    REFERENCES Exercise (id)
+    ON DELETE CASCADE
+    NOT DEFERRABLE
+    INITIALLY IMMEDIATE
+;
+
+ALTER TABLE JsonObject ADD CONSTRAINT JsonObject_Exercise 
+    FOREIGN KEY (Exercise_id)
+    REFERENCES Exercise (id)
+    ON DELETE CASCADE
+    NOT DEFERRABLE
+    INITIALLY IMMEDIATE
+;
+ALTER TABLE Blob ADD CONSTRAINT Blob_Exercise 
+    FOREIGN KEY (Exercise_id)
+    REFERENCES Exercise (id)
+    ON DELETE CASCADE
+    NOT DEFERRABLE
+    INITIALLY IMMEDIATE
+;
+
+
 
 ALTER TABLE Device ADD CONSTRAINT Device_Client
     FOREIGN KEY (Client_id)
@@ -68,29 +161,19 @@ ALTER TABLE Device ADD CONSTRAINT Device_Client
 ;
 
 -- Reference: Template_Client (table: Device)
-ALTER TABLE Template ADD CONSTRAINT Template_Client
-    FOREIGN KEY (Client_id)
-    REFERENCES Client (id)  
-    NOT DEFERRABLE 
-    INITIALLY IMMEDIATE
-;
 
--- Reference: Workout_Template (table: Workout)
-ALTER TABLE Workout ADD CONSTRAINT Workout_Template
+
+-- Reference: Exercise_Template (table: Exercise)
+ALTER TABLE Exercise ADD CONSTRAINT Exercise_Template
     FOREIGN KEY (Template_id)
     REFERENCES Template (id) ON DELETE CASCADE
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
 ;
 
-ALTER TABLE Workout ADD CONSTRAINT Workout_Client
+ALTER TABLE Exercise ADD CONSTRAINT Exercise_Client
     FOREIGN KEY (Client_id)
     REFERENCES Client (id) ON DELETE CASCADE
     NOT DEFERRABLE
     INITIALLY IMMEDIATE
 ;
-
-
-
-
--- End of file.
