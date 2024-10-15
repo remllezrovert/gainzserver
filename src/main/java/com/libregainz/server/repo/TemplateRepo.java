@@ -28,12 +28,13 @@ public class TemplateRepo{
     public void save(Template t) throws DuplicateKeyException
     {
         String sql = """
-        INSERT INTO Template (Client_id, title, fieldArray,summary) 
-        VALUES (?,?,?,?);
+        INSERT INTO Template (Client_id, title, formId, dataType, summary) 
+        VALUES (?,?,?,?,?);
         """;
         jdbcTemp.update(sql,
         t.getClientId(),
         t.getTitle(),
+        t.getFormId(),
         t.getDataType(),
         t.getSummary()
         );
@@ -45,7 +46,8 @@ public boolean update(Integer clientId, Template t) throws DuplicateKeyException
         UPDATE Template SET 
         Client_id = ?,
         title = ?,
-        fieldArray = ?, 
+        formId = ?, 
+        dataType = ?,
         summary = ?
         WHERE id = ?
         AND client_id = ?;
@@ -53,6 +55,7 @@ public boolean update(Integer clientId, Template t) throws DuplicateKeyException
         return jdbcTemp.update(sql,
         t.getClientId(),
         t.getTitle(),
+        t.getFormId(),
         t.getDataType(),
         t.getSummary(),
         t.getId(),
@@ -66,6 +69,7 @@ public boolean update(Integer clientId, Template t) throws DuplicateKeyException
     public Template extract(ResultSet rs){
         try {
         Template t = new Template(rs.getInt("id"));
+        t.setFormId(rs.getInt("form_id"));
         t.setDataType(DataType.valueOf(rs.getString("dataType")));
         t.setTitle(rs.getString("title"));
         t.setSummary(rs.getString("summary"));

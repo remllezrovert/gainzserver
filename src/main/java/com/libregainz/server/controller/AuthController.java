@@ -46,7 +46,7 @@ public class AuthController {
         Client authenticatedClient = authenticationService.authenticate(loginClientDto);
         String jwtToken = jwtService.generateToken(authenticatedClient);
         LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());
-        System.out.println(loginResponse);
+        System.out.println(loginResponse.toString());
         return ResponseEntity.ok(loginResponse);
     }
 

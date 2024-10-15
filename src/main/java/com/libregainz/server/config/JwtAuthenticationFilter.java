@@ -1,4 +1,5 @@
 package com.libregainz.server.config;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpRequest;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +22,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter{
-
     private final HandlerExceptionResolver handlerExceptionResolver;
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
@@ -29,7 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
     public JwtAuthenticationFilter(
         JwtService jwtService,
         UserDetailsService userDetailsService,
-        HandlerExceptionResolver handlerExceptionResolver
+        @Qualifier("handlerExceptionResolver") HandlerExceptionResolver handlerExceptionResolver
     ){
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
