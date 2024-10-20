@@ -16,36 +16,38 @@ import com.libregainz.server.repo.ClientRepo;
 
 @Configuration
 public class ApplicationConfiguration {
+    private final ClientRepo clientRepo;
  /**
      * Constructor for ApplicationConfiguration.
      *
      * @param clientRepo the repository for accessing client data from the database.
      */
-    private final ClientRepo clientRepo;
     public ApplicationConfiguration(ClientRepo clientRepo){
-        /**
+        this.clientRepo = clientRepo;
+    }
+
+   /**
      * Defines a UserDetailsService bean to retrieve user details from the client repository.
      * This service is used by Spring Security during authentication to load a user's details by their email.
      *
      * @return a UserDetailsService that fetches a client by their email.
      */
-        this.clientRepo = clientRepo;
-    }
-
-
     @Bean
     UserDetailsService userDetailsService(){
-        /**
+       
+        return username -> clientRepo.findByEmail(username);
+        }
+  /**
      * Defines a BCryptPasswordEncoder bean that provides password encryption and decryption using the BCrypt hashing algorithm.
      * This encoder is used by the authentication provider to securely store and verify passwords.
      *
      * @return an instance of BCryptPasswordEncoder.
      */
-        return username -> clientRepo.findByEmail(username);
-        }
     @Bean
     BCryptPasswordEncoder passwordEncoder(){
-        /**
+        return new BCryptPasswordEncoder();
+    } 
+ /**
      * Defines an AuthenticationManager bean that manages the overall authentication process.
      * This bean is obtained from Spring's AuthenticationConfiguration and is used to authenticate user credentials.
      *
@@ -53,8 +55,6 @@ public class ApplicationConfiguration {
      * @return an instance of AuthenticationManager.
      * @throws Exception if there is an error obtaining the AuthenticationManager.
      */
-        return new BCryptPasswordEncoder();
-    } 
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
         return config.getAuthenticationManager();
