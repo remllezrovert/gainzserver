@@ -61,16 +61,16 @@ public class TemplateController {
         return wList;
     }
 
-    @GetMapping("/{userId}/template")
-    public List<Template> getUsertemplate(@PathVariable Integer userId){
+    @GetMapping("/{clientId}/template")
+    public List<Template> getUsertemplate(@PathVariable Integer clientId){
         int limit = 10;
         List<Template> wList= new ArrayList<>();
-        wList.addAll(templateRepo.findAll(userId, limit));
+        wList.addAll(templateRepo.findAll(clientId, limit));
         return wList;
     }
 
- @PostMapping("/{userId}/template")
-    public void postUserTemplate(@RequestBody String entity, @PathVariable Integer userId) {
+ @PostMapping("/{clientId}/template")
+    public void postUserTemplate(@RequestBody String entity, @PathVariable Integer clientId) {
          try {
             ObjectMapper objectMapper = new ObjectMapper();
             List<Template> list = objectMapper.readValue(entity, objectMapper.getTypeFactory().constructCollectionType(List.class, Template.class));
@@ -80,12 +80,12 @@ public class TemplateController {
         }
     }
 
-@PatchMapping("/{userId}/template")
- public boolean patchUserTemplate(@RequestBody String entity, @PathVariable Integer userId){
+@PatchMapping("/{clientId}/template")
+ public boolean patchUserTemplate(@RequestBody String entity, @PathVariable Integer clientId){
     try {
         ObjectMapper objectMapper = new ObjectMapper();
         List<Template> list = objectMapper.readValue(entity, objectMapper.getTypeFactory().constructCollectionType(List.class, Template.class));
-        list.forEach((template) -> templateRepo.update(userId, template));
+        list.forEach((template) -> templateRepo.update(clientId, template));
         return true;
         
         } catch (Exception e) {
@@ -123,9 +123,9 @@ public boolean deleteTemplate(@PathVariable Integer templateId){
 }
 
 
- @DeleteMapping("/{userId}/template/{id}")
-    public boolean deleteUserTemplate(@PathVariable Integer userId, @PathVariable Integer id){
-        return templateRepo.delete(userId, id);
+ @DeleteMapping("/{clientId}/template/{id}")
+    public boolean deleteUserTemplate(@PathVariable Integer clientId, @PathVariable Integer id){
+        return templateRepo.delete(clientId, id);
     }
 
 

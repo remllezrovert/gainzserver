@@ -62,7 +62,7 @@ public class Client implements UserDetails{
 
     @Override
     public String getUsername() {
-        return title;
+        return email;
     }
     public void setUsername(String username) {
         this.title = username;

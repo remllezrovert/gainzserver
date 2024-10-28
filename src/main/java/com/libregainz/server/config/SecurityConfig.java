@@ -47,8 +47,7 @@ public class SecurityConfig {
                 authorize
                     .requestMatchers("/auth/**").permitAll()
                     .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                    .anyRequest()
-                    .anonymous();
+                    .anyRequest().authenticated(); //switched from anon
             } catch (Exception e) {
                 e.printStackTrace();
             }

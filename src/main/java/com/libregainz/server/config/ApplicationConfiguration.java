@@ -25,7 +25,7 @@ public class ApplicationConfiguration {
 
     @Bean
     UserDetailsService userDetailsService(){
-        return username -> clientRepo.findByEmail(username);
+        return email -> clientRepo.findByEmail(email);
         }
     @Bean
     BCryptPasswordEncoder passwordEncoder(){
