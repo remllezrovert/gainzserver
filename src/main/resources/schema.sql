@@ -25,6 +25,8 @@ CREATE TYPE dataType AS ENUM (
 CREATE SEQUENCE exerciseId START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE clientId START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE templateId START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE formId START WITH 1 INCREMENT BY 1;
+
 
 -- Table: Client
 CREATE TABLE IF NOT EXISTS Client (
@@ -51,12 +53,24 @@ CREATE INDEX IF NOT EXISTS ClientIdIndex on Device (Client_id ASC);
 -- Table: Template
 CREATE TABLE IF NOT EXISTS Template (
     id serial NOT NULL,
-    Client_id serial NOT NULL,
+    Client_id int NOT NULL,
     title varchar(32)  NOT NULL UNIQUE,
+    form_id int NOT NULL,
     dataType dataType NULL,
     summary varchar(128)  NULL,
     CONSTRAINT Template_pk PRIMARY KEY (id)
 );
+
+
+--Table: Form
+CREATE TABLE IF NOT EXISTS Form(
+id serial NOT NULL,
+content BYTEA NULL,
+CONSTRAINT Form_pk PRIMARY KEY (id)
+);
+
+
+
 
 CREATE INDEX IF NOT EXISTS TemplateTitleIndex on Template (title ASC);
 
@@ -109,6 +123,8 @@ CREATE INDEX IF NOT EXISTS ExerciseClientIndex ON Exercise (Client_id ASC);
 ALTER TABLE exercise ALTER COLUMN id SET DEFAULT nextval('exerciseId');
 ALTER TABLE client ALTER COLUMN id SET DEFAULT nextval('clientId');
 ALTER TABLE template ALTER COLUMN id SET DEFAULT nextval('templateId');
+ALTER TABLE form ALTER COLUMN id SET DEFAULT nextval('formId');
+
 
 
 ALTER TABLE Strength ADD CONSTRAINT Strength_Exercise
@@ -151,6 +167,13 @@ ALTER TABLE Blob ADD CONSTRAINT Blob_Exercise
     INITIALLY IMMEDIATE
 ;
 
+ALTER TABLE Template ADD CONSTRAINT Template_Form
+    FOREIGN KEY (Form_id)
+    REFERENCES Form (id)
+    ON DELETE CASCADE
+    NOT DEFERRABLE
+    INITIALLY IMMEDIATE
+;
 
 
 ALTER TABLE Device ADD CONSTRAINT Device_Client

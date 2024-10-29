@@ -55,9 +55,12 @@ dependencyManagement {
 }
 
 
-application{
+
+
+application {
 	mainClass = 'com.libregainz.server.ServerApplication'
 }
+
 /*
 tasks.named('test') {
 	useJUnitPlatform()

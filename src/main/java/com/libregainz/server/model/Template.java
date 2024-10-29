@@ -12,6 +12,7 @@ private String title;
 private DataType dataType;
 private String summary;
 private int clientId;
+private int formId;
 
 public Template(int id){
     this.id = id;
@@ -51,6 +52,13 @@ public void setClientId(int clientId) {
     this.clientId = clientId;
 }
 
+public int getFormId() {
+    return formId;
+}
+
+public void setFormId(int formId) {
+    this.formId = formId;
+}
 
 
 }
