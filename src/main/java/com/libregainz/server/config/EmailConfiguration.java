@@ -26,7 +26,6 @@ public class EmailConfiguration {
      * @return a configured JavaMailSender instance that can be used for sending emails.
      */
     @Bean
-    @Bean
     public JavaMailSender javaMailSender(){
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
