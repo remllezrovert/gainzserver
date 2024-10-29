@@ -1,5 +1,6 @@
 package com.libregainz.server.config;
 
+import java.lang.reflect.Array;
 import java.util.List;
 
 import org.springframework.http.HttpMethod;
@@ -65,7 +66,7 @@ public class SecurityConfig {
                 authorize
                     .requestMatchers("/auth/**").permitAll()
                     .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                    .anyRequest().authenticated(); //switched from anon
+                    .anyRequest().authenticated();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -89,9 +90,12 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("https://remllez.com","http://localhost:8081","*"));
+        //configuration.setAllowedOrigins(List.of("http://localhost:3000")); //new
+        configuration.setAllowedOrigins(List.of("http://localhost:3000","http://remllez.com:8081","https://remllez.com","http://localhost:8081","*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH","OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-type"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true); 
+        //configuration.setAllowedHeaders(List.of("Authorization", "Content-type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
