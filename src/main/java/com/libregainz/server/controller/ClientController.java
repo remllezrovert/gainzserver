@@ -36,8 +36,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 
 
-@RequestMapping("/client")
 @RestController  
+@RequestMapping("/client")
 public class ClientController {
 
 
@@ -51,9 +51,9 @@ public class ClientController {
     }
 
 
-    public ClientController(ClientService clientService){
-        this.clientService = clientService;
-    }
+    //public ClientController(ClientService clientService){
+        //this.clientService = clientService;
+    //}
 
 
     public ClientController(){
@@ -69,11 +69,6 @@ public class ClientController {
 
     }
 
-    @GetMapping("/")
-    public ResponseEntity<List<Client>> allUsers(){
-        List<Client> clients = clientService.allClients();
-        return ResponseEntity.ok(clients);
-    }
 
 
 

@@ -1,5 +1,6 @@
 package com.libregainz.server.controller;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,13 +42,18 @@ public class AuthController {
         return ResponseEntity.ok(registeredClient);
     }
 
-    @PostMapping("/login")
+    //@PostMapping("/login")
+    @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
+
     public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginClientDto loginClientDto){
         Client authenticatedClient = authenticationService.authenticate(loginClientDto);
         String jwtToken = jwtService.generateToken(authenticatedClient);
         LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());
         System.out.println(loginResponse.toString());
-        return ResponseEntity.ok(loginResponse);
+        //return ResponseEntity.ok(loginResponse);
+        return ResponseEntity.ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(loginResponse);
     }
 
 

@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/forms")
+@RequestMapping("/forms")
 public class FormController {
 
     private final FormRepo formRepo;

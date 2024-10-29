@@ -34,8 +34,7 @@ public class ApplicationConfiguration {
      */
     @Bean
     UserDetailsService userDetailsService(){
-       
-        return username -> clientRepo.findByEmail(username);
+        return email -> clientRepo.findByEmail(email);
         }
   /**
      * Defines a BCryptPasswordEncoder bean that provides password encryption and decryption using the BCrypt hashing algorithm.

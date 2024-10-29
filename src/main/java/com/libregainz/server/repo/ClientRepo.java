@@ -94,6 +94,7 @@ public boolean update(Client c) throws DuplicateKeyException
     RowMapper<Client> mapper = (rs, rowNum) ->
         extract(rs);
         List<Client> clientList= jdbcTemp.query(sql, mapper);
+        System.out.println(clientList.size());
         return clientList;
     }
 
@@ -165,6 +166,19 @@ public List<Client> find(String title){
         FROM Client
         WHERE email = '""" 
         + String.valueOf(email) + "';";
+    RowMapper<Client> mapper = (rs, rowNum) ->
+        extract(rs);
+    List<Client> clientList = jdbcTemp.query(sql, mapper);
+    return clientList.get(0);
+    }
+
+    public Client findByTitle(String title) {
+        System.out.println("\n\n\n" + title + "\n\n\n");
+    String sql = """
+        SELECT * 
+        FROM gainzdb.client
+        WHERE title = '""" 
+        + String.valueOf(title) + "';";
     RowMapper<Client> mapper = (rs, rowNum) ->
         extract(rs);
     List<Client> clientList = jdbcTemp.query(sql, mapper);
