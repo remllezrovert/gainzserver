@@ -28,6 +28,12 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
 
+    /**
+     * Constructor for SecurityConfig.
+     *
+     * @param jwtAuthenticationFilter The filter responsible for processing JWT tokens during requests.
+     * @param authenticationProvider The provider that handles user authentication.
+     */
     public SecurityConfig(
         JwtAuthenticationFilter jwtAuthenticationFilter,
         AuthenticationProvider authenticationProvider
@@ -36,6 +42,18 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
+    /**
+     * Configures the security filter chain to use JWT authentication, disable CSRF, and allow certain endpoints to be accessible.
+     * 
+     * - Disables CSRF protection (not needed in a stateless API).
+     * - Permits requests to `/auth/**` and OPTIONS requests.
+     * - Enables stateless session management.
+     * - Adds the `JwtAuthenticationFilter` before the `UsernamePasswordAuthenticationFilter`.
+     *
+     * @param http The HttpSecurity object to customize security behavior.
+     * @return A configured SecurityFilterChain instance.
+     * @throws Exception If any configuration error occurs.
+     */
     @SuppressWarnings("removal")
     @Bean
     public SecurityFilterChain jwtSecurityFilterChain(HttpSecurity http)throws Exception
@@ -63,6 +81,11 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Configures CORS (Cross-Origin Resource Sharing) settings to allow requests from specific origins, methods, and headers.
+     *
+     * @return A configured CorsConfigurationSource instance.
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
